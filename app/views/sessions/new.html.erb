@@ -1,0 +1,10 @@
+<h1>Iniciar sesión</h1>
+<%= form_with url: login_path do |f| %>
+  <%= label_tag :username, "Usuario" %><br>
+  <%= text_field_tag :username %><br>
+
+  <%= label_tag :password, "Contraseña" %><br>
+  <%= password_field_tag :password %><br>
+
+  <%= submit_tag "Entrar" %>
+<% end %>
