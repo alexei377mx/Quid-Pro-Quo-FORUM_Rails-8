@@ -1,10 +1,43 @@
-<h1>Iniciar sesión</h1>
-<%= form_with url: login_path do |f| %>
-  <%= label_tag :username, "Usuario" %><br>
-  <%= text_field_tag :username %><br>
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <h1 class="title has-text-centered">Iniciar sesión</h1>
 
-  <%= label_tag :password, "Contraseña" %><br>
-  <%= password_field_tag :password %><br>
+        <%= form_with url: login_path, local: true, html: { class: "box" } do |form| %>
+          <div class="field">
+            <%= form.label :login, 'Email o nombre de usuario', class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.text_field :login, class: "input", placeholder: "ejemplo@email.com o tu_usuario" %>
+              <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+              </span>
+            </div>
+          </div>
 
-  <%= submit_tag "Entrar" %>
-<% end %>
+          <div class="field">
+            <%= form.label :password, 'Contraseña', class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.password_field :password, class: "input", placeholder: "••••••••" %>
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <%= form.submit 'Iniciar sesión', class: "button is-primary is-fullwidth" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="has-text-centered">
+          <p class="is-size-6">
+            ¿No tienes cuenta? <%= link_to 'Regístrate aquí', register_path, class: "has-text-link" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

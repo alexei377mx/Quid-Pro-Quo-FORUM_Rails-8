@@ -1,0 +1,49 @@
+<section class="section">
+  <div class="container">
+    <div class="content">
+      <h1 class="title is-2"><%= @post.title %></h1>
+      
+      <div class="subtitle is-6 has-text-grey mb-5">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-user"></i>
+          </span>
+          <span>Publicado por <strong><%= @post.user.name %></strong></span>
+        </span>
+        
+        <span class="icon-text ml-4">
+          <span class="icon">
+            <i class="fas fa-calendar-alt"></i>
+          </span>
+          <span><%= @post.created_at.strftime("%d/%m/%Y a las %H:%M") %></span>
+        </span>
+        
+        <% if @post.updated_at > @post.created_at %>
+          <span class="icon-text ml-4">
+            <span class="icon">
+              <i class="fas fa-edit"></i>
+            </span>
+            <span>Editado el <%= @post.updated_at.strftime("%d/%m/%Y a las %H:%M") %></span>
+          </span>
+        <% end %>
+      </div>
+
+      <% if user_signed_in? && @post.user == current_user %>
+        <div class="buttons are-small">
+          <%= link_to edit_post_path(@post), class: "button is-warning" do %>
+            <span class="icon">
+              <i class="fas fa-edit"></i>
+            </span>
+            <span>Editar</span>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="box">
+        <div class="content post-content">
+          <%= simple_format(@post.content) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
