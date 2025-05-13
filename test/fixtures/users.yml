@@ -3,11 +3,13 @@
 one:
   name: "Juan Pérez"
   username: "juanp"
+  email: "email@email.com"
   password_digest: <%= BCrypt::Password.create('password123') %>
   role: "admin"
 
 two:
   name: "Ana Gómez"
   username: "anag"
+  email: "emaisl@email.com"
   password_digest: <%= BCrypt::Password.create('secret456') %>
   role: "user"

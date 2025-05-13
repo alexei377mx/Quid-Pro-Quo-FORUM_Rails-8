@@ -1,0 +1,23 @@
+<section class="section">
+  <div class="container">
+    <% if user_signed_in? %>
+      <h1 class="title">Bienvenido al foro <%= current_user.name %>!</h1>
+      <%= link_to 'Nuevo Post', new_post_path, class: "button is-primary mb-4" %>
+    <% end %>
+
+    <% @posts.each do |post| %>
+      <div class="box">
+        <h2 class="title is-4">
+          <%= link_to post.title, post, class: "has-text-link" %>
+        </h2>
+        <p class="subtitle is-6">
+          Publicado por <strong><%= post.user.name %></strong> 
+          el <%= post.created_at.strftime("%d/%m/%Y") %>
+        </p>
+        <div class="content">
+          <%= truncate(post.content, length: 150) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
