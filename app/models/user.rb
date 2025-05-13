@@ -3,7 +3,7 @@ class User < ApplicationRecord
 
   ROLES = %w[user admin moderator].freeze
 
-  
+  before_validation :set_default_role, on: :create
 
   validates :name, presence: true
   validates :username, presence: true, uniqueness: true
@@ -12,6 +12,6 @@ class User < ApplicationRecord
   private
 
   def set_default_role
-    self.role ||= 'user'
+    self.role ||= "user"
   end
 end
