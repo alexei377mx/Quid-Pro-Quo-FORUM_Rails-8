@@ -1,0 +1,27 @@
+<%= form_with(model: post) do |form| %>
+  <% if post.errors.any? %>
+    <div>
+      <h2>Se encontraron <%= pluralize(post.errors.count, "error") %>:</h2>
+      <ul>
+        <% post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, "Título" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :content, "Contenido" %>
+    <%= form.text_area :content, rows: 10 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+    <%= link_to 'Cancelar', posts_path %>
+  </div>
+<% end %>

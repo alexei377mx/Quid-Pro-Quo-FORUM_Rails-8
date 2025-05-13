@@ -10,26 +10,32 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "debería iniciar sesión con credenciales correctas" do
-    post login_path, params: { username: @user.username, password: "password123" }
+  test "debería iniciar sesión con credenciales correctas (email)" do
+    post login_path, params: { login: @user.email, password: "password123" }
+    assert_redirected_to root_path
+    assert_equal @user.id, session[:user_id]
+  end
+
+  test "debería iniciar sesión con credenciales correctas (name)" do
+    post login_path, params: { login: @user.name, password: "password123" }
     assert_redirected_to root_path
     assert_equal @user.id, session[:user_id]
   end
 
   test "no debería iniciar sesión con contraseña incorrecta" do
-    post login_path, params: { username: @user.username, password: "wrongpass" }
-    assert_response :unprocessable_entity
+    post login_path, params: { login: @user.email, password: "wrongpass" }
+    assert_response :unprocessable_entity   # Esperamos el código de estado 422
     assert_nil session[:user_id]
   end
 
-  test "no debería iniciar sesión con un nombre de usuario no existente" do
-    post login_path, params: { username: "fakeuser", password: "whatever" }
-    assert_response :unprocessable_entity
+  test "no debería iniciar sesión con un usuario no existente" do
+    post login_path, params: { login: "nonexistent@example.com", password: "whatever" }
+    assert_response :unprocessable_entity   # Esperamos el código de estado 422
     assert_nil session[:user_id]
   end
 
   test "debería cerrar sesión correctamente" do
-    post login_path, params: { username: @user.username, password: "password123" }
+    post login_path, params: { login: @user.email, password: "password123" }
     assert_equal @user.id, session[:user_id]
 
     delete logout_path

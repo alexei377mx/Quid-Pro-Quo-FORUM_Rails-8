@@ -1,0 +1,22 @@
+<h1>Foro</h1>
+
+<% if user_signed_in? %>
+  <p><%= link_to 'Nuevo Post', new_post_path %></p>
+<% end %>
+
+<% @posts.each do |post| %>
+  <div>
+    <h2><%= link_to post.title, post %></h2>
+    <p>Publicado por <%= post.user.name %> el <%= post.created_at.strftime("%d/%m/%Y a las %H:%M") %></p>
+    <p><%= truncate(post.content, length: 150) %></p>
+    
+    <% if user_signed_in? && post.user == current_user %>
+      <p>
+        <%= link_to 'Editar', edit_post_path(post) %> |
+        <%= link_to 'Eliminar', post, method: :delete, data: { confirm: '¿Estás seguro?' } %>
+      </p>
+    <% end %>
+    
+    <hr>
+  </div>
+<% end %>

@@ -1,0 +1,23 @@
+<h1><%= @post.title %></h1>
+
+<p>
+  Publicado por <strong><%= @post.user.name %></strong> el 
+  <%= @post.created_at.strftime("%d/%m/%Y a las %H:%M") %>
+  <% if @post.updated_at > @post.created_at %>
+    (editado el <%= @post.updated_at.strftime("%d/%m/%Y") %>)
+  <% end %>
+</p>
+
+<div>
+  <%= simple_format(@post.content) %>
+</div>
+
+<% if user_signed_in? && @post.user == current_user %>
+  <p>
+    <%= link_to 'Editar', edit_post_path(@post) %> |
+    <%= link_to 'Eliminar', @post, method: :delete, data: { confirm: '¿Estás seguro?' } %> |
+    <%= link_to 'Volver', posts_path %>
+  </p>
+<% else %>
+  <p><%= link_to 'Volver al foro', posts_path %></p>
+<% end %>
