@@ -3,6 +3,8 @@
     <% if user_signed_in? %>
       <h1 class="title">Bienvenido al foro <%= current_user.name %>!</h1>
       <%= link_to 'Nuevo Post', new_post_path, class: "button is-primary mb-4" %>
+    <% else %>
+      <h1 class="title">Bienvenido al foro!</h1>
     <% end %>
 
     <% @posts.each do |post| %>
