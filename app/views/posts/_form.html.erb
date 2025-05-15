@@ -1,27 +1,71 @@
-<%= form_with(model: post) do |form| %>
-  <% if post.errors.any? %>
-    <div>
-      <h2>Se encontraron <%= pluralize(post.errors.count, "error") %>:</h2>
-      <ul>
-        <% post.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<%= form_with(model: post, html: { class: "box" }) do |form| %>
+  <div class="field">
+    <%= form.label :title, class: "label" do %>
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas fa-heading"></i>
+        </span>
+        <span>Título</span>
+      </span>
+    <% end %>
+    <div class="control has-icons-left">
+      <%= form.text_field :title, class: "input #{'is-danger' if post.errors[:title].any?}", placeholder: "Título del post (mínimo 5 caracteres)" %>
+      <span class="icon is-small is-left">
+        <i class="fas fa-pen"></i>
+      </span>
     </div>
-  <% end %>
-
-  <div>
-    <%= form.label :title, "Título" %>
-    <%= form.text_field :title %>
+    <% if post.errors[:title].any? %>
+      <p class="help is-danger">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-exclamation-circle"></i>
+          </span>
+          <span><%= post.errors[:title].join(', ') %></span>
+        </span>
+      </p>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.label :content, "Contenido" %>
-    <%= form.text_area :content, rows: 10 %>
+  <div class="field">
+    <%= form.label :content, class: "label" do %>
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas fa-align-left"></i>
+        </span>
+        <span>Contenido</span>
+      </span>
+    <% end %>
+    <div class="control">
+      <%= form.text_area :content, rows: 10, class: "textarea #{'is-danger' if post.errors[:content].any?}", placeholder: "Escribe el contenido detallado del post..." %>
+    </div>
+    <% if post.errors[:content].any? %>
+      <p class="help is-danger">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-exclamation-circle"></i>
+          </span>
+          <span><%= post.errors[:content].join(', ') %></span>
+        </span>
+      </p>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.submit %>
-    <%= link_to 'Cancelar', posts_path %>
+  <div class="field is-grouped">
+    <div class="control">
+      <%= form.submit "Guardar Post", class: "button is-primary is-medium" do %>
+        <span class="icon">
+          <i class="fas fa-save"></i>
+        </span>
+        <span>Guardar</span>
+      <% end %>
+    </div>
+    <div class="control">
+      <%= link_to posts_path, class: "button is-light is-medium" do %>
+        <span class="icon">
+          <i class="fas fa-times"></i>
+        </span>
+        <span>Cancelar</span>
+      <% end %>
+    </div>
   </div>
 <% end %>

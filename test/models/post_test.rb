@@ -12,19 +12,19 @@ class PostTest < ActiveSupport::TestCase
   test "debería ser inválido sin título" do
     @post.title = ""
     assert_not @post.valid?
-    assert_includes @post.errors[:title], "can't be blank"
+    assert_includes @post.errors[:title], "no puede estar en blanco"
   end
 
   test "debería ser inválido si el título es muy corto" do
     @post.title = "Hey"
     assert_not @post.valid?
-    assert_includes @post.errors[:title], "is too short (minimum is 5 characters)"
+    assert_includes @post.errors[:title], "es demasiado corto (5 caracteres mínimo)"
   end
 
   test "debería ser inválido sin contenido" do
     @post.content = ""
     assert_not @post.valid?
-    assert_includes @post.errors[:content], "can't be blank"
+    assert_includes @post.errors[:content], "no puede estar en blanco"
   end
 
   test "debería pertenecer a un usuario" do
@@ -34,6 +34,6 @@ class PostTest < ActiveSupport::TestCase
   test "debería ser inválido sin un usuario asociado" do
     @post.user = nil
     assert_not @post.valid?
-    assert_includes @post.errors[:user], "must exist"
+    assert_includes @post.errors[:user], "debe existir"
   end
 end

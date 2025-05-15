@@ -24,13 +24,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "no debería iniciar sesión con contraseña incorrecta" do
     post login_path, params: { login: @user.email, password: "wrongpass" }
-    assert_response :unprocessable_entity   # Esperamos el código de estado 422
+    assert_response :unprocessable_entity
     assert_nil session[:user_id]
   end
 
   test "no debería iniciar sesión con un usuario no existente" do
     post login_path, params: { login: "nonexistent@example.com", password: "whatever" }
-    assert_response :unprocessable_entity   # Esperamos el código de estado 422
+    assert_response :unprocessable_entity
     assert_nil session[:user_id]
   end
 

@@ -1,19 +1,67 @@
-<h1>Registro</h1>
-<%= form_with model: @user, url: users_path do |f| %>
-  <%= f.label :name, "Nombre completo" %><br>
-  <%= f.text_field :name %><br>
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <h1 class="title">Registrar nuevo usuario</h1>
 
-  <%= f.label :username, "Nombre de usuario" %><br>
-  <%= f.text_field :username %><br>
+        <%= form_with(model: @user, local: true) do |form| %>
+          <% if @user.errors.any? %>
+            <div class="notification is-danger">
+              <h2 class="subtitle"><%= pluralize(@user.errors.count, "error") %> impidieron guardar este usuario:</h2>
+              <ul>
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
 
-  <%= f.label :email, "Email" %><br>
-  <%= f.text_field :email %><br>
+          <div class="field">
+            <%= form.label :name, "Nombre", class: "label" %>
+            <div class="control">
+              <%= form.text_field :name, class: "input" %>
+            </div>
+          </div>
 
-  <%= f.label :password %><br>
-  <%= f.password_field :password %><br>
+          <div class="field">
+            <%= form.label :username, "Usuario", class: "label" %>
+            <div class="control">
+              <%= form.text_field :username, class: "input" %>
+            </div>
+          </div>
 
-  <%= f.label :password_confirmation, "Confirmar contraseña" %><br>
-  <%= f.password_field :password_confirmation %><br>
+          <div class="field">
+            <%= form.label :email, "Email", class: "label" %>
+            <div class="control">
+              <%= form.email_field :email, class: "input" %>
+            </div>
+          </div>
 
-  <%= f.submit "Registrarse" %>
-<% end %>
+          <div class="field">
+            <%= form.label :password, "Contraseña", class: "label" %>
+            <div class="control">
+              <%= form.password_field :password, class: "input" %>
+            </div>
+          </div>
+
+          <div class="field">
+            <%= form.label :password_confirmation, "Confirmar contraseña", class: "label" %>
+            <div class="control">
+              <%= form.password_field :password_confirmation, class: "input" %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <%= form.submit "Registrarse", class: "button is-primary is-fullwidth" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="has-text-centered mt-4">
+          <%= link_to "¿Ya tienes cuenta? Inicia sesión", login_path %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
