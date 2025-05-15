@@ -16,6 +16,9 @@
       </div>
 
       <div class="navbar-end">
+        <a class="navbar-item" data-controller="theme" data-action="click->theme#toggle">
+          <i data-theme-target="icon" class="fas fa-moon"></i>
+        </a>
         <% if user_signed_in? %>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">

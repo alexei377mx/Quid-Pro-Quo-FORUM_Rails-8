@@ -15,7 +15,7 @@
           <span class="icon">
             <i class="fas fa-calendar-alt"></i>
           </span>
-          <span><%= @post.created_at.strftime("%d/%m/%Y a las %H:%M") %></span>
+          <span><%= @post.created_at.strftime("%d/%m/%Y a las %H:%M HRS") %></span>
         </span>
         
         <% if @post.updated_at > @post.created_at %>
@@ -23,7 +23,7 @@
             <span class="icon">
               <i class="fas fa-edit"></i>
             </span>
-            <span>Editado el <%= @post.updated_at.strftime("%d/%m/%Y a las %H:%M") %></span>
+            <span>Editado el <%= @post.updated_at.strftime("%d/%m/%Y a las %H:%M HRS") %></span>
           </span>
         <% end %>
       </div>
