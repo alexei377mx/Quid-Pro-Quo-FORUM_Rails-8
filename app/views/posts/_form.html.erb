@@ -59,8 +59,9 @@
         <span>Guardar</span>
       <% end %>
     </div>
+    <% cancel_path = @post&.persisted? ? post_path(@post) : posts_path %>
     <div class="control">
-      <%= link_to posts_path, class: "button is-light is-medium" do %>
+      <%= link_to cancel_path, class: "button is-light is-medium" do %>
         <span class="icon">
           <i class="fas fa-times"></i>
         </span>
