@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
     if @comment.save
       redirect_to @post, notice: "El comentario fue publicado exitosamente."
     else
-      redirect_to @post, alert: "Hubo un error al publicar el comentario."
+      redirect_to @post, alert: "Hubo un error al publicar el comentario: #{@comment.errors.full_messages.join(', ')}"
     end
   end
 
@@ -22,7 +22,7 @@ class CommentsController < ApplicationController
     if @reply.save
       redirect_to @post, notice: "La respuesta fue publicada exitosamente."
     else
-      redirect_to @post, alert: "Hubo un error al publicar la respuesta: #{@reply.errors.full_messages.join(', ')}"
+      redirect_to @post, alert: "Hubo un error al publicar la respuesta: #{@comment.errors.full_messages.join(', ')}"
     end
   end
 
@@ -36,7 +36,9 @@ class CommentsController < ApplicationController
     if @comment.update(comment_params)
       redirect_to @post, notice: "El comentario fue actualizado exitosamente."
     else
-      render :edit
+      Rails.logger.error("Error al actualizar comentario: #{@comment.errors.full_messages.join(', ')}")
+      flash.now[:alert] = "Hubo un error al actualizar el comentario: #{@comment.errors.full_messages.join(', ')}"
+      render :edit, status: :unprocessable_entity
     end
   end
 

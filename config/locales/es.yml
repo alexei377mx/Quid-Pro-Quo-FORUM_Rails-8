@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      post: "Publicación"
+      comment: "Comentario"
+    attributes:
+      post:
+        title: "Título"
+        content: "Contenido"
+      comment:
+        content: "Contenido"
