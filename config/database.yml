@@ -23,20 +23,12 @@ test:
   database: quid_pro_quo_test
 
 production:
-  primary: &primary_production
-    <<: *default
-    database: quid_pro_quo_production
-    username: quid_pro_quo
-    password: <%= ENV["QUID_PRO_QUO_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: quid_pro_quo_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: quid_pro_quo_production_queue
-    migrations_paths: db/queue_migrate
+  primary:
+    url: <%= ENV['DATABASE_URL'] %>
   cable:
-    <<: *primary_production
-    database: quid_pro_quo_production_cable
-    migrations_paths: db/cable_migrate
+    url: <%= ENV['DATABASE_URL'] %>
+  queue:
+    url: <%= ENV['DATABASE_URL'] %>
+  cache:
+    url: <%= ENV['DATABASE_URL'] %>
+    

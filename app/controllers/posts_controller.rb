@@ -25,6 +25,7 @@ class PostsController < ApplicationController
       logger.info "Publicación creada exitosamente. ID: #{@post.id}"
       redirect_to @post, notice: "La publicación fue creada exitosamente."
     else
+      flash.now[:alert] = "La creación de la publicación falló. Errores: #{@post.errors.full_messages.join(', ')}"
       logger.warn "La creación de la publicación falló. Errores: #{@post.errors.full_messages.join(', ')}"
       render :new, status: :unprocessable_entity
     end
@@ -43,6 +44,7 @@ class PostsController < ApplicationController
       logger.info "Publicación actualizada exitosamente. ID: #{@post.id}"
       redirect_to @post, notice: "La publicación fue actualizada exitosamente."
     else
+      flash.now[:alert] = "La actualización de la publicación falló. Errores: #{@post.errors.full_messages.join(', ')}"
       logger.warn "La actualización de la publicación falló. Errores: #{@post.errors.full_messages.join(', ')}"
       render :edit, status: :unprocessable_entity
     end
@@ -56,7 +58,7 @@ class PostsController < ApplicationController
       redirect_to posts_url, notice: "La publicación fue eliminada exitosamente."
     else
       logger.error "Falló la eliminación de la publicación ID: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}"
-      redirect_to @post, alert: "No se pudo eliminar la publicación.", status: :unprocessable_entity
+      redirect_to @post, alert: "No se pudo eliminar la publicación ID: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}", status: :unprocessable_entity
     end
   end
 
