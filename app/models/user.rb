@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :comment_reactions, dependent: :destroy
+  has_many :liked_comments, through: :comment_reactions, source: :comment
 
   ROLES = %w[user admin moderator].freeze
 
