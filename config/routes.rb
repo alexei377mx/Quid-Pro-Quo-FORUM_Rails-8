@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :posts do
     resources :comments, only: [ :create, :edit, :update ] do
       post "reply", on: :member
+      resource :comment_reaction, only: [:create, :destroy]
     end
   end
 

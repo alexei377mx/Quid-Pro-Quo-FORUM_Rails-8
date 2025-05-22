@@ -76,6 +76,18 @@
                 </div>
 
                 <% if user_signed_in? %>
+                  <div class="mt-2">
+                    <% if comment.liked_by_users.include?(current_user) %>
+                      <%= button_to "Quitar like (#{comment.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :delete, class: "button is-small is-danger is-light" %>
+                    <% else %>
+                      <%= button_to "Me gusta (#{comment.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :post, class: "button is-small is-success is-light" %>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="is-size-7 has-text-grey">Inicia sesión para reaccionar.</p>
+                <% end %>
+
+                <% if user_signed_in? %>
                   <div id="reply-form-<%= comment.id %>" style="display: none;">
                     <%= form_with(model: [ @post, Comment.new(parent_id: comment.id) ], url: reply_post_comment_path(@post, comment), local: true) do |form| %>
                       <div class="field">
@@ -94,7 +106,7 @@
 
                 <% if comment.replies.any? %>
                   <% comment.replies.order(created_at: :desc).each do |reply| %>
-                    <article class="media">
+                    <article class="media mt-4">
                       <figure class="media-left">
                         <p class="image is-48x48">
                           <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
@@ -118,6 +130,17 @@
                             </small>
                           </p>
                         </div>
+
+                        <% if user_signed_in? %>
+                          <div class="mt-2">
+                            <% if reply.liked_by_users.include?(current_user) %>
+                              <%= button_to "Quitar like (#{reply.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :delete, class: "button is-small is-danger is-light" %>
+                            <% else %>
+                              <%= button_to "Me gusta (#{reply.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :post, class: "button is-small is-success is-light" %>
+                            <% end %>
+                          </div>
+                        <% end %>
+
                       </div>
                     </article>
                   <% end %>
