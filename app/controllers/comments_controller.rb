@@ -10,7 +10,10 @@ class CommentsController < ApplicationController
     if @comment.save
       redirect_to @post, notice: "El comentario fue publicado exitosamente."
     else
-      redirect_to @post, alert: "Hubo un error al publicar el comentario: #{@comment.errors.full_messages.join(', ')}"
+      Rails.logger.error("Hubo un error al publicar el comentario: #{@comment.errors.full_messages.join(', ')}")
+      flash.now[:alert] = "Hubo un error al publicar el comentario."
+      @comments = @post.comments.order(created_at: :desc)
+      render "posts/show", status: :unprocessable_entity
     end
   end
 
@@ -22,7 +25,11 @@ class CommentsController < ApplicationController
     if @reply.save
       redirect_to @post, notice: "La respuesta fue publicada exitosamente."
     else
-      redirect_to @post, alert: "Hubo un error al publicar la respuesta: #{@comment.errors.full_messages.join(', ')}"
+      Rails.logger.error("Hubo un error al publicar la respuesta: #{@reply.errors.full_messages.join(', ')}")
+      flash.now[:alert] = "Hubo un error al publicar la respuesta"
+      @comments = @post.comments.order(created_at: :desc)
+      @reply_with_errors = @reply
+      render "posts/show", status: :unprocessable_entity
     end
   end
 
@@ -37,7 +44,7 @@ class CommentsController < ApplicationController
       redirect_to @post, notice: "El comentario fue actualizado exitosamente."
     else
       Rails.logger.error("Error al actualizar comentario: #{@comment.errors.full_messages.join(', ')}")
-      flash.now[:alert] = "Hubo un error al actualizar el comentario: #{@comment.errors.full_messages.join(', ')}"
+      flash.now[:alert] = "Hubo un error al actualizar el comentario."
       render :edit, status: :unprocessable_entity
     end
   end
@@ -59,12 +66,14 @@ class CommentsController < ApplicationController
 
   def authorize_comment_owner
     unless @comment.user == current_user
+      Rails.logger.error("No estás autorizado para realizar esta acción.")
       redirect_to @post, alert: "No estás autorizado para realizar esta acción."
     end
   end
 
   def require_login
     unless user_signed_in?
+      Rails.logger.error("Debes iniciar sesión para realizar esta acción.")
       redirect_to login_path, alert: "Debes iniciar sesión para realizar esta acción."
     end
   end

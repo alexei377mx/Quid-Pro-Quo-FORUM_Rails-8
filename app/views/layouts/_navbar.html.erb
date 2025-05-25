@@ -37,8 +37,8 @@
             </div>
           </div>
         <% else %>
-          <%= link_to "Iniciar sesión", login_path, class: "navbar-item" %>
-          <%= link_to "Registrarse", register_path, class: "navbar-item" %>
+          <%= link_to "Iniciar sesión", login_path, class: "navbar-item", data: { turbo: false } %>
+          <%= link_to "Registrarse", register_path, class: "navbar-item", data: { turbo: false } %>
         <% end %>
       </div>
     </div>

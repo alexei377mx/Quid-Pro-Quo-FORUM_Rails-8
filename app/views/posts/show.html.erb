@@ -5,22 +5,16 @@
       <br>
       <div class="subtitle is-6 has-text-grey mb-5">
         <span class="icon-text">
-          <span class="icon">
-            <i class="fas fa-user"></i>
-          </span>
+          <span class="icon"><i class="fa-solid fa-user"></i></span>
           <span>Publicado por <strong><%= @post.user.name %></strong></span>
         </span>
         <span class="icon-text ml-4">
-          <span class="icon">
-            <i class="fas fa-calendar-alt"></i>
-          </span>
+          <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
           <span>hace <%= time_ago_in_words(@post.created_at) %></span>
         </span>
         <% if @post.updated_at > @post.created_at %>
           <span class="icon-text ml-4">
-            <span class="icon">
-              <i class="fas fa-edit"></i>
-            </span>
+            <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
             <span>Editado hace <%= time_ago_in_words(@post.updated_at) %></span>
           </span>
         <% end %>
@@ -29,9 +23,7 @@
       <% if user_signed_in? && @post.user == current_user %>
         <div class="buttons are-small">
           <%= link_to edit_post_path(@post), class: "button is-warning" do %>
-            <span class="icon">
-              <i class="fas fa-edit"></i>
-            </span>
+            <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
             <span>Editar</span>
           <% end %>
         </div>
@@ -45,111 +37,14 @@
       </div>
 
       <div class="comments mt-5">
-        <h2 class="subtitle is-4">Comentarios</h2>
+        <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> Comentarios</h2>
 
         <% if @post.comments.order(created_at: :desc).any? %>
           <% @post.comments.order(created_at: :desc).each do |comment| %>
-            <article class="media">
-              <figure class="media-left">
-                <p class="image is-64x64">
-                  <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
-                </p>
-              </figure>
-              <div class="media-content">
-                <div class="content">
-                  <p>
-                    <strong><%= comment.user.name %></strong>
-                    <br />
-                    <%= comment.content %>
-                    <br />
-                    <small> hace 
-                      <%= time_ago_in_words(comment.created_at) %>
-                      <% if comment.updated_at > comment.created_at %>
-                        <span> · Editado hace <%= time_ago_in_words(comment.updated_at) %></span>
-                      <% end %>
-                      <% if user_signed_in? && comment.user == current_user %>
-                        · <%= link_to "Editar", edit_post_comment_path(@post, comment) %>
-                      <% end %>
-                      · <%= link_to "Responder", "#", onclick: "document.getElementById('reply-form-#{comment.id}').style.display='block'; return false;" %>
-                    </small>
-                  </p>
-                </div>
-
-                <% if user_signed_in? %>
-                  <div class="mt-2">
-                    <% if comment.liked_by_users.include?(current_user) %>
-                      <%= button_to "Quitar like (#{comment.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :delete, class: "button is-small is-danger is-light" %>
-                    <% else %>
-                      <%= button_to "Me gusta (#{comment.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :post, class: "button is-small is-success is-light" %>
-                    <% end %>
-                  </div>
-                <% else %>
-                  <p class="is-size-7 has-text-grey">Inicia sesión para reaccionar.</p>
-                <% end %>
-
-                <% if user_signed_in? %>
-                  <div id="reply-form-<%= comment.id %>" style="display: none;">
-                    <%= form_with(model: [ @post, Comment.new(parent_id: comment.id) ], url: reply_post_comment_path(@post, comment), local: true) do |form| %>
-                      <div class="field">
-                        <p class="control">
-                          <%= form.text_area :content, class: "textarea", placeholder: "Agregar una respuesta..." %>
-                        </p>
-                      </div>
-                      <div class="field">
-                        <p class="control">
-                          <%= form.submit "Publicar respuesta", class: "button is-info" %>
-                        </p>
-                      </div>
-                    <% end %>
-                  </div>
-                <% end %>
-
-                <% if comment.replies.any? %>
-                  <% comment.replies.order(created_at: :desc).each do |reply| %>
-                    <article class="media mt-4">
-                      <figure class="media-left">
-                        <p class="image is-48x48">
-                          <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
-                        </p>
-                      </figure>
-                      <div class="media-content">
-                        <div class="content">
-                          <p>
-                            <strong><%= reply.user.name %></strong>
-                            <br />
-                            <%= reply.content %>
-                            <br />
-                            <small>
-                              <%= time_ago_in_words(reply.created_at) %> atrás
-                              <% if reply.updated_at > reply.created_at %>
-                                <span> · Editado hace <%= time_ago_in_words(reply.updated_at) %></span>
-                              <% end %>
-                              <% if user_signed_in? && reply.user == current_user %>
-                                · <%= link_to "Editar", edit_post_comment_path(@post, reply) %>
-                              <% end %>
-                            </small>
-                          </p>
-                        </div>
-
-                        <% if user_signed_in? %>
-                          <div class="mt-2">
-                            <% if reply.liked_by_users.include?(current_user) %>
-                              <%= button_to "Quitar like (#{reply.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :delete, class: "button is-small is-danger is-light" %>
-                            <% else %>
-                              <%= button_to "Me gusta (#{reply.comment_reactions.count})", post_comment_comment_reaction_path(@post, comment), method: :post, class: "button is-small is-success is-light" %>
-                            <% end %>
-                          </div>
-                        <% end %>
-
-                      </div>
-                    </article>
-                  <% end %>
-                <% end %>
-              </div>
-            </article>
+            <%= render partial: "comments/comment", locals: { comment: comment, post: @post } %>
           <% end %>
         <% else %>
-          <p>No hay comentarios aún.</p>
+          <p><i class="fa-solid fa-circle-info"></i> No hay comentarios aún.</p>
         <% end %>
 
         <% if user_signed_in? %>
@@ -160,22 +55,31 @@
               </p>
             </figure>
             <div class="media-content">
-              <%= form_with(model: [ @post, @post.comments.build ], local: true) do |form| %>
+              <%= form_with(model: [ @post, (@comment || @post.comments.build) ], local: true) do |form| %>
                 <div class="field">
-                  <p class="control">
-                    <%= form.text_area :content, class: "textarea", placeholder: "Agregar un comentario..." %>
-                  </p>
+                  <%= form.label :content, class: "label" do %>
+                    <span class="icon-text">
+                      <span class="icon"><i class="fa-solid fa-comment"></i></span>
+                      <span>Comentario</span>
+                    </span>
+                  <% end %>
+                  <div class="control">
+                    <%= form.text_area :content, class: "textarea #{(@comment && @comment.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar un comentario..." %>
+                  </div>
+                  <small class="help is-danger"><%= (@comment && @comment.errors[:content].join(', ')) %></small>
                 </div>
                 <div class="field">
                   <p class="control">
-                    <%= form.submit "Publicar comentario", class: "button is-info" %>
+                    <%= form.submit class: "button is-info" do %>
+                      <i class="fa-solid fa-paper-plane"></i> Publicar comentario
+                    <% end %>
                   </p>
                 </div>
               <% end %>
             </div>
           </article>
         <% else %>
-          <p><%= link_to "Inicia sesión", login_path %> para dejar un comentario.</p>
+          <p><%= link_to "<i class='fa-solid fa-right-to-bracket'></i> Inicia sesión".html_safe, login_path, data: { turbo: false } %> para dejar un comentario.</p>
         <% end %>
       </div>
     </div>

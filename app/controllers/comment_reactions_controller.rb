@@ -8,6 +8,7 @@ class CommentReactionsController < ApplicationController
     if reaction.save
       redirect_to @comment.post, notice: "Te gustó el comentario."
     else
+      Rails.logger.error("Ya le diste like a este comentario.")
       redirect_to @comment.post, alert: "Ya le diste like a este comentario."
     end
   end
@@ -18,6 +19,7 @@ class CommentReactionsController < ApplicationController
       reaction.destroy
       redirect_to @comment.post, notice: "Quitaste tu reacción."
     else
+      Rails.logger.error("No habías reaccionado a este comentario.")
       redirect_to @comment.post, alert: "No habías reaccionado a este comentario."
     end
   end
@@ -30,6 +32,7 @@ class CommentReactionsController < ApplicationController
 
   def require_login
     unless user_signed_in?
+      Rails.logger.error("Debes iniciar sesión para realizar esta acción.")
       redirect_to login_path, alert: "Debes iniciar sesión para realizar esta acción."
     end
   end

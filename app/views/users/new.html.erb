@@ -2,64 +2,60 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-half">
-        <h1 class="title">Registrar nuevo usuario</h1>
+        <h1 class="title">
+          <i class="fa-solid fa-user-plus"></i> Registrar nuevo usuario
+        </h1>
 
-        <%= form_with(model: @user, local: true) do |form| %>
-          <% if @user.errors.any? %>
-            <div class="notification is-danger">
-              <h2 class="subtitle"><%= pluralize(@user.errors.count, "error") %> impidieron guardar este usuario:</h2>
-              <ul>
-                <% @user.errors.full_messages.each do |message| %>
-                  <li><%= message %></li>
-                <% end %>
-              </ul>
+        <%= form_with(model: @user, local: true, html: { "data-turbo" => "false" }) do |form| %>
+
+          <% [:name, :username, :email, :password, :password_confirmation].each do |field| %>
+            <div class="field">
+              <%= form.label field, @user.class.human_attribute_name(field), class: "label" %>
+              <div class="control has-icons-left">
+                <% input_type = field.to_s.include?("password") ? :password_field : (field == :email ? :email_field : :text_field) %>
+                <%= form.send(input_type, field, class: "input #{'is-danger' if @user.errors[field].any?}", placeholder: "Tu #{field.to_s.humanize.downcase}") %>
+                <span class="icon is-small is-left">
+                  <% icon = case field
+                    when :name then "fa-solid fa-user"
+                    when :username then "fa-solid fa-user-tag"
+                    when :email then "fa-solid fa-envelope"
+                    else "fa-solid fa-lock"
+                  end %>
+                  <i class="<%= icon %>"></i>
+                </span>
+              </div>
+              <% if @user.errors[field].any? %>
+                <small class="help is-danger"><%= @user.errors[field].join(", ") %></small>
+              <% end %>
             </div>
           <% end %>
 
-          <div class="field">
-            <%= form.label :name, "Nombre", class: "label" %>
-            <div class="control">
-              <%= form.text_field :name, class: "input" %>
-            </div>
-          </div>
-
-          <div class="field">
-            <%= form.label :username, "Usuario", class: "label" %>
-            <div class="control">
-              <%= form.text_field :username, class: "input" %>
-            </div>
-          </div>
-
-          <div class="field">
-            <%= form.label :email, "Email", class: "label" %>
-            <div class="control">
-              <%= form.email_field :email, class: "input" %>
-            </div>
-          </div>
-
-          <div class="field">
-            <%= form.label :password, "Contraseña", class: "label" %>
-            <div class="control">
-              <%= form.password_field :password, class: "input" %>
-            </div>
-          </div>
-
-          <div class="field">
-            <%= form.label :password_confirmation, "Confirmar contraseña", class: "label" %>
-            <div class="control">
-              <%= form.password_field :password_confirmation, class: "input" %>
+          <div class="columns is-centered">
+            <div class="column is-narrow">
+              <div class="field">
+                <% if @show_checkbox_recaptcha %>
+                  <%= recaptcha_tags(site_key: Rails.application.credentials.dig(:recaptcha, :site_key_v2)) %>
+                <% else %>
+                  <%= recaptcha_v3(action: 'registration', site_key: Rails.application.credentials.dig(:recaptcha, :site_key_v3)) %>
+                <% end %>
+              </div>
             </div>
           </div>
 
           <div class="field">
             <div class="control">
-              <%= form.submit "Registrarse", class: "button is-primary is-fullwidth" %>
+              <%= form.submit class: "button is-primary is-fullwidth" do %>
+                <span class="icon"><i class="fa-solid fa-user-plus"></i></span>
+                <span>Registrarse</span>
+              <% end %>
             </div>
           </div>
         <% end %>
 
         <div class="has-text-centered mt-4">
-          <%= link_to "¿Ya tienes cuenta? Inicia sesión", login_path %>
+          <%= link_to login_path, class: "has-text-link", data: { turbo: false } do %>
+            <i class="fa-solid fa-right-to-bracket"></i> ¿Ya tienes cuenta? Inicia sesión
+          <% end %>
         </div>
       </div>
     </div>
