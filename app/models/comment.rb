@@ -9,4 +9,12 @@ class Comment < ApplicationRecord
 
   validates :content, presence: true
   validates :content, length: { minimum: 2 }
+
+  def edited?
+    updated_at > created_at
+  end
+
+  def likes_count
+    comment_reactions.count
+  end
 end

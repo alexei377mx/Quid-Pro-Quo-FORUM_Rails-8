@@ -1,20 +1,36 @@
 <section class="section">
   <div class="container">
     <% if user_signed_in? %>
-      <h1 class="title">Bienvenido al foro <%= current_user.name %>!</h1>
-      <%= link_to 'Nuevo Post', new_post_path, class: "button is-primary mb-4" %>
+      <h1 class="title">
+        <i class="fa-solid fa-user"></i>
+        Bienvenido al foro <%= current_user.name %>!
+      </h1>
+      <%= link_to new_post_path, class: "button is-primary mb-4" do %>
+        <span class="icon">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span>Nuevo Post</span>
+      <% end %>
     <% else %>
-      <h1 class="title">Bienvenido al foro!</h1>
+      <h1 class="title">
+        <i class="fa-solid fa-comments"></i>
+        Bienvenido al foro!
+      </h1>
     <% end %>
 
     <% @posts.each do |post| %>
       <div class="box">
         <h2 class="title is-4">
-          <%= link_to post.title, post, class: "has-text-link" %>
+          <%= link_to post, class: "has-text-link" do %>
+            <i class="fa-solid fa-file-lines"></i> <%= post.title %>
+          <% end %>
         </h2>
         <p class="subtitle is-6">
-          Publicado por <strong><%= post.user.name %></strong> 
-          el <%= post.created_at.strftime("%d/%m/%Y") %>
+          <i class="fa-solid fa-user-pen"></i>
+          Publicado por <strong><%= post.user.name %></strong>
+          <span class="ml-2">
+            <i class="fa-solid fa-clock"></i> hace <%= time_ago_in_words(post.created_at) %>
+          </span>
         </p>
         <div class="content">
           <%= truncate(post.content, length: 150) %>

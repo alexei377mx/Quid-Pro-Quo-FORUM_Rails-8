@@ -40,8 +40,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to post_path(@post)
-    follow_redirect!
+    assert_response :unprocessable_entity
     assert_match "Hubo un error al publicar el comentario", response.body
   end
 

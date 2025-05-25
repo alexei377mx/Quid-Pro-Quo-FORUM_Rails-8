@@ -1,0 +1,77 @@
+<article class="media">
+  <figure class="media-left">
+    <p class="image is-64x64">
+      <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
+    </p>
+  </figure>
+  <div class="media-content">
+    <div class="content">
+      <p>
+        <strong><%= comment.user.name %></strong>
+        <br />
+        <%= comment.content %>
+        <br />
+        <small>
+          <i class="fa-solid fa-clock"></i> hace <%= time_ago_in_words(comment.created_at) %>
+          <% if comment.edited? %>
+            · <i class="fa-solid fa-pen-to-square"></i> Editado hace <%= time_ago_in_words(comment.updated_at) %>
+          <% end %>
+          <%= comment_edit_link(comment, post) %>
+          <% if user_signed_in? %>
+            · <%= link_to "<i class='fa-solid fa-reply'></i> Responder".html_safe, "#", onclick: "document.getElementById('reply-form-#{comment.id}').style.display='block'; return false;" %>
+          <% end %>
+        </small>
+      </p>
+    </div>
+
+    <div class="mt-2">
+      <% liked = comment_liked_by_user?(comment) %>
+
+      <% if liked %>
+        <%= button_to post_comment_comment_reaction_path(post, comment), method: :delete, class: "button is-small is-danger is-light", disabled: !user_signed_in? do %>
+          <i class="fa-solid fa-thumbs-down"></i> Quitar like (<%= comment.likes_count %>)
+        <% end %>
+      <% else %>
+        <%= button_to post_comment_comment_reaction_path(post, comment), method: :post, class: "button is-small is-success is-light", disabled: !user_signed_in? do %>
+          <i class="fa-solid fa-thumbs-up"></i> Me gusta (<%= comment.likes_count %>)
+        <% end %>
+      <% end %>
+
+      <% unless user_signed_in? %>
+        <p class="is-size-7 has-text-grey mt-1">Inicia sesión para reaccionar.</p>
+      <% end %>
+    </div>
+
+    <% if user_signed_in? %>
+      <div id="reply-form-<%= comment.id %>" style="display: <%= (@reply_with_errors && @reply_with_errors.parent_id == comment.id) ? 'block' : 'none' %>;">
+        <%= form_with(model: [ post, (@reply_with_errors || Comment.new(parent_id: comment.id)) ], url: reply_post_comment_path(post, comment), local: true) do |form| %>
+          <div class="field">
+            <%= form.label :content, class: "label" do %>
+              <span class="icon-text">
+                <span class="icon"><i class="fa-solid fa-reply"></i></span>
+                <span>Respuesta</span>
+              </span>
+            <% end %>
+            <div class="control">
+              <%= form.text_area :content, class: "textarea #{(form.object.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar una respuesta..." %>
+            </div>
+            <small class="help is-danger"><%= form.object.errors[:content].join(', ') %></small>
+          </div>
+          <div class="field">
+            <p class="control">
+              <%= form.submit class: "button is-info" do %>
+                <i class="fa-solid fa-paper-plane"></i> Publicar respuesta
+              <% end %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if comment.replies.any? %>
+      <% comment.replies.order(created_at: :desc).each do |reply| %>
+        <%= render partial: "comments/comment", locals: { comment: reply, post: post } %>
+      <% end %>
+    <% end %>
+  </div>
+</article>
