@@ -4,24 +4,18 @@ class SessionsController < ApplicationController
   end
 
   def create
-    logger.info "Intento de inicio de sesión con credencial: #{params[:login]}"
+    if verify_recaptcha
+      user = User.find_by("email = ? OR name = ?", params[:login], params[:login])
 
-    user = User.find_by("email = ? OR name = ?", params[:login], params[:login])
-
-    if user
-      logger.debug "Usuario encontrado (ID: #{user.id})"
-      if user.authenticate(params[:password])
+      if user&.authenticate(params[:password])
         session[:user_id] = user.id
-        logger.info "Sesión iniciada correctamente para el usuario ID: #{user.id}"
         redirect_to root_path, notice: "Has iniciado sesión exitosamente."
       else
-        logger.warn "Contraseña incorrecta para el usuario: #{params[:login]}"
         flash.now[:alert] = "Credenciales incorrectas."
         render :new, status: :unprocessable_entity
       end
     else
-      logger.warn "Usuario no encontrado con credencial: #{params[:login]}"
-      flash.now[:alert] = "Credenciales incorrectas."
+      flash.now[:alert] = "Por favor completa el reCAPTCHA"
       render :new, status: :unprocessable_entity
     end
   end
