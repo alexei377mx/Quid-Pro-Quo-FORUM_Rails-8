@@ -1,0 +1,13 @@
+.notification {
+  position: fixed;
+  top: 65px;
+  right: 10px;
+  z-index: 1000;
+  max-width: 400px;
+  animation-duration: 0.5s;
+  
+  &.hide {
+    animation-name: animate__slideOutRight;
+    animation-fill-mode: forwards;
+  }
+}
