@@ -94,6 +94,6 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
       comment: { content: "" }
     }
 
-    assert_response :success
+    assert_response :unprocessable_entity
   end
 end
