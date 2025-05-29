@@ -51,6 +51,7 @@ gem update --system
 git config --global color.ui true
 git config --global user.name "YOUR NAME"
 git config --global user.email "YOUR_EMAIL@example.com"
+git config --global core.editor "code --wait"
 
 ssh-keygen -t ed25519 -C "YOUR_EMAIL@example.com"
 cat ~/.ssh/id_ed25519.pub

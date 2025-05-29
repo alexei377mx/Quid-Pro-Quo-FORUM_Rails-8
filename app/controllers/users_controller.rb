@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+  def show
+    @user = current_user
+    @posts = @user.posts
+  end
+
   def new
     @user = User.new
     @show_checkbox_recaptcha = false

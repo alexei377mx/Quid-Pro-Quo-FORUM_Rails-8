@@ -1,0 +1,43 @@
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="box">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-128x128">
+                <img class="is-rounded" src="https://bulma.io/assets/images/placeholders/128x128.png" alt="Avatar">
+              </figure>
+            </div>
+            <div class="media-content">
+              <h1 class="title is-3"><%= @user.name %> (@<%= @user.username %>)</h1>
+              <p class="subtitle is-6 has-text-grey">
+                <i class="fa-solid fa-envelope"></i> <%= @user.email %><br>
+                <% if @user.admin? %>
+                  <i class="fa-solid fa-user-tag"></i> Rol: <%= @user.role.capitalize %><br>
+                <% end %>
+                <i class="fa-solid fa-calendar-plus"></i> Registrado hace <%= time_ago_in_words(@user.created_at) %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="title is-4 mt-6"><i class="fa-solid fa-pen-nib"></i> Mis publicaciones</h2>
+
+        <% if @posts.any? %>
+          <div class="columns is-multiline">
+            <% @posts.each do |post| %>
+              <div class="column">
+                <%= render partial: "posts/posts", locals: { post: post } %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="is-info is-light">
+            <i class="fa-solid fa-circle-info"></i> No has creado publicaciones aún.
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

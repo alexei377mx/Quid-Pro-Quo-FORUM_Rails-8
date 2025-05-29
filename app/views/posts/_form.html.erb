@@ -32,6 +32,21 @@
     <small class="help is-danger"><%= post.errors[:content].join(', ') %></small>
   </div>
 
+  <div class="field">
+    <%= form.label :category, class: "label" do %>
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fa-solid fa-tags"></i>
+        </span>
+        <span>Categoría</span>
+      </span>
+    <% end %>
+    <div class="select">
+      <%= form.select :category, Post::CATEGORIES.sort, { prompt: "Selecciona una categoría" }, class: "select #{'is-danger' if post.errors[:category].any?}" %>
+    </div>
+    <small class="help is-danger"><%= post.errors[:category].join(', ') %></small>
+  </div>
+
   <div class="field is-grouped">
     <div class="control">
       <%= form.submit "Guardar Post", class: "button is-primary" do %>
