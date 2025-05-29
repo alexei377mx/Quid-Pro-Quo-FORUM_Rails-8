@@ -5,7 +5,7 @@
         <i class="fa-solid fa-user"></i>
         Bienvenido al foro <%= current_user.name %>!
       </h1>
-      <%= link_to new_post_path, class: "button is-primary mb-4" do %>
+      <%= link_to new_post_path, class: "button is-primary" do %>
         <span class="icon">
           <i class="fa-solid fa-plus"></i>
         </span>
@@ -19,23 +19,7 @@
     <% end %>
 
     <% @posts.each do |post| %>
-      <div class="box">
-        <h2 class="title is-4">
-          <%= link_to post, class: "has-text-link" do %>
-            <i class="fa-solid fa-file-lines"></i> <%= post.title %>
-          <% end %>
-        </h2>
-        <p class="subtitle is-6">
-          <i class="fa-solid fa-user-pen"></i>
-          Publicado por <strong><%= post.user.name %></strong>
-          <span class="ml-2">
-            <i class="fa-solid fa-clock"></i> hace <%= time_ago_in_words(post.created_at) %>
-          </span>
-        </p>
-        <div class="content">
-          <%= truncate(post.content, length: 150) %>
-        </div>
-      </div>
+      <%= render partial: "posts", locals: { post: post } %>
     <% end %>
   </div>
 </section>
