@@ -8,4 +8,20 @@ module CommentsHelper
 
     link_to "<i class='fa-solid fa-pen'></i> Editar".html_safe, edit_post_comment_path(post, comment)
   end
+
+  def time_ago(comment)
+    "hace #{time_ago_in_words(comment.created_at)}"
+  end
+
+  def edited_time_ago(comment)
+    "Editado hace #{time_ago_in_words(comment.updated_at)}" if comment.edited?
+  end
+
+  def reply_form_object(comment)
+    if @reply_with_errors&.parent_id == comment.id
+      @reply_with_errors
+    else
+      Comment.new(parent_id: comment.id)
+    end
+  end
 end

@@ -34,6 +34,11 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_nil session[:user_id]
   end
 
+  test "no debería iniciar sesión con campos vacíos" do
+    post login_path, params: { login: "", password: "" }
+    assert_response :unprocessable_entity
+  end
+
   test "debería cerrar sesión correctamente" do
     post login_path, params: { login: @user.email, password: "password123" }
     assert_equal @user.id, session[:user_id]

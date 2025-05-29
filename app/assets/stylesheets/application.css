@@ -9,17 +9,15 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
- /* Fija la navbar arriba */
 .navbar.is-fixed-top {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 30; /* Por encima del contenido */
+  z-index: 30;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Para que el contenido no quede oculto debajo de la navbar, agrega un padding-top al body (ajusta la altura si cambias el tamaño de la navbar) */
 body {
-  padding-top: 3.25rem; /* altura estándar navbar Bulma */
+  padding-top: 3.25rem;
 }

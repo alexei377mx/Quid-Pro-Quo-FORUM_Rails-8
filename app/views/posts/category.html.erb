@@ -1,0 +1,19 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      <i class="fa-solid fa-tag"></i>
+      Posts en la categoría: <%= params[:category_id] %>
+    </h1>
+
+    <% if @posts.present? %>
+      <% @posts.each do |post| %>
+        <%= render partial: "posts", locals: { post: post } %>
+      <% end %>
+    <% else %>
+      <p>
+        <i class="fa-solid fa-circle-info"></i>
+        No hay publicaciones en esta categoría.
+      </p>
+    <% end %>
+  </div>
+</section>

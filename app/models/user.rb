@@ -16,6 +16,10 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
   validates :role, presence: true, inclusion: { in: ROLES }
 
+  def admin?
+    role == "admin"
+  end
+
   private
 
   def set_default_role

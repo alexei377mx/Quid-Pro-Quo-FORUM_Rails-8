@@ -1,0 +1,21 @@
+<div class="box">
+  <h2 class="title is-4">
+    <%= link_to post, class: "has-text-link" do %>
+      <i class="fa-solid fa-file-lines"></i> <%= post.title %>
+    <% end %>
+  </h2>
+  <p class="subtitle is-6">        
+    <span class="icon"><i class="fa-solid fa-user"></i></span>
+    <span>Publicado por <strong><%= post.user.name %></strong></span>
+
+    <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
+    <span><%= post_published_time(post) %></span>
+
+    <span class="icon"><i class="fa-solid fa-tag"></i></span>
+    <span><strong>Categoría:</strong> <%= post.category %></span>
+  </p>
+
+  <div class="content">
+    <%= truncate(post.content, length: 150) %>
+  </div>
+</div>

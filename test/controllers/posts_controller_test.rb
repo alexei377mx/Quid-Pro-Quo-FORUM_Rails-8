@@ -33,7 +33,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     log_in_as(@user_one)
     assert_difference("Post.count", 1) do
       post posts_url, params: {
-        post: { title: "Nuevo Título", content: "Nuevo contenido" }
+        post: { title: "Nuevo Título", content: "Nuevo contenido", category: "Tecnología" }
       }
     end
 

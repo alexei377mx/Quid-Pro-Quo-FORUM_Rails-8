@@ -1,13 +1,32 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_post_owner, only: [ :edit, :update, :destroy ]
-  before_action :require_login, except: [ :index, :show ]
+  before_action :require_login, except: [ :index, :show, :category ]
 
   def index
     @posts = Post.all.order(created_at: :desc)
   end
 
   def show
+    @comments = @post.comments.where(parent_id: nil).includes(:user, :replies).order(created_at: :desc)
+
+    if flash[:reply_errors].present?
+      @reply_with_errors = Comment.new(
+        content: flash[:reply_content],
+        parent_id: flash[:reply_parent_id]
+      )
+      flash[:reply_errors].each { |msg| @reply_with_errors.errors.add(:content, msg) }
+    end
+  end
+
+  def category
+    @category = params[:category_id].capitalize 
+    if Post::CATEGORIES.include?(@category)
+      @posts = Post.where(category: @category).order(created_at: :desc)
+    else
+      @posts = []
+      flash[:alert] = "La categoría seleccionada no es válida."
+    end
   end
 
   def new
@@ -58,7 +77,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :content)
+    params.require(:post).permit(:title, :content, :category)
   end
 
   def authorize_post_owner

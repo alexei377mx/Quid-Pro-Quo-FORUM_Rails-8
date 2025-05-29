@@ -14,12 +14,24 @@
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </a>
     </div>
 
     <div class="navbar-menu" data-navbar-target="menu">
       <div class="navbar-start">
         <%= link_to "Posts", posts_path, class: "navbar-item" %>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            Categorías
+          </a>
+
+          <div class="navbar-dropdown">
+            <% Post::CATEGORIES.sort.each do |category| %>
+              <%= link_to category, category_posts_path(category_id: category), class: "navbar-item" %>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <div class="navbar-end">
@@ -33,6 +45,8 @@
             </a>
 
             <div class="navbar-dropdown">
+              <%= link_to "Mi perfil", profile_path, class: "navbar-item" %>
+              <hr class="navbar-divider">
               <%= link_to "Cerrar sesión", logout_path, method: :delete, class: "navbar-item" %>
             </div>
           </div>

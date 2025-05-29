@@ -3,24 +3,36 @@
     <div class="content">
       <h1 class="title is-2"><%= @post.title %></h1>
       <br>
-      <div class="subtitle is-6 has-text-grey mb-5">
-        <span class="icon-text">
-          <span class="icon"><i class="fa-solid fa-user"></i></span>
-          <span>Publicado por <strong><%= @post.user.name %></strong></span>
-        </span>
-        <span class="icon-text ml-4">
-          <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
-          <span>hace <%= time_ago_in_words(@post.created_at) %></span>
-        </span>
+      <div class="columns">
+        <div class="column">
+          <div class="icon-text">
+            <span class="icon"><i class="fa-solid fa-user"></i></span>
+            <span>Publicado por <strong><%= @post.user.name %></strong></span>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="icon-text">
+            <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
+            <span><%= post_published_time(@post) %></span>
+          </div>
+        </div>
         <% if @post.updated_at > @post.created_at %>
-          <span class="icon-text ml-4">
+          <div class="column">
             <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
-            <span>Editado hace <%= time_ago_in_words(@post.updated_at) %></span>
-          </span>
+            <span><%= post_edited_time(@post) %></span>
+          </div>
         <% end %>
+
+        <div class="column">
+          <div class="icon-text">
+            <span class="icon"><i class="fa-solid fa-tag"></i></span>
+            <span><strong>Categoría:</strong> <%= @post.category %></span>
+          </div>
+        </div>
       </div>
 
-      <% if user_signed_in? && @post.user == current_user %>
+      <% if can_edit_post?(@post) %>
         <div class="buttons are-small">
           <%= link_to edit_post_path(@post), class: "button is-warning" do %>
             <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
@@ -39,8 +51,8 @@
       <div class="comments mt-5">
         <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> Comentarios</h2>
 
-        <% if @post.comments.order(created_at: :desc).any? %>
-          <% @post.comments.order(created_at: :desc).each do |comment| %>
+        <% if @comments.any? %>
+          <% @comments.each do |comment| %>
             <%= render partial: "comments/comment", locals: { comment: comment, post: @post } %>
           <% end %>
         <% else %>

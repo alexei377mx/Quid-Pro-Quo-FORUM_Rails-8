@@ -4,8 +4,10 @@ one:
   title: MyString
   content: MyText
   user: one
+  category: Tecnología
 
 two:
   title: MyString
   content: MyText
   user: two
+  category: Tecnología
