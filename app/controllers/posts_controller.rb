@@ -20,7 +20,7 @@ class PostsController < ApplicationController
   end
 
   def category
-    @category = params[:category_id].capitalize 
+    @category = params[:category_id].capitalize
     if Post::CATEGORIES.include?(@category)
       @posts = Post.where(category: @category).order(created_at: :desc)
     else

@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-     user = User.where("email = :login OR name = :login OR username = :login", login: params[:login]).first
+    user = User.where("email = :login OR name = :login OR username = :login", login: params[:login]).first
 
     if user.nil?
       flash.now[:alert] = "No se encontró un usuario con ese email o nombre de usuario."

@@ -20,6 +20,12 @@ Rails.application.routes.draw do
       post "reply", on: :member
       resource :comment_reaction, only: [ :create, :destroy ]
     end
+
+    resources :reports, only: [ :new, :create ]
+  end
+
+  resources :comments, only: [] do
+    resources :reports, only: [ :new, :create ]
   end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

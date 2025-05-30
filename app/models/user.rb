@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :comment_reactions, dependent: :destroy
   has_many :liked_comments, through: :comment_reactions, source: :comment
+  has_many :reports, dependent: :destroy
 
   ROLES = %w[user admin moderator].freeze
 

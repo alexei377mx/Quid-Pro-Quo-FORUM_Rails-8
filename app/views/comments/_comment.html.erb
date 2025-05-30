@@ -7,10 +7,7 @@
   <div class="media-content">
     <div class="content">
       <p>
-        <strong><%= comment.user.name %></strong>
-        <br />
-        <%= comment.content %>
-        <br />
+        <strong><%= comment.user.name %></strong><br>
         <small>
           <i class="fa-solid fa-clock"></i> <%= time_ago(comment) %>
           <% if comment.edited? %>
@@ -19,8 +16,12 @@
           <%= comment_edit_link(comment, post) %>
           <% if user_signed_in? %>
             · <%= link_to "<i class='fa-solid fa-reply'></i> Responder".html_safe, "#", onclick: "document.getElementById('reply-form-#{comment.id}').style.display='block'; return false;" %>
+            · <%= link_to "<i class='fa-solid fa-flag'></i> Reportar".html_safe, new_comment_report_path(comment) %>
           <% end %>
         </small>
+        <br/>
+        <%= comment.content %>
+        <br/>
       </p>
     </div>
 
@@ -28,11 +29,11 @@
       <% liked = comment_liked_by_user?(comment) %>
 
       <% if liked %>
-        <%= button_to post_comment_comment_reaction_path(post, comment), method: :delete, class: "button is-small is-danger is-light", disabled: !user_signed_in? do %>
+        <%= button_to post_comment_comment_reaction_path(post, comment), method: :delete, class: "button is-small is-danger", disabled: !user_signed_in? do %>
           <i class="fa-solid fa-thumbs-down"></i> Quitar like (<%= comment.likes_count %>)
         <% end %>
       <% else %>
-        <%= button_to post_comment_comment_reaction_path(post, comment), method: :post, class: "button is-small is-success is-light", disabled: !user_signed_in? do %>
+        <%= button_to post_comment_comment_reaction_path(post, comment), method: :post, class: "button is-small is-success", disabled: !user_signed_in? do %>
           <i class="fa-solid fa-thumbs-up"></i> Me gusta (<%= comment.likes_count %>)
         <% end %>
       <% end %>

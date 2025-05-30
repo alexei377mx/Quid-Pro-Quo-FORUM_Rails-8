@@ -32,14 +32,20 @@
         </div>
       </div>
 
-      <% if can_edit_post?(@post) %>
-        <div class="buttons are-small">
+      <div class="buttons are-small">
+        <% if can_edit_post?(@post) %>
           <%= link_to edit_post_path(@post), class: "button is-warning" do %>
             <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
             <span>Editar</span>
           <% end %>
-        </div>
-      <% end %>
+        <% end %>
+        <% if user_signed_in? %>
+            <%= link_to new_post_report_path(@post), class: "button is-danger" do %>
+              <span class="icon"><i class="fa-solid fa-flag"></i></span>
+              <span>Reportar</span>
+            <% end %>
+        <% end %>
+      </div>
 
       <hr>
       <div class="box">
