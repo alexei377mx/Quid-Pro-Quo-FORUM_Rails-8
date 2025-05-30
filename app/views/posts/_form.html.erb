@@ -58,7 +58,7 @@
     </div>
     <% cancel_path = post&.persisted? ? post_path(post) : posts_path %>
     <div class="control">
-      <%= link_to cancel_path, class: "button is-light" do %>
+      <%= link_to cancel_path, class: "button" do %>
         <span class="icon">
           <i class="fa-solid fa-times"></i>
         </span>
