@@ -1,6 +1,16 @@
 <nav class="navbar is-primary is-fixed-top" role="navigation" aria-label="main navigation" data-controller="navbar">
   <div class="container">
     <div class="navbar-brand">
+      <!--
+      <div class="is-hidden-desktop is-block-mobile">
+        <%= link_to (request.referer || root_path), class: "navbar-item", title: "Volver" do %>
+          <span class="icon">
+            <i class="fas fa-arrow-left"></i>
+          </span>
+        <% end %>
+      </div>
+      -->
+
       <%= link_to "Quid Pro Quo FORUM", root_path, class: "navbar-item" %>
 
       <a
@@ -45,6 +55,11 @@
             </a>
 
             <div class="navbar-dropdown">
+              <% if can? :read, Report %>
+                <%= link_to "Reportes", reports_path, class: "navbar-item" %>
+                <hr class="navbar-divider">
+              <% end %>
+
               <%= link_to "Mi perfil", profile_path, class: "navbar-item" %>
               <hr class="navbar-divider">
               <%= link_to "Cerrar sesión", logout_path, method: :delete, class: "navbar-item" %>

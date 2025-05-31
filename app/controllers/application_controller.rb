@@ -13,4 +13,8 @@ class ApplicationController < ActionController::Base
   def user_signed_in?
     current_user.present?
   end
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_path, alert: "No estás autorizado para acceder a esta página."
+  end
 end
