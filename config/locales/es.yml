@@ -3,9 +3,46 @@ es:
     models:
       post: "Publicación"
       comment: "Comentario"
+      comment_reaction: "Reacción a comentario"
+      report: "Reporte"
+      user: "Usuario"
+
     attributes:
       post:
         title: "Título"
         content: "Contenido"
+        user_id: "Usuario"
+        category: "Categoría"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
+
       comment:
         content: "Contenido"
+        post_id: "Publicación"
+        user_id: "Usuario"
+        parent_id: "Comentario padre"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
+
+      comment_reaction:
+        user_id: "Usuario"
+        comment_id: "Comentario"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
+
+      report:
+        user_id: "Usuario"
+        reason: "Razón"
+        reportable_type: "Tipo de contenido"
+        reportable_id: "Contenido reportado"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
+
+      user:
+        name: "Nombre"
+        username: "Nombre de usuario"
+        email: "Correo electrónico"
+        password_digest: "Contraseña"
+        role: "Rol"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
