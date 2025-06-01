@@ -49,6 +49,22 @@ class CommentsController < ApplicationController
     end
   end
 
+def soft_delete
+  @comment = @post.comments.find(params[:id])
+
+  unless can?(:soft_delete, @comment)
+    flash[:alert] = "No estás autorizado para realizar esta acción."
+    redirect_to @post and return
+  end
+
+  if @comment.update(deleted_by_admin: true)
+    redirect_to @post, notice: "Comentario eliminado por administración."
+  else
+    Rails.logger.error("Error al eliminar comentario por admin: #{@comment.errors.full_messages.join(', ')}")
+    redirect_to @post, alert: "Hubo un error al eliminar el comentario."
+  end
+end
+
   private
 
   def set_post

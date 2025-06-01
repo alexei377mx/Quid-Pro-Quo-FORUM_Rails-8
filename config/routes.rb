@@ -18,13 +18,14 @@ Rails.application.routes.draw do
   resources :posts do
     resources :comments, only: [ :create, :edit, :update ] do
       post "reply", on: :member
+      patch "soft_delete", on: :member
       resource :comment_reaction, only: [ :create, :destroy ]
     end
 
     resources :reports, only: [ :new, :create ]
   end
 
-  resources :comments, only: [] do
+  resources :comments do
     resources :reports, only: [ :new, :create ]
   end
 

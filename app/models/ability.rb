@@ -10,6 +10,10 @@ class Ability
       can :read, Report
     end
 
+    if user.admin?
+      can :soft_delete, Comment
+    end
+
     # Define abilities for the user here. For example:
     #
     #   return unless user.present?

@@ -9,7 +9,12 @@
       </span>
     <% end %>
     <div class="control has-icons-left">
-      <%= form.text_field :title, class: "input #{'is-danger' if post.errors[:title].any?}", placeholder: "Título del post (mínimo 5 caracteres)" %>
+      <% if post.persisted? %>
+        <%= form.text_field :title, class: "input", disabled: true %>
+        <%= form.hidden_field :title %>
+      <% else %>
+        <%= form.text_field :title, class: "input #{'is-danger' if post.errors[:title].any?}", placeholder: "Título del post (mínimo 5 caracteres)" %>
+      <% end %>
       <span class="icon is-small is-left">
         <i class="fa-solid fa-pen"></i>
       </span>
@@ -42,21 +47,28 @@
       </span>
     <% end %>
     <div class="select">
-      <%= form.select :category, Post::CATEGORIES.sort, { prompt: "Selecciona una categoría" }, class: "select #{'is-danger' if post.errors[:category].any?}" %>
+      <% if post.persisted? %>
+        <%= form.select :category, Post::CATEGORIES.sort, {}, disabled: true, class: "select" %>
+        <%= form.hidden_field :category %>
+      <% else %>
+        <%= form.select :category, Post::CATEGORIES.sort, { prompt: "Selecciona una categoría" }, class: "select #{'is-danger' if post.errors[:category].any?}" %>
+      <% end %>
     </div>
     <small class="help is-danger"><%= post.errors[:category].join(', ') %></small>
   </div>
 
   <div class="field is-grouped">
     <div class="control">
-      <%= form.submit "Guardar Post", class: "button is-primary" do %>
+      <%= button_tag type: 'submit', class: "button is-primary" do %>
         <span class="icon">
           <i class="fa-solid fa-save"></i>
         </span>
-        <span>Guardar</span>
+        <span>
+          <%= post.persisted? ? "Actualizar publicación" : "Crear publicación" %>
+        </span>
       <% end %>
     </div>
-    <% cancel_path = post&.persisted? ? post_path(post) : posts_path %>
+    <% cancel_path = post.persisted? ? post_path(post) : posts_path %>
     <div class="control">
       <%= link_to cancel_path, class: "button" do %>
         <span class="icon">

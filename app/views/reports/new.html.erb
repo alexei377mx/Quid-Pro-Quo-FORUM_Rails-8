@@ -15,9 +15,11 @@
 
       <div class="field">
         <div class="control">
-          <%= f.submit "Enviar reporte", class: "button is-danger" %>
-          <%= link_to "Cancelar", request.referer || root_path, class: "button" %>
-        </div>
+        <%= button_tag type: 'submit', class: "button is-danger" do %>
+          <i class="fa-solid fa-triangle-exclamation"></i> Enviar reporte
+        <% end %>
+        <%= link_to "Cancelar", request.referer || root_path, class: "button" %>
+      </div>
       </div>
     <% end %>
   </div>
