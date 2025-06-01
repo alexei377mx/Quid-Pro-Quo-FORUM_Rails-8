@@ -33,7 +33,7 @@
         <% if comment.deleted_by_admin? %>
           <em class="has-text-grey">Comentario eliminado por administración</em>
         <% else %>
-          <%= comment.content %>
+          <%= markdown(comment.display_content) %>
         <% end %>
         <br/>
       </p>
@@ -68,6 +68,10 @@
                   <span class="icon"><i class="fa-solid fa-reply"></i></span>
                   <span>Respuesta</span>
                 </span>
+                <p class="help">
+                  Puedes usar <strong>Markdown</strong> para dar formato al texto. 
+                  <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+                </p>
               <% end %>
               <div class="control">
                 <%= form.text_area :content, class: "textarea #{(form.object.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar una respuesta..." %>
