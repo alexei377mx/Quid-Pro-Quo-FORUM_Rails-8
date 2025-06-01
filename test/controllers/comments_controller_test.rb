@@ -99,7 +99,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "no debe permitir eliminar comentario si no es admin" do
     log_in_as(@otro_usuario)
 
-    patch soft_delete_post_comment_path(@post, @comentario)
+    patch admin_destroy_comment_post_comment_path(@post, @comentario)
     assert_redirected_to post_path(@post)
     follow_redirect!
     assert_match "No estás autorizado", response.body
@@ -110,7 +110,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "debe permitir eliminar comentario si es admin" do
     log_in_as(@usuario)
 
-    patch soft_delete_post_comment_path(@post, @comentario)
+    patch admin_destroy_comment_post_comment_path(@post, @comentario)
     assert_redirected_to post_path(@post)
     follow_redirect!
     assert_match "Comentario eliminado por administración", response.body

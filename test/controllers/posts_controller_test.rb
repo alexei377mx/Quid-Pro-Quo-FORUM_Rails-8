@@ -99,4 +99,29 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to posts_url
   end
+
+  test "admin debería poder marcar post como eliminado por admin" do
+    log_in_as(@user_one)
+    patch admin_destroy_post_post_url(@post_two)
+    assert_redirected_to posts_url
+    assert_equal "Publicación eliminada por administración.", flash[:alert]
+    @post_two.reload
+    assert @post_two.deleted_by_admin?
+  end
+
+  test "usuario normal no debería poder marcar post como eliminado por admin" do
+    log_in_as(@user_two)
+    patch admin_destroy_post_post_url(@post_one)
+    assert_redirected_to root_path
+    assert_equal "No estás autorizado para acceder a esta página.", flash[:alert]
+    @post_one.reload
+    refute @post_one.deleted_by_admin?
+  end
+
+  test "mostrar alerta si post fue eliminado por admin al intentar verlo" do
+    @post_one.update_column(:deleted_by_admin, true)
+    get post_url(@post_one)
+    assert_redirected_to posts_url
+    assert_equal "Esta publicación fue eliminada por la administración.", flash[:alert]
+  end
 end
