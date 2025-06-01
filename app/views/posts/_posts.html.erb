@@ -15,7 +15,7 @@
     <span><strong>Categoría:</strong> <%= post.category %></span>
   </p>
 
-  <div class="content">
-    <%= truncate(post.content, length: 150) %>
+  <div class="content truncated-markdown is-clipped" style="max-height: 8rem; overflow: hidden;">
+    <%= markdown(post.content) %>
   </div>
 </div>

@@ -7,6 +7,10 @@
     <%= form_with(model: [ @post, @comment ], local: true) do |form| %>
       <div class="field">
         <%= form.label :content, "Contenido", class: "label" %>
+        <p class="help">
+          Puedes usar <strong>Markdown</strong> para dar formato al texto. 
+          <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+        </p>
         <div class="control">
           <%= form.text_area :content, class: "textarea", rows: 3 %>
         </div>
