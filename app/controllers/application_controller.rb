@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :user_signed_in?
 
+  after_action :log_action
+
   private
 
   def current_user
@@ -16,5 +18,17 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to root_path, alert: "No estás autorizado para acceder a esta página."
+  end
+
+  def log_action
+    return unless user_signed_in?
+
+    Log.create(
+      user: current_user,
+      action: "#{controller_name}##{action_name}",
+      description: "Params: #{request.filtered_parameters.except(:password, :password_confirmation).inspect}, IP: #{request.remote_ip}"
+    )
+  rescue => e
+    Rails.logger.error("Error al guardar log: #{e.message}")
   end
 end

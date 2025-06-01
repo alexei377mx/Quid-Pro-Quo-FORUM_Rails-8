@@ -1,0 +1,28 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title">Logs de actividad</h1>
+
+    <div class="table-container">
+      <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+          <tr>
+            <th>Fecha y Hora</th>
+            <th>Usuario</th>
+            <th>Acción</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @logs.each do |log| %>
+            <tr>
+              <td><%= log.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+              <td><%= log.user&.username || "Desconocido" %></td>
+              <td><%= log.action %></td>
+              <td><%= log.description %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
