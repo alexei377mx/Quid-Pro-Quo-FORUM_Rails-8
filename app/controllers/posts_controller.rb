@@ -1,13 +1,17 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy, :admin_destroy_post ]
   before_action :authorize_post_owner, only: [ :edit, :update, :destroy ]
   before_action :require_login, except: [ :index, :show, :category ]
 
   def index
-    @posts = Post.all.order(created_at: :desc)
+    @posts = Post.where(deleted_by_admin: false).order(created_at: :desc)
   end
 
   def show
+    if @post.deleted_by_admin
+      redirect_to posts_path, alert: "Esta publicación fue eliminada por la administración." and return
+    end
+
     @comments = @post.comments.where(parent_id: nil).includes(:user, :replies).order(created_at: :desc)
 
     if flash[:reply_errors].present?
@@ -21,8 +25,9 @@ class PostsController < ApplicationController
 
   def category
     @category = params[:category_id].capitalize
+
     if Post::CATEGORIES.include?(@category)
-      @posts = Post.where(category: @category).order(created_at: :desc)
+      @posts = Post.where(category: @category, deleted_by_admin: false).order(created_at: :desc)
     else
       @posts = []
       flash[:alert] = "La categoría seleccionada no es válida."
@@ -46,11 +51,15 @@ class PostsController < ApplicationController
   end
 
   def edit
-    authorize_post_owner
+    if @post.deleted_by_admin
+      redirect_to posts_path, alert: "Esta publicación fue eliminada por la administración." and return
+    end
   end
 
   def update
-    authorize_post_owner
+    if @post.deleted_by_admin
+      redirect_to posts_path, alert: "Esta publicación fue eliminada por la administración." and return
+    end
 
     if @post.update(post_params)
       redirect_to @post, notice: "La publicación fue actualizada exitosamente."
@@ -67,6 +76,17 @@ class PostsController < ApplicationController
     else
       Rails.logger.error("No se pudo eliminar la publicación ID: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}")
       redirect_to @post, alert: "No se pudo eliminar la publicación ID: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}", status: :unprocessable_entity
+    end
+  end
+
+  def admin_destroy_post
+    authorize! :admin_destroy_post, @post
+
+    if @post.update_column(:deleted_by_admin, true)
+      redirect_to posts_path, alert: "Publicación eliminada por administración."
+    else
+      Rails.logger.error("No se pudo eliminar la publicación como administrador: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}")
+      redirect_to @post, alert: "No se pudo eliminar la publicación como administrador."
     end
   end
 

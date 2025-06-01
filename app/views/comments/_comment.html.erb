@@ -22,8 +22,8 @@
             <% end %>
           <% end %>
 
-          <% if can?(:soft_delete, comment) && !comment.deleted_by_admin? %>
-            · <%= link_to soft_delete_post_comment_path(post, comment), method: :patch, data: { confirm: "¿Estás seguro de eliminar este comentario?" }, class: "has-text-danger" do %>
+          <% if can?(:admin_destroy_comment, comment) && !comment.deleted_by_admin? %>
+            · <%= link_to admin_destroy_comment_post_comment_path(post, comment), method: :patch, data: { confirm: "¿Estás seguro de eliminar este comentario?" }, class: "has-text-danger" do %>
               <i class="fa-solid fa-trash"></i> Eliminar (admin)
             <% end %>
           <% end %>
