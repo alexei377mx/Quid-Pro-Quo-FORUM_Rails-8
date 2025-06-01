@@ -11,5 +11,5 @@ two:
   name: "Ana Gómez"
   username: "anag"
   email: "emaisl@email.com"
-  password_digest: <%= BCrypt::Password.create('secret456') %>
+  password_digest: <%= BCrypt::Password.create('password123') %>
   role: "user"
