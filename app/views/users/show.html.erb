@@ -25,11 +25,9 @@
         <h2 class="title is-4 mt-6"><i class="fa-solid fa-pen-nib"></i> Mis publicaciones</h2>
 
         <% if @posts.any? %>
-          <div class="columns is-multiline">
+          <div class="box">
             <% @posts.each do |post| %>
-              <div class="column">
                 <%= render partial: "posts/posts", locals: { post: post } %>
-              </div>
             <% end %>
           </div>
         <% else %>
