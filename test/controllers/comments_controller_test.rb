@@ -59,7 +59,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "no debe permitir editar comentario de otro usuario" do
-    log_in_as(@otro_usuario, password: "secret456")
+    log_in_as(@otro_usuario)
 
     get edit_post_comment_path(@post, @comentario)
     assert_redirected_to post_path(@post)
@@ -94,5 +94,27 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :unprocessable_entity
+  end
+
+  test "no debe permitir eliminar comentario si no es admin" do
+    log_in_as(@otro_usuario)
+
+    patch soft_delete_post_comment_path(@post, @comentario)
+    assert_redirected_to post_path(@post)
+    follow_redirect!
+    assert_match "No estás autorizado", response.body
+    @comentario.reload
+    assert_not @comentario.deleted_by_admin
+  end
+
+  test "debe permitir eliminar comentario si es admin" do
+    log_in_as(@usuario)
+
+    patch soft_delete_post_comment_path(@post, @comentario)
+    assert_redirected_to post_path(@post)
+    follow_redirect!
+    assert_match "Comentario eliminado por administración", response.body
+    @comentario.reload
+    assert @comentario.deleted_by_admin
   end
 end

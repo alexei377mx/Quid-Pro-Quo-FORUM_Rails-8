@@ -58,7 +58,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "debería redirigir al intentar editar si no es el propietario" do
-    log_in_as(@user_two, password: "secret456")
+    log_in_as(@user_two)
     get edit_post_url(@post_one)
     assert_redirected_to posts_url
     assert_equal "No estás autorizado para realizar esta acción.", flash[:alert]
@@ -75,7 +75,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "no debería actualizar la publicación si no es el propietario" do
-    log_in_as(@user_two, password: "secret456")
+    log_in_as(@user_two)
     patch post_url(@post_one), params: {
       post: { title: "Título Hackeado" }
     }
@@ -93,7 +93,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "no debería eliminar la publicación si no es el propietario" do
-    log_in_as(@user_two, password: "secret456")
+    log_in_as(@user_two)
     assert_no_difference("Post.count") do
       delete post_url(@post_one)
     end

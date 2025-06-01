@@ -58,7 +58,7 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "non-admin should not access report index" do
-    log_in_as(@user, password: "secret456")
+    log_in_as(@user)
     get reports_path
     assert_redirected_to root_path
     follow_redirect!
