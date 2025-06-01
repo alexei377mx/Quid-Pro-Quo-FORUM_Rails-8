@@ -46,3 +46,11 @@ es:
         role: "Rol"
         created_at: "Fecha de creación"
         updated_at: "Fecha de actualización"
+
+  views:
+    pagination:
+      first: "Primera"
+      last: "Última"
+      previous: "Anterior"
+      next: "Siguiente"
+      truncate: "..."

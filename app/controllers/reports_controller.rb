@@ -21,7 +21,7 @@ class ReportsController < ApplicationController
   end
 
   def index
-    @reports = Report.includes(:user, :reportable).order(created_at: :desc)
+    @reports = Report.includes(:user, :reportable).order(created_at: :desc).page(params[:page]).per(20)
   end
 
   private

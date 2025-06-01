@@ -59,7 +59,7 @@
       <hr>
       <div class="box">
         <div class="content post-content">
-          <%= simple_format(@post.content) %>
+          <%= markdown(@post.content) %>
         </div>
       </div>
 
@@ -89,6 +89,10 @@
                       <span class="icon"><i class="fa-solid fa-comment"></i></span>
                       <span>Comentario</span>
                     </span>
+                    <p class="help">
+                      Puedes usar <strong>Markdown</strong> para dar formato al texto. 
+                      <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+                    </p>
                   <% end %>
                   <div class="control">
                     <%= form.text_area :content, class: "textarea #{(@comment && @comment.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar un comentario..." %>

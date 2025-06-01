@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   before_action :require_login, except: [ :index, :show, :category ]
 
   def index
-    @posts = Post.where(deleted_by_admin: false).order(created_at: :desc)
+    @posts = Post.where(deleted_by_admin: false).order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show
@@ -27,7 +27,7 @@ class PostsController < ApplicationController
     @category = params[:category_id].capitalize
 
     if Post::CATEGORIES.include?(@category)
-      @posts = Post.where(category: @category, deleted_by_admin: false).order(created_at: :desc)
+      @posts = Post.where(category: @category, deleted_by_admin: false).order(created_at: :desc).page(params[:page]).per(10)
     else
       @posts = []
       flash[:alert] = "La categoría seleccionada no es válida."
