@@ -16,9 +16,13 @@ Rails.application.routes.draw do
   get "/posts/category/:category_id", to: "posts#category", as: "category_posts"
 
   resources :posts do
+     member do
+      patch :admin_destroy_post
+    end
+
     resources :comments, only: [ :create, :edit, :update ] do
       post "reply", on: :member
-      patch "soft_delete", on: :member
+      patch "admin_destroy_comment", on: :member
       resource :comment_reaction, only: [ :create, :destroy ]
     end
 
