@@ -12,6 +12,7 @@ class Ability
       can :admin_destroy_post, Post
       can :admin_destroy_comment, Comment
       can :read, Report
+      can :read, Log
     end
   end
 end
