@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 
   resources :reports, only: [ :index ]
   resources :logs, only: [ :index ]
+  resources :radios, only: [ :index, :create, :destroy ]
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
