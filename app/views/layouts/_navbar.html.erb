@@ -4,23 +4,15 @@
       <!--
       <div class="is-hidden-desktop is-block-mobile">
         <%= link_to (request.referer || root_path), class: "navbar-item", title: "Volver" do %>
-          <span class="icon">
-            <i class="fas fa-arrow-left"></i>
-          </span>
+          <span class="icon"><i class="fas fa-arrow-left"></i></span>
         <% end %>
       </div>
       -->
 
       <%= link_to "Quid Pro Quo FORUM", root_path, class: "navbar-item" %>
 
-      <a
-        role="button"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-navbar-target="burger"
-        data-action="click->navbar#toggle"
-      >
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+         data-navbar-target="burger" data-action="click->navbar#toggle">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -32,9 +24,7 @@
       <div class="navbar-start">
         <%= link_to "Posts", posts_path, class: "navbar-item" %>
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            Categorías
-          </a>
+          <a class="navbar-link">Categorías</a>
 
           <div class="navbar-dropdown">
             <% Post::CATEGORIES.sort.each do |category| %>
@@ -45,22 +35,63 @@
       </div>
 
       <div class="navbar-end">
+        <div class="navbar-item" id="radio-player-container" data-turbo-permanent style="width: 100%;">
+          <div id="radio-player" class="is-flex is-flex-direction-column" style="width: 100%; align-items: flex-end;">
+            <div class="buttons has-addons mb-1" style="width: 100%; display: flex; justify-content: flex-end;">
+              <button id="prev-radio" class="button is-small is-dark" title="Anterior">
+                <i class="fas fa-backward"></i>
+              </button>
+
+              <button id="toggle-play" class="button is-small is-dark" title="Play/Pause">
+                <i class="fas fa-play" id="play-icon"></i>
+              </button>
+
+              <button id="next-radio" class="button is-small is-dark" title="Siguiente">
+                <i class="fas fa-forward"></i>
+              </button>
+            </div>
+
+            <span id="radio-title" class="has-text-white has-text-weight-semibold is-size-7"
+                  style="width: 100%; text-align: right;">Sin radio</span>
+
+            <audio id="audio" style="display: none;"></audio>
+          </div>
+
+          <style>
+            @media (max-width: 768px) {
+              #radio-player {
+                align-items: center !important;
+              }
+
+              #radio-player .buttons {
+                justify-content: center !important;
+              }
+
+              #radio-title {
+                text-align: center !important;
+              }
+            }
+          </style>
+        </div>
+
         <a class="navbar-item" data-controller="theme" data-action="click->theme#toggle">
           <i data-theme-target="icon" class="fas fa-moon"></i>
         </a>
         <% if user_signed_in? %>
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              <%= current_user.username %>
-            </a>
+            <a class="navbar-link"><%= current_user.username %></a>
 
             <div class="navbar-dropdown">
               <% if can? :read, Report %>
                 <%= link_to "Reportes", reports_path, class: "navbar-item" %>
               <% end %>
-              <% if can?(:read, Log) %>
+              <% if can? :read, Log %>
                 <%= link_to "Logs", logs_path, class: "navbar-item" %>
               <% end %>
+              <% if can? :read, Radio %>
+                <%= link_to "Radios", radios_path, class: "navbar-item" %>
+              <% end %>
+
               <hr class="navbar-divider">
 
               <%= link_to "Mi perfil", profile_path, class: "navbar-item" %>
@@ -76,3 +107,168 @@
     </div>
   </div>
 </nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const radios = <%= raw(Radio.all.to_json(only: [:title, :stream_url])) %> || [];
+    let currentIndex = 0;
+    let userInteracted = false;
+
+    const player = document.getElementById('audio');
+    const title = document.getElementById('radio-title');
+    const playBtn = document.getElementById('toggle-play');
+    const playIcon = document.getElementById('play-icon');
+    const prevBtn = document.getElementById('prev-radio');
+    const nextBtn = document.getElementById('next-radio');
+
+    function setPlayButtonEnabled(enabled) {
+      playBtn.disabled = !enabled;
+      playBtn.classList.toggle('is-disabled', !enabled);
+    }
+
+    function showFlashNotification(type, message) {
+      const config = {
+        danger:  { bulma_class: 'is-danger',  title: 'ALERTA', icon: 'fa-circle-exclamation' },
+        warning: { bulma_class: 'is-warning', title: 'ADVERTENCIA', icon: 'fa-triangle-exclamation' }
+      };
+
+      const c = config[type] || config.info;
+
+      if (document.getElementById('radio-error')) return;
+
+      const container = document.createElement('div');
+      container.id = 'radio-error';
+      container.className = `notification ${c.bulma_class} animate__animated animate__slideInRight`;
+      container.setAttribute('data-controller', 'notification');
+
+      container.innerHTML = `
+        <button class="delete" aria-label="Cerrar notificación"></button>
+        <span class="icon-text">
+          <span class="icon"><i class="fas ${c.icon}"></i></span>
+          <span><strong>${c.title}</strong></span>
+        </span>
+        <br>${message}
+      `;
+
+      container.querySelector('.delete').addEventListener('click', () => container.remove());
+      document.body.appendChild(container);
+    }
+
+    const showAutoplayWarning = () => {
+      showFlashNotification('warning', 'Autoplay bloqueado. Haz clic en cualquier parte para activar el reproductor.');
+    };
+
+    document.body.addEventListener('click', () => {
+      userInteracted = true;
+      document.getElementById('radio-error')?.remove();
+
+      if (player && player.paused && localStorage.getItem('radioIsPlaying') === 'true') {
+        player.play()
+          .then(() => playIcon.className = "fas fa-pause")
+          .catch(err => console.warn("Bloqueado aún después de clic:", err));
+      }
+    }, { once: true });
+
+    player.addEventListener('error', () => {
+      const error = player.error;
+      setPlayButtonEnabled(false);
+
+      if (error) {
+        console.warn("Error del reproductor de audio:", error);
+
+        let message = 'Error: No se pudo reproducir el stream.';
+        switch (error.code) {
+          case MediaError.MEDIA_ERR_ABORTED:
+            message = 'La reproducción fue interrumpida.';
+            break;
+          case MediaError.MEDIA_ERR_NETWORK:
+            message = 'Error: No se pudo conectar con la radio (problema de red o URL inválida).';
+            break;
+          case MediaError.MEDIA_ERR_DECODE:
+            message = 'Error: Problema al decodificar el stream de audio.';
+            break;
+          case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            message = 'Error: La URL del stream no es válida o no es compatible.';
+            break;
+        }
+
+        playIcon.className = "fas fa-play";
+        showFlashNotification('danger', message);
+      }
+    });
+
+    function loadRadio(index, shouldPlay = true) {
+      if (radios.length === 0) return;
+
+      currentIndex = (index + radios.length) % radios.length;
+      const radio = radios[currentIndex];
+
+      player.src = radio.stream_url;
+      title.textContent = radio.title;
+      localStorage.setItem('lastRadioIndex', currentIndex);
+      document.getElementById('radio-error')?.remove();
+      setPlayButtonEnabled(false);
+
+      const tryPlay = () => {
+        if (shouldPlay) {
+          player.play()
+            .then(() => {
+              playIcon.className = "fas fa-pause";
+            })
+            .catch(err => {
+              console.warn("Error en .play():", err);
+              playIcon.className = "fas fa-play";
+              if (!userInteracted) showAutoplayWarning();
+            });
+        } else {
+          playIcon.className = "fas fa-play";
+        }
+      };
+
+      const onCanPlay = () => {
+        player.removeEventListener('canplay', onCanPlay);
+        player.removeEventListener('error', onError);
+        setPlayButtonEnabled(true);
+        tryPlay();
+      };
+
+      const onError = () => {
+        player.removeEventListener('canplay', onCanPlay);
+        player.removeEventListener('error', onError);
+      };
+
+      player.addEventListener('canplay', onCanPlay);
+      player.addEventListener('error', onError);
+    }
+
+    playBtn?.addEventListener('click', () => {
+      if (player.paused) {
+        player.play()
+          .then(() => {
+            playIcon.className = "fas fa-pause";
+            localStorage.setItem('radioIsPlaying', 'true');
+          })
+          .catch(err => {
+            console.warn("Error al intentar reproducir:", err);
+            showAutoplayWarning();
+          });
+      } else {
+        player.pause();
+        playIcon.className = "fas fa-play";
+        localStorage.setItem('radioIsPlaying', 'false');
+      }
+    });
+
+    prevBtn?.addEventListener('click', () => loadRadio(currentIndex - 1, localStorage.getItem('radioIsPlaying') !== 'false'));
+    nextBtn?.addEventListener('click', () => loadRadio(currentIndex + 1, localStorage.getItem('radioIsPlaying') !== 'false'));
+
+    const savedIndex = parseInt(localStorage.getItem('lastRadioIndex'), 10);
+    const shouldPlay = localStorage.getItem('radioIsPlaying') !== 'false';
+
+    if (!isNaN(savedIndex)) {
+      loadRadio(savedIndex, shouldPlay);
+    } else if (radios.length > 0) {
+      loadRadio(0, shouldPlay);
+    }
+  });
+</script>
