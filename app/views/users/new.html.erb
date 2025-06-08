@@ -6,29 +6,71 @@
           <i class="fa-solid fa-user-plus"></i> Registrar nuevo usuario
         </h1>
 
-        <%= form_with(model: @user, local: true, html: { "data-turbo" => "false" }) do |form| %>
-
-          <% [:name, :username, :email, :password, :password_confirmation].each do |field| %>
-            <div class="field">
-              <%= form.label field, @user.class.human_attribute_name(field), class: "label" %>
-              <div class="control has-icons-left">
-                <% input_type = field.to_s.include?("password") ? :password_field : (field == :email ? :email_field : :text_field) %>
-                <%= form.send(input_type, field, class: "input #{'is-danger' if @user.errors[field].any?}", placeholder: "Tu #{field.to_s.humanize.downcase}") %>
-                <span class="icon is-small is-left">
-                  <% icon = case field
-                    when :name then "fa-solid fa-user"
-                    when :username then "fa-solid fa-user-tag"
-                    when :email then "fa-solid fa-envelope"
-                    else "fa-solid fa-lock"
-                  end %>
-                  <i class="<%= icon %>"></i>
-                </span>
-              </div>
-              <% if @user.errors[field].any? %>
-                <small class="help is-danger"><%= @user.errors[field].join(", ") %></small>
-              <% end %>
+        <%= form_with(model: @user, local: true) do |form| %>
+          <div class="field">
+            <%= form.label :name, @user.class.human_attribute_name(:name), class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.text_field :name, class: "input #{'is-danger' if @user.errors[:name].any?}", placeholder: "Tu nombre" %>
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-user"></i>
+              </span>
             </div>
-          <% end %>
+            <% if @user.errors[:name].any? %>
+              <small class="help is-danger"><%= @user.errors[:name].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="field">
+            <%= form.label :username, @user.class.human_attribute_name(:username), class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.text_field :username, class: "input #{'is-danger' if @user.errors[:username].any?}", placeholder: "Tu nombre de usuario" %>
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-user-tag"></i>
+              </span>
+            </div>
+            <% if @user.errors[:username].any? %>
+              <small class="help is-danger"><%= @user.errors[:username].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="field">
+            <%= form.label :email, @user.class.human_attribute_name(:email), class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.email_field :email, class: "input #{'is-danger' if @user.errors[:email].any?}", placeholder: "Tu correo electrónico" %>
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-envelope"></i>
+              </span>
+            </div>
+            <% if @user.errors[:email].any? %>
+              <small class="help is-danger"><%= @user.errors[:email].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="field">
+            <%= form.label :password, @user.class.human_attribute_name(:password), class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.password_field :password, class: "input #{'is-danger' if @user.errors[:password].any?}", placeholder: "Tu contraseña" %>
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+            </div>
+            <% if @user.errors[:password].any? %>
+              <small class="help is-danger"><%= @user.errors[:password].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="field">
+            <%= form.label :password_confirmation, @user.class.human_attribute_name(:password_confirmation), class: "label" %>
+            <div class="control has-icons-left">
+              <%= form.password_field :password_confirmation, class: "input #{'is-danger' if @user.errors[:password_confirmation].any?}", placeholder: "Confirma tu contraseña" %>
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+            </div>
+            <% if @user.errors[:password_confirmation].any? %>
+              <small class="help is-danger"><%= @user.errors[:password_confirmation].join(", ") %></small>
+            <% end %>
+          </div>
 
           <div class="columns is-centered">
             <div class="column is-narrow">

@@ -47,8 +47,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "debería autenticar con la contraseña correcta" do
-    assert @admin.authenticate("password123")
-    assert @user.authenticate("password123")
+    assert @admin.authenticate("NewPassword1!")
+    assert @user.authenticate("NewPassword1!")
   end
 
   test "no debería autenticar con la contraseña incorrecta" do

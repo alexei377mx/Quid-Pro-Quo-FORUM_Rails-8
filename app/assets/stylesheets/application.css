@@ -21,3 +21,17 @@
 body {
   padding-top: 3.25rem;
 }
+
+@media (max-width: 768px) {
+  #radio-player {
+    align-items: center !important;
+  }
+
+  #radio-player .buttons {
+    justify-content: center !important;
+  }
+
+  #radio-title {
+    text-align: center !important;
+  }
+}
