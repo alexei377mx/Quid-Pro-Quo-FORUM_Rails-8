@@ -1,7 +1,7 @@
 <nav class="navbar is-primary is-fixed-top" role="navigation" aria-label="main navigation" data-controller="navbar">
   <div class="container">
     <div class="navbar-brand">
-      <!--
+       <!--
       <div class="is-hidden-desktop is-block-mobile">
         <%= link_to (request.referer || root_path), class: "navbar-item", title: "Volver" do %>
           <span class="icon"><i class="fas fa-arrow-left"></i></span>
@@ -9,7 +9,10 @@
       </div>
       -->
 
-      <%= link_to "Quid Pro Quo FORUM", root_path, class: "navbar-item" %>
+      <%= link_to root_path, class: "navbar-item" do %>
+        <span class="icon"><i class="fas fa-comments"></i></span>
+        <span> Quid Pro Quo FORUM</span>
+      <% end %>
 
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
          data-navbar-target="burger" data-action="click->navbar#toggle">
@@ -22,13 +25,23 @@
 
     <div class="navbar-menu" data-navbar-target="menu">
       <div class="navbar-start">
-        <%= link_to "Posts", posts_path, class: "navbar-item" %>
+        <%= link_to posts_path, class: "navbar-item" do %>
+          <span class="icon"><i class="fas fa-newspaper"></i></span>
+          <span> Posts</span>
+        <% end %>
+
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">Categorías</a>
+          <a class="navbar-link">
+            <span class="icon"><i class="fas fa-th-list"></i></span>
+            <span> Categorías</span>
+          </a>
 
           <div class="navbar-dropdown">
             <% Post::CATEGORIES.sort.each do |category| %>
-              <%= link_to category, category_posts_path(category_id: category), class: "navbar-item" %>
+              <%= link_to category_posts_path(category_id: category), class: "navbar-item" do %>
+                <span class="icon"><i class="fas fa-tag"></i></span>
+                <span> <%= category %></span>
+              <% end %>
             <% end %>
           </div>
         </div>
@@ -56,22 +69,6 @@
 
             <audio id="audio" style="display: none;"></audio>
           </div>
-
-          <style>
-            @media (max-width: 768px) {
-              #radio-player {
-                align-items: center !important;
-              }
-
-              #radio-player .buttons {
-                justify-content: center !important;
-              }
-
-              #radio-title {
-                text-align: center !important;
-              }
-            }
-          </style>
         </div>
 
         <a class="navbar-item" data-controller="theme" data-action="click->theme#toggle">
@@ -79,29 +76,53 @@
         </a>
         <% if user_signed_in? %>
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link"><%= current_user.username %></a>
+            <a class="navbar-link">
+              <span class="icon"><i class="fas fa-user"></i></span>
+              <span><%= current_user.username %></span>
+            </a>
 
             <div class="navbar-dropdown">
               <% if can? :read, Report %>
-                <%= link_to "Reportes", reports_path, class: "navbar-item" %>
+                <%= link_to reports_path, class: "navbar-item" do %>
+                  <span class="icon"><i class="fas fa-flag"></i></span>
+                  <span> Reportes</span>
+                <% end %>
               <% end %>
               <% if can? :read, Log %>
-                <%= link_to "Logs", logs_path, class: "navbar-item" %>
+                <%= link_to logs_path, class: "navbar-item" do %>
+                  <span class="icon"><i class="fas fa-file-alt"></i></span>
+                  <span> Logs</span>
+                <% end %>
               <% end %>
               <% if can? :read, Radio %>
-                <%= link_to "Radios", radios_path, class: "navbar-item" %>
+                <%= link_to radios_path, class: "navbar-item" do %>
+                  <span class="icon"><i class="fas fa-broadcast-tower"></i></span>
+                  <span> Radios</span>
+                <% end %>
               <% end %>
 
               <hr class="navbar-divider">
 
-              <%= link_to "Mi perfil", profile_path, class: "navbar-item" %>
+              <%= link_to profile_path, class: "navbar-item" do %>
+                <span class="icon"><i class="fas fa-id-badge"></i></span>
+                <span> Mi perfil</span>
+              <% end %>
               <hr class="navbar-divider">
-              <%= link_to "Cerrar sesión", logout_path, method: :delete, class: "navbar-item" %>
+              <%= link_to logout_path, method: :delete, class: "navbar-item" do %>
+                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span> Cerrar sesión</span>
+              <% end %>
             </div>
           </div>
         <% else %>
-          <%= link_to "Iniciar sesión", login_path, class: "navbar-item", data: { turbo: false } %>
-          <%= link_to "Registrarse", register_path, class: "navbar-item", data: { turbo: false } %>
+          <%= link_to login_path, class: "navbar-item", data: { turbo: false } do %>
+            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+            <span> Iniciar sesión</span>
+          <% end %>
+          <%= link_to register_path, class: "navbar-item", data: { turbo: false } do %>
+            <span class="icon"><i class="fas fa-user-plus"></i></span>
+            <span> Registrarse</span>
+          <% end %>
         <% end %>
       </div>
     </div>

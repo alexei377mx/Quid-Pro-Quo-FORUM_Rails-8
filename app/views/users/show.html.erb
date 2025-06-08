@@ -18,6 +18,10 @@
                 <% end %>
                 <i class="fa-solid fa-calendar-plus"></i> Registrado hace <%= time_ago_in_words(@user.created_at) %>
               </p>
+              <%= link_to edit_password_path, class: "button is-info mt-3" do %>
+              <span class="icon"><i class="fa-solid fa-key"></i></span>
+              <span>Cambiar contraseña</span>
+            <% end %>
             </div>
           </div>
         </div>

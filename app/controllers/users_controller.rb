@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!, only: [ :show, :edit_password, :update_password ]
+
   def show
     @user = current_user
     @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(10)
@@ -40,9 +42,49 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit_password
+    @user = current_user
+  end
+
+  def update_password
+    @user = current_user
+
+    unless @user.authenticate(params[:user][:current_password])
+      flash.now[:alert] = "La contraseña actual es incorrecta."
+      render :edit_password, status: :unprocessable_entity
+      return
+    end
+
+    if params[:user][:password] != params[:user][:password_confirmation]
+      flash.now[:alert] = "Las nuevas contraseñas no coinciden."
+      render :edit_password, status: :unprocessable_entity
+      return
+    end
+
+    if @user.update(password_params)
+      redirect_to profile_path, notice: "Contraseña actualizada correctamente"
+    else
+      Rails.logger.error "Error al actualizar la contraseña para el usuario ID=#{@user.id}: #{@user.errors.full_messages.join(', ')}"
+      flash.now[:alert] = "Error al actualizar la contraseña."
+      render :edit_password, status: :unprocessable_entity
+    end
+  end
+
+
   private
 
   def user_params
     params.require(:user).permit(:name, :username, :email, :password, :password_confirmation)
+  end
+
+  def password_params
+    params.require(:user).permit(:password, :password_confirmation)
+  end
+
+  def authenticate_user!
+    unless user_signed_in?
+      flash[:alert] = "Debes iniciar sesión para acceder a esta página."
+      redirect_to login_path
+    end
   end
 end

@@ -6,7 +6,7 @@
           <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
         </h1>
 
-        <%= form_with url: login_path, local: true, html: { class: "box", "data-turbo" => "false" } do |form| %>
+        <%= form_with url: login_path, local: true do |form| %>
           <div class="field">
             <%= form.label :login, 'Email o nombre de usuario', class: "label" %>
             <div class="control has-icons-left">

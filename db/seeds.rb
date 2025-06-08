@@ -8,10 +8,16 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-User.find_or_create_by!(username: "admin") do |user|
-  user.name = "Administrador"
-  user.email = "admin@example.com"
-  user.password = "admin@example.com"
-  user.password_confirmation = "admin@example.com"
-  user.role = "admin"
+admin_creds = Rails.application.credentials.admin
+
+unless User.exists?(username: admin_creds[:username])
+  user = User.new(
+    username: admin_creds[:username],
+    name: "Administrador",
+    email: admin_creds[:email],
+    password: admin_creds[:password],
+    password_confirmation: admin_creds[:password],
+    role: "admin"
+  )
+  user.save!
 end
