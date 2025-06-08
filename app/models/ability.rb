@@ -13,6 +13,7 @@ class Ability
       can :admin_destroy_comment, Comment
       can :read, Report
       can :read, Log
+      can :manage, Radio
     end
   end
 end

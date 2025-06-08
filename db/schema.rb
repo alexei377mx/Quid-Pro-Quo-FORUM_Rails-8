@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_01_222654) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_184714) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "comment_reactions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "comment_id", null: false
@@ -53,6 +56,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_01_222654) do
     t.string "category"
     t.boolean "deleted_by_admin", default: false, null: false
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "radios", force: :cascade do |t|
+    t.string "title"
+    t.string "stream_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "reports", force: :cascade do |t|
