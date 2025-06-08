@@ -11,13 +11,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "debería iniciar sesión con credenciales correctas (email)" do
-    post login_path, params: { login: @user.email, password: "password123" }
+    post login_path, params: { login: @user.email, password: "NewPassword1!" }
     assert_redirected_to root_path
     assert_equal @user.id, session[:user_id]
   end
 
   test "debería iniciar sesión con credenciales correctas (name)" do
-    post login_path, params: { login: @user.name, password: "password123" }
+    post login_path, params: { login: @user.name, password: "NewPassword1!" }
     assert_redirected_to root_path
     assert_equal @user.id, session[:user_id]
   end
@@ -40,7 +40,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "debería cerrar sesión correctamente" do
-    post login_path, params: { login: @user.email, password: "password123" }
+    post login_path, params: { login: @user.email, password: "NewPassword1!" }
     assert_equal @user.id, session[:user_id]
 
     delete logout_path

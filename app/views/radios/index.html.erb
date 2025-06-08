@@ -44,6 +44,8 @@
       <i class="fas fa-list"></i> Lista de radios
     </h2>
 
+    <div id="dynamic-flash-container" class="mb-4"></div>
+
     <div class="table-container">
       <table class="table is-fullwidth is-striped">
         <thead>
@@ -57,11 +59,19 @@
           <% @radios.each do |radio| %>
             <tr>
               <td><%= radio.title %></td>
-              <td><code title="<%= radio.stream_url %>"><%= truncate(radio.stream_url, length: 50) %></code></td>
               <td>
+                <code title="<%= radio.stream_url %>"><%= truncate(radio.stream_url, length: 50) %></code>
+              </td>
+              <td class="is-flex is-align-items-center is-gap-2">
+                <button
+                  class="button is-info is-small"
+                  data-controller="clipboard-radio"
+                  data-clipboard-radio-url-value="<%= radio.stream_url %>"
+                  data-action="click->clipboard-radio#copy">
+                  <i class="fas fa-copy"></i>
+                </button>
                 <%= button_to radio_path(radio), method: :delete, data: { confirm: "¿Seguro que deseas eliminar esta radio?" }, class: "button is-danger is-small" do %>
                   <i class="fas fa-trash"></i>
-                  <span class="ml-1">Eliminar</span>
                 <% end %>
               </td>
             </tr>
