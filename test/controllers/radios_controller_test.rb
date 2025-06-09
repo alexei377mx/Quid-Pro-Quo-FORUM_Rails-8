@@ -9,7 +9,7 @@ class RadiosControllerTest < ActionDispatch::IntegrationTest
 
   test "admin debería mostrar el índice" do
     log_in_as(@admin)
-    get radios_url
+    get admin_path(tab: "radios")
     assert_response :success
   end
 
@@ -20,7 +20,7 @@ class RadiosControllerTest < ActionDispatch::IntegrationTest
         radio: { title: "Nueva Radio", stream_url: "https://example.com/stream" }
       }
     end
-    assert_redirected_to radios_path
+    assert_redirected_to admin_path(tab: "radios")
     follow_redirect!
     assert_match "Radio añadida correctamente", response.body
   end
@@ -30,15 +30,16 @@ class RadiosControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Radio.count", -1) do
       delete radio_url(@radio)
     end
-    assert_redirected_to radios_path
+    assert_redirected_to admin_path(tab: "radios")
     follow_redirect!
     assert_match "Radio eliminada correctamente", response.body
   end
 
   test "usuario no debería acceder al índice" do
     log_in_as(@user)
-    get radios_url
+    get admin_path(tab: "radios")
     assert_redirected_to root_url
+    follow_redirect!
   end
 
   test "usuario no debería crear radio" do
@@ -49,16 +50,18 @@ class RadiosControllerTest < ActionDispatch::IntegrationTest
       }
     end
     assert_redirected_to root_url
+    follow_redirect!
   end
 
   test "usuario no debería eliminar radio" do
     log_in_as(@user)
     delete radio_url(@radio)
     assert_redirected_to root_url
+    follow_redirect!
   end
 
   test "invitado es redirigido al login" do
-    get radios_url
+    get admin_path(tab: "radios")
     assert_redirected_to root_url
   end
 end

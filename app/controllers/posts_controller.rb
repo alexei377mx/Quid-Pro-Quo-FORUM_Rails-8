@@ -8,6 +8,8 @@ class PostsController < ApplicationController
   end
 
   def show
+    @post.increment!(:visits)
+
     if @post.deleted_by_admin
       redirect_to posts_path, alert: "Esta publicación fue eliminada por la administración." and return
     end

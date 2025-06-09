@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["icon"];
 
   connect() {
+    console.log("theme controller connected")
     const savedTheme = localStorage.getItem("theme") || "light";
     document.documentElement.setAttribute("data-theme", savedTheme);
     this.updateIcon(savedTheme);

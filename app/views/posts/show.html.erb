@@ -27,7 +27,13 @@
         <div class="column">
           <div class="icon-text">
             <span class="icon"><i class="fa-solid fa-tag"></i></span>
-            <span><strong>Categoría:</strong> <%= @post.category %></span>
+            <span><%= @post.category %></span>
+          </div>
+        </div>
+        <div class="column">
+          <div class="icon-text">
+            <span class="icon"><i class="fa-solid fa-eye"></i></span>
+            <span><strong><%= @post.visits || 0 %></strong> visitas</span>
           </div>
         </div>
       </div>
@@ -64,7 +70,7 @@
       </div>
 
       <div class="comments mt-5">
-        <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> Comentarios</h2>
+        <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> Comentarios (<%= @post.comments.count %>)</h2>
 
         <% if @comments.any? %>
           <% @comments.each do |comment| %>

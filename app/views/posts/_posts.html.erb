@@ -12,10 +12,22 @@
     <span><%= post_published_time(post) %></span>
 
     <span class="icon"><i class="fa-solid fa-tag"></i></span>
-    <span><strong>Categoría:</strong> <%= post.category %></span>
+    <span><%= post.category %></span>
   </p>
 
-  <div class="content truncated-markdown is-clipped" style="max-height: 8rem; overflow: hidden;">
-    <%= markdown(post.content) %>
+  <div class="content">
+    <%= truncate(post.content, length: 150) %>
+  </div>
+
+  <div class="columns">
+    <div class="column has-text-centered">
+      <span class="icon"><i class="fa-solid fa-comments"></i></span>
+      <span><strong><%= post.comments.count %></strong> Comentarios</span>
+    </div>
+
+    <div class="column has-text-centered">
+      <span class="icon"><i class="fa-solid fa-eye"></i></span>
+      <span><strong><%= post.visits || 0 %></strong> Visitas</span>
+    </div>
   </div>
 </div>
