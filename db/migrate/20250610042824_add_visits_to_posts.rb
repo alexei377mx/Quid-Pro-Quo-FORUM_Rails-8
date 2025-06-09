@@ -1,0 +1,5 @@
+class AddVisitsToPosts < ActiveRecord::Migration[8.0]
+  def change
+    add_column :posts, :visits, :integer, default: 0, null: false
+  end
+end

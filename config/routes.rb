@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get "/profile/change_password", to: "users#edit_password", as: :edit_password
   patch "/profile/change_password", to: "users#update_password", as: :update_password
 
+  get "admin", to: "admin#dashboard"
+  patch "admin/reports/:id/toggle_reviewed", to: "admin#toggle_report_reviewed", as: :toggle_reviewed_admin_report
+
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy", as: :logout
@@ -35,9 +38,7 @@ Rails.application.routes.draw do
     resources :reports, only: [ :new, :create ]
   end
 
-  resources :reports, only: [ :index ]
-  resources :logs, only: [ :index ]
-  resources :radios, only: [ :index, :create, :destroy ]
+  resources :radios, only: [ :create, :destroy ]
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

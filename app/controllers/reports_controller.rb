@@ -1,6 +1,5 @@
 class ReportsController < ApplicationController
   before_action :require_login
-  load_and_authorize_resource only: [ :index ]
 
   def new
     @reportable = find_reportable
@@ -18,10 +17,6 @@ class ReportsController < ApplicationController
       flash.now[:alert] = "No se pudo enviar el reporte."
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def index
-    @reports = Report.includes(:user, :reportable).order(created_at: :desc).page(params[:page]).per(20)
   end
 
   private

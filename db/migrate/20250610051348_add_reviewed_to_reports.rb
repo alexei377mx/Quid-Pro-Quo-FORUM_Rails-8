@@ -1,0 +1,5 @@
+class AddReviewedToReports < ActiveRecord::Migration[8.0]
+  def change
+    add_column :reports, :reviewed, :boolean, default: false, null: false
+  end
+end
