@@ -10,8 +10,8 @@
       -->
 
       <%= link_to root_path, class: "navbar-item" do %>
-        <span class="icon"><i class="fas fa-comments"></i></span>
-        <span> Quid Pro Quo FORUM</span>
+        <%= image_tag "logo-QPQ.png", alt: "Quid Pro Quo", class: "logo" %>
+        <span>Quid Pro Quo FORUM</span>
       <% end %>
 
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
@@ -25,11 +25,6 @@
 
     <div class="navbar-menu" data-navbar-target="menu">
       <div class="navbar-start">
-        <%= link_to posts_path, class: "navbar-item" do %>
-          <span class="icon"><i class="fas fa-newspaper"></i></span>
-          <span> Posts</span>
-        <% end %>
-
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">
             <span class="icon"><i class="fas fa-th-list"></i></span>
@@ -38,9 +33,10 @@
 
           <div class="navbar-dropdown">
             <% Post::CATEGORIES.sort.each do |category| %>
+              <% count = Post.where(category: category, deleted_by_admin: false).count %>
               <%= link_to category_posts_path(category_id: category), class: "navbar-item" do %>
                 <span class="icon"><i class="fas fa-tag"></i></span>
-                <span> <%= category %></span>
+                <span><%= category %> (<%= count %>)</span>
               <% end %>
             <% end %>
           </div>
@@ -82,22 +78,13 @@
             </a>
 
             <div class="navbar-dropdown">
-              <% if can? :read, Report %>
-                <%= link_to reports_path, class: "navbar-item" do %>
-                  <span class="icon"><i class="fas fa-flag"></i></span>
-                  <span> Reportes</span>
-                <% end %>
-              <% end %>
-              <% if can? :read, Log %>
-                <%= link_to logs_path, class: "navbar-item" do %>
-                  <span class="icon"><i class="fas fa-file-alt"></i></span>
-                  <span> Logs</span>
-                <% end %>
-              <% end %>
-              <% if can? :read, Radio %>
-                <%= link_to radios_path, class: "navbar-item" do %>
-                  <span class="icon"><i class="fas fa-broadcast-tower"></i></span>
-                  <span> Radios</span>
+              <% if can? :admin, :all %>
+                <%= link_to admin_path, class: "navbar-item" do %>
+                  <span class="icon"><i class="fas fa-tools"></i></span>
+                  <span>
+                    Panel de<br>
+                    Administración
+                  </span>
                 <% end %>
               <% end %>
 
@@ -112,7 +99,6 @@
                 <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
                 <span> Cerrar sesión</span>
               <% end %>
-            </div>
           </div>
         <% else %>
           <%= link_to login_path, class: "navbar-item", data: { turbo: false } do %>
