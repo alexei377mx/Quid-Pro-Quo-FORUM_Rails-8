@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :user_signed_in?
 
   after_action :log_action
+  before_action :reject_banned_user
 
   private
 
@@ -30,5 +31,12 @@ class ApplicationController < ActionController::Base
     )
   rescue => e
     Rails.logger.error("Error al guardar log: #{e.message}")
+  end
+
+  def reject_banned_user
+    if current_user&.banned?
+      reset_session
+      redirect_to root_path, alert: "Tu cuenta ha sido baneada."
+    end
   end
 end

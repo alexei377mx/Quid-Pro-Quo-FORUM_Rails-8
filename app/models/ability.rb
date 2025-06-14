@@ -6,7 +6,7 @@ class Ability
   def initialize(user)
     return unless user.present?
 
-    can :manage, Post, user_id: user.id
+    can [ :read, :update ], Post, user_id: user.id
 
     if user.admin?
       can :admin, :all

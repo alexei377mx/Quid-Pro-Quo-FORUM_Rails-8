@@ -47,4 +47,17 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
     assert_nil session[:user_id]
   end
+
+  test "debería redirigir si el usuario está baneado" do
+    @banned_user = users(:banned_user)
+
+    post login_path, params: { login: @banned_user.email, password: "NewPassword1!" }
+    assert_equal @banned_user.id, session[:user_id]
+
+    get root_path
+
+    assert_redirected_to root_path
+    assert_nil session[:user_id]
+    assert_equal "Tu cuenta ha sido baneada.", flash[:alert]
+  end
 end

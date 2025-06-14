@@ -1,37 +1,39 @@
-<% flash.each do |type, message| %>
-  <% 
-    bulma_class = case type.to_sym
-                  when :notice, :success then 'is-success'
-                  when :alert, :error, :danger then 'is-danger'
-                  when :warning then 'is-warning'
-                  else 'is-info'
-                  end
+<div id="flash-messages" data-controller="notification">
+  <% flash.each do |type, message| %>
+    <% 
+      bulma_class = case type.to_sym
+                    when :notice, :success then 'is-success'
+                    when :alert, :error, :danger then 'is-danger'
+                    when :warning then 'is-warning'
+                    else 'is-info'
+                    end
 
-    title = case type.to_sym
-            when :notice then 'AVISO'
-            when :success then 'ÉXITO'
-            when :alert, :error, :danger then 'ALERTA'
-            when :warning then 'ADVERTENCIA'
-            else 'INFORMACIÓN'
-            end
+      title = case type.to_sym
+              when :notice then 'AVISO'
+              when :success then 'ÉXITO'
+              when :alert, :error, :danger then 'ALERTA'
+              when :warning then 'ADVERTENCIA'
+              else 'INFORMACIÓN'
+              end
 
-    icon_class = case type.to_sym
-                 when :notice, :success then 'fa-circle-check'
-                 when :alert, :error, :danger then 'fa-circle-exclamation'
-                 when :warning then 'fa-triangle-exclamation'
-                 else 'fa-circle-info'
-                 end
-  %>
+      icon_class = case type.to_sym
+                   when :notice, :success then 'fa-circle-check'
+                   when :alert, :error, :danger then 'fa-circle-exclamation'
+                   when :warning then 'fa-triangle-exclamation'
+                   else 'fa-circle-info'
+                   end
+    %>
 
-  <div class="notification <%= bulma_class %> animate__animated animate__slideInRight" data-controller="notification">
-    <button class="delete" data-action="click->notification#close"></button>
-    <span class="icon-text">
-      <span class="icon">
-        <i class="fas <%= icon_class %>"></i>
+    <div class="notification <%= bulma_class %> animate__animated is-hidden" data-notification-target="message">
+      <button class="delete" data-action="click->notification#closeNow"></button>
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas <%= icon_class %>"></i>
+        </span>
+        <span><strong><%= title %></strong></span>
       </span>
-      <span><strong><%= title %></strong></span>
-    </span>
-    <br>
-    <%= message %>
-  </div>
-<% end %>
+      <br>
+      <%= message %>
+    </div>
+  <% end %>
+</div>

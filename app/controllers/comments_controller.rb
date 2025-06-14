@@ -58,6 +58,7 @@ class CommentsController < ApplicationController
     end
 
     if @comment.update(deleted_by_admin: true)
+      @comment.user.check_for_ban!(self)
       redirect_to @post, notice: "Comentario eliminado por administración."
     else
       Rails.logger.error("Error al eliminar comentario por admin: #{@comment.errors.full_messages.join(', ')}")

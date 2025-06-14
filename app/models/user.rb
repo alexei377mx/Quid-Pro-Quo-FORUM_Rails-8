@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   ROLES = %w[user admin moderator].freeze
   PASSWORD_FORMAT = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}\z/.freeze
+  USERNAME_FORMAT = /\A[a-zA-Z0-9_-]+\z/.freeze
 
   before_validation :set_default_role, on: :create
 
@@ -19,11 +20,28 @@ class User < ApplicationRecord
     with: PASSWORD_FORMAT,
     message: "debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (por ejemplo: !, @, #, $, %, &, *)."
   }, allow_nil: true
-  validates :username, presence: true, uniqueness: true
+  validates :username,
+  presence: true,
+  uniqueness: true,
+  format: {
+    with: USERNAME_FORMAT,
+    message: "solo puede contener letras, números, guiones medios y guiones bajos, sin espacios"
+  }
   validates :role, presence: true, inclusion: { in: ROLES }
 
   def admin?
     role == "admin"
+  end
+
+  def check_for_ban!(controller = nil)
+    total_deleted = posts.where(deleted_by_admin: true).count +
+                    comments.where(deleted_by_admin: true).count
+
+    if total_deleted >= 5 && !banned?
+      update(banned: true)
+      Rails.logger.info("Usuario #{id} ha sido baneado automáticamente por contenido eliminado.")
+      controller&.flash&.warning = "El usuario #{username} ha sido baneado automáticamente por eliminaciones repetidas."
+    end
   end
 
   private

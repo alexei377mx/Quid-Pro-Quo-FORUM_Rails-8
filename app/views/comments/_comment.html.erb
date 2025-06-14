@@ -7,7 +7,7 @@
   <div class="media-content">
     <div class="content">
       <p>
-        <strong><%= comment.user.name %></strong><br>
+        <strong><%= name_and_username(comment.user) %></strong><br>
         <small>
           <i class="fa-solid fa-clock"></i> <%= time_ago(comment) %>
           <% if comment.edited? %>

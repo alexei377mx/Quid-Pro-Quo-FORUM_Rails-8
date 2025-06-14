@@ -26,4 +26,10 @@ module PostsHelper
     })
     markdown.render(text).html_safe
   end
+
+  def name_and_username(user)
+    return "" unless user
+
+    "#{user.name} (@#{user.username})".html_safe
+  end
 end

@@ -85,6 +85,7 @@ class PostsController < ApplicationController
     authorize! :admin_destroy_post, @post
 
     if @post.update_column(:deleted_by_admin, true)
+      @post.user.check_for_ban!(self)
       redirect_to posts_path, alert: "Publicación eliminada por administración."
     else
       Rails.logger.error("No se pudo eliminar la publicación como administrador: #{@post.id}. Errores: #{@post.errors.full_messages.join(', ')}")
