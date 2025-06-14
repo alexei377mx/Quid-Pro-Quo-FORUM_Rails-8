@@ -1,3 +1,11 @@
+<% content_for :head do %>
+  <% if @show_checkbox_recaptcha %>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <% else %>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= Rails.application.credentials.dig(:recaptcha, :site_key_v3) %>"></script>
+  <% end %>
+<% end %>
+
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
@@ -6,7 +14,12 @@
           <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
         </h1>
 
-        <%= form_with url: login_path, local: true do |form| %>
+        <%= form_with url: login_path, local: true, data: {
+          controller: "recaptcha",
+          "recaptcha-site-key-value" => Rails.application.credentials.dig(:recaptcha, @show_checkbox_recaptcha ? :site_key_v2 : :site_key_v3),
+          "recaptcha-action-value" => "login",
+          "recaptcha-v2-value" => @show_checkbox_recaptcha
+        } do |form| %>
           <div class="field">
             <%= form.label :login, 'Email o nombre de usuario', class: "label" %>
             <div class="control has-icons-left">
