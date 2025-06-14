@@ -24,4 +24,10 @@ module CommentsHelper
       Comment.new(parent_id: comment.id)
     end
   end
+
+  def name_and_username(user)
+    return "" unless user
+
+    "#{user.name} (@#{user.username})".html_safe
+  end
 end

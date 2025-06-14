@@ -13,3 +13,11 @@ two:
   email: "emaisl@email.com"
   password_digest: <%= BCrypt::Password.create('NewPassword1!') %>
   role: "user"
+
+banned_user:
+  name: BannedUser
+  username: "banned"
+  email: banned@example.com
+  password_digest: <%= BCrypt::Password.create('NewPassword1!') %>
+  role: "user"
+  banned: true
