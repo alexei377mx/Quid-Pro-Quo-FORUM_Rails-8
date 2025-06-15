@@ -20,6 +20,20 @@
 
 body {
   padding-top: 3.25rem;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  height: 100%;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 768px) {
