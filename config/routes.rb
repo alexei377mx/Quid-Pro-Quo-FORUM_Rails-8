@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy", as: :logout
 
   get "/posts/category/:category_id", to: "posts#category", as: "category_posts"
+  get "/fair_use", to: "pages#fair_use", as: :fair_use
 
   resources :posts do
     member do
