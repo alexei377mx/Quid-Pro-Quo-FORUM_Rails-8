@@ -1,0 +1,69 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title">Formulario de Contacto</h1>
+    <p class="subtitle">Consultas o apelaciones pueden enviarse desde aquí.</p>
+
+    <%= form_with model: @contact_message, local: true do |form| %>
+      <div class="field">
+        <%= form.label :name, "Nombre", class: "label" %>
+        <div class="control has-icons-left">
+          <%= form.text_field :name, class: "input #{'is-danger' if @contact_message.errors[:name].any?}", required: true, placeholder: "Tu nombre completo" %>
+          <span class="icon is-small is-left">
+            <i class="fa-solid fa-user"></i>
+          </span>
+        </div>
+        <% if @contact_message.errors[:name].any? %>
+          <small class="help is-danger"><%= @contact_message.errors[:name].join(', ') %></small>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= form.label :email, "Correo Electrónico", class: "label" %>
+        <div class="control has-icons-left">
+          <%= form.email_field :email, class: "input #{'is-danger' if @contact_message.errors[:email].any?}", required: true, placeholder: "tucorreo@ejemplo.com" %>
+          <span class="icon is-small is-left">
+            <i class="fa-solid fa-envelope"></i>
+          </span>
+        </div>
+        <% if @contact_message.errors[:email].any? %>
+          <small class="help is-danger"><%= @contact_message.errors[:email].join(', ') %></small>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= form.label :subject, "Asunto", class: "label" %>
+        <div class="control has-icons-left">
+          <%= form.text_field :subject, class: "input #{'is-danger' if @contact_message.errors[:subject].any?}", required: true, placeholder: "Motivo del contacto" %>
+          <span class="icon is-small is-left">
+            <i class="fa-solid fa-tag"></i>
+          </span>
+        </div>
+        <% if @contact_message.errors[:subject].any? %>
+          <small class="help is-danger"><%= @contact_message.errors[:subject].join(', ') %></small>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= form.label :message, "Mensaje", class: "label" %>
+        <div class="control has-icons-left">
+          <%= form.text_area :message, class: "textarea #{'is-danger' if @contact_message.errors[:message].any?}", required: true, placeholder: "Escribe tu consulta o apelación aquí..." %>
+        </div>
+        <% if @contact_message.errors[:message].any? %>
+          <small class="help is-danger"><%= @contact_message.errors[:message].join(', ') %></small>
+        <% end %>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-link">
+            <span class="icon"><i class="fa-solid fa-paper-plane"></i></span>
+            <span>Enviar</span>
+          </button>
+        </div>
+        <div class="control">
+          <%= link_to "Cancelar", root_path, class: "button is-light" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

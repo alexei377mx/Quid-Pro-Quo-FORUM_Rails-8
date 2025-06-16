@@ -6,31 +6,19 @@ class AdminController < ApplicationController
 
     case @tab
     when "reports"
+      from = parse_date(params[:from])
+      to = parse_date(params[:to])
+      reviewed = to_boolean(params[:reviewed])
+
       @reports = Report.includes(:user, :reportable)
-                       .without_deleted_content
-                       .order(created_at: :desc)
-
-      if params[:type].present?
-        @reports = @reports.where(reportable_type: params[:type])
-      end
-
-      if params.key?(:reviewed) && %w[true false].include?(params[:reviewed])
-        reviewed = params[:reviewed] == "true"
-        @reports = @reports.where(reviewed: reviewed)
-      elsif !params.key?(:reviewed)
-        @reports = @reports.where(reviewed: false)
-        params[:reviewed] = "false"
-      end
-
-      if params[:from].present? && params[:to].present?
-        from = Date.parse(params[:from]) rescue nil
-        to = Date.parse(params[:to]) rescue nil
-        if from && to
-          @reports = @reports.where(created_at: from.beginning_of_day..to.end_of_day)
-        end
-      end
-
-      @reports = @reports.page(params[:page]).per(20)
+                      .without_deleted_content
+                      .order(created_at: :desc)
+                      .by_type(params[:type])
+                      .by_reviewed(reviewed)
+                      .by_date_range(from, to)
+                      .page(params[:page])
+                      .per(20)
+      params[:reviewed] ||= "false"
 
     when "radios"
       @radios = Radio.order(:title)
@@ -38,9 +26,21 @@ class AdminController < ApplicationController
 
     when "logs"
       @logs = Log.includes(:user)
-                 .order(created_at: :desc)
-                 .page(params[:page])
-                 .per(20)
+                .order(created_at: :desc)
+                .page(params[:page])
+                .per(20)
+
+    when "contact_messages"
+      from = parse_date(params[:from])
+      to = parse_date(params[:to])
+      reviewed = to_boolean(params[:reviewed])
+
+      @contact_messages = ContactMessage.order(created_at: :desc)
+                                        .by_reviewed(reviewed)
+                                        .by_date_range(from, to)
+                                        .page(params[:page])
+                                        .per(20)
+      params[:reviewed] ||= "false"
     end
   end
 
@@ -56,5 +56,30 @@ class AdminController < ApplicationController
       to: params[:to],
       page: params[:page]
     ), notice: "Estado del reporte actualizado."
+  end
+
+  def toggle_contact_message_reviewed
+    @contact_message = ContactMessage.find(params[:id])
+    @contact_message.update(reviewed: !@contact_message.reviewed)
+
+    redirect_to admin_path(
+      tab: "contact_messages",
+      reviewed: params[:reviewed],
+      from: params[:from],
+      to: params[:to],
+      page: params[:page]
+    ), notice: "Estado del mensaje actualizado."
+  end
+
+  private
+
+  def parse_date(date_string)
+    Date.parse(date_string) rescue nil
+  end
+
+  def to_boolean(value)
+    return true if value == "true"
+    return false if value == "false"
+    nil
   end
 end

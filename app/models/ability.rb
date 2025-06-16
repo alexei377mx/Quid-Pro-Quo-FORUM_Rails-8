@@ -15,6 +15,7 @@ class Ability
       can :read, Report
       can :read, Log
       can :manage, Radio
+      can :read, ContactMessage
     end
   end
 end
