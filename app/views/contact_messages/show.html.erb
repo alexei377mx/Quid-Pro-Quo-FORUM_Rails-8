@@ -1,0 +1,16 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title"><i class="fas fa-envelope"></i> Mensaje de Contacto</h1>
+
+    <div class="box">
+      <p><strong>Nombre:</strong> <%= @contact_message.name %></p>
+      <p><strong>Email:</strong> <%= @contact_message.email %></p>
+      <p><strong>Asunto:</strong> <%= @contact_message.subject %></p>
+      <p><strong>Mensaje:</strong></p>
+      <pre><%= @contact_message.message %></pre>
+      <p class="has-text-grey-light">Enviado el <%= l(@contact_message.created_at, format: :long) %></p>
+    </div>
+
+    <%= link_to "Volver al panel", admin_path(tab: "contact_messages"), class: "button is-light" %>
+  </div>
+</section>

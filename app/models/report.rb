@@ -24,4 +24,20 @@ class Report < ApplicationRecord
       (reports.reportable_type != 'Comment' OR comment_posts.deleted_by_admin = ?)
     SQL
   }
+
+  scope :by_type, ->(type) { where(reportable_type: type) if type.present? }
+  scope :by_reviewed, ->(reviewed) {
+    if reviewed.in?([ true, false ])
+      where(reviewed: reviewed)
+    else
+      all
+    end
+  }
+  scope :by_date_range, ->(from, to) {
+    if from.present? && to.present?
+      where(created_at: from.beginning_of_day..to.end_of_day)
+    else
+      all
+    end
+  }
 end
