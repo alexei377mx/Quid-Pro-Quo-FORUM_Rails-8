@@ -18,6 +18,12 @@
             <span>Radios</span>
           <% end %>
         </li>
+        <li class="<%= 'is-active' if @tab == 'contact_messages' %>">
+          <%= link_to admin_path(tab: 'contact_messages') do %>
+            <span class="icon is-small"><i class="fas fa-envelope-open-text"></i></span>
+            <span>Mensajes</span>
+          <% end %>
+        </li>
         <li class="<%= 'is-active' if @tab == 'logs' %>">
           <%= link_to admin_path(tab: 'logs') do %>
             <span class="icon is-small"><i class="fas fa-history"></i></span>
@@ -33,6 +39,8 @@
         <%= render partial: "admin/radios" %>
       <% when "reports" %>
         <%= render partial: "admin/reports" %>
+      <% when "contact_messages" %>
+        <%= render partial: "admin/contact_messages" %>
       <% when "logs" %>
         <%= render partial: "admin/logs" %>
       <% end %>

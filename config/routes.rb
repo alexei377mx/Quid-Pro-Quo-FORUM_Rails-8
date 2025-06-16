@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get "admin", to: "admin#dashboard"
   patch "admin/reports/:id/toggle_reviewed", to: "admin#toggle_report_reviewed", as: :toggle_reviewed_admin_report
+  patch "admin/contact_messages/:id/toggle_reviewed", to: "admin#toggle_contact_message_reviewed", as: "toggle_reviewed_admin_contact_message"
 
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
@@ -40,6 +41,8 @@ Rails.application.routes.draw do
   end
 
   resources :radios, only: [ :create, :destroy ]
+  resources :contact_messages, only: [ :create, :show ]
+  get "/contact", to: "contact_messages#new", as: :contact
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

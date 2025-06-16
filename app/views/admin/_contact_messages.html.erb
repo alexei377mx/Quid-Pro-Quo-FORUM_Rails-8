@@ -1,0 +1,71 @@
+<%= form_with url: admin_path, method: :get, local: true do %>
+  <input type="hidden" name="tab" value="contact_messages">
+
+  <div class="columns is-multiline">
+    <div class="column is-one-quarter">
+      <label class="label">Estado</label>
+      <div class="select is-fullwidth">
+        <%= select_tag :reviewed,
+                        options_for_select([["Todos", ""], ["Leídos", "true"], ["No leídos", "false"]], selected: params[:reviewed]),
+                        class: "select" %>
+      </div>
+    </div>
+
+    <div class="column is-one-quarter">
+      <label class="label">Desde</label>
+      <%= date_field_tag :from, params[:from], class: "input" %>
+    </div>
+
+    <div class="column is-one-quarter">
+      <label class="label">Hasta</label>
+      <%= date_field_tag :to, params[:to], class: "input" %>
+    </div>
+
+    <div class="column is-full">
+      <%= submit_tag "Filtrar", class: "button is-primary" %>
+      <%= link_to "Limpiar", admin_path(tab: "contact_messages"), class: "button is-light" %>
+    </div>
+  </div>
+<% end %>
+
+<br>
+
+<div class="table-container">
+  <table class="table is-fullwidth is-hoverable is-striped">
+    <thead>
+      <tr>
+        <th>Asunto</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contact_messages.each do |msg| %>
+        <tr>
+          <td><%= link_to msg.subject, contact_message_path(msg), class: "has-text-link" %></td>
+          <td><%= msg.name %></td>
+          <td><%= msg.email %></td>
+          <td><%= l(msg.created_at, format: :short) %></td>
+          <td>
+            <%= button_to toggle_reviewed_admin_contact_message_path(msg),
+                method: :patch,
+                params: {
+                  reviewed: params[:reviewed],
+                  from: params[:from],
+                  to: params[:to],
+                  page: params[:page]
+                },
+                form: { data: { turbo_confirm: "¿Cambiar estado de revisión?" } },
+                class: "button is-small is-#{msg.reviewed ? 'success' : 'warning'}" do %>
+                  <%= msg.reviewed ? "Leído" : "No leído" %>
+                <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @contact_messages %>
