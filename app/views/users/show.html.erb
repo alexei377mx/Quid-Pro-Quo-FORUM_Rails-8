@@ -1,48 +1,88 @@
 <section class="section">
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-10">
-        <div class="box">
-          <div class="media">
-            <div class="media-left">
-              <figure class="image is-128x128">
-                <img class="is-rounded" src="https://bulma.io/assets/images/placeholders/128x128.png" alt="Avatar">
-              </figure>
-            </div>
-            <div class="media-content">
-              <h1 class="title is-3"><%= @user.name %> (@<%= @user.username %>)</h1>
-              <p class="subtitle is-6 has-text-grey">
-                <i class="fa-solid fa-envelope"></i> <%= @user.email %><br>
-                <% if @user.admin? %>
-                  <i class="fa-solid fa-user-tag"></i> Rol: <%= @user.role.capitalize %><br>
-                <% end %>
-                <i class="fa-solid fa-calendar-plus"></i> Registrado hace <%= time_ago_in_words(@user.created_at) %>
-              </p>
-              <%= link_to edit_password_path, class: "button is-info mt-3" do %>
-              <span class="icon"><i class="fa-solid fa-key"></i></span>
-              <span>Cambiar contraseña</span>
+    <div class="box">
+      <div class="columns is-vcentered is-variable is-6">
+        <div class="column is-3 has-text-centered">
+          <figure class="image is-128x128 is-inline-block mb-5">
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
+            <% else %>
+              <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
             <% end %>
+          </figure>
+
+          <%= form_with model: current_user, url: user_avatar_path, html: { multipart: true }, method: :patch, local: true do |form| %>
+            <div class="file has-name is-small" data-controller="file-input">
+              <label class="file-label">
+                <%= form.file_field :avatar, class: "file-input", accept: "image/*", required: true,
+                      data: {
+                        file_input_target: "input",
+                        action: "change->file-input#updateFileName"
+                      } %>
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">Cambiar imagen</span>
+                </span>
+                <span class="file-name" id="file-name" data-file-input-target="fileName">No hay archivo seleccionado</span>
+              </label>
             </div>
-          </div>
+            <div class="field mt-4">
+              <%= button_tag(type: 'submit', class: 'button is-primary is-fullwidth') do %>
+                <i class="fas fa-user-circle"></i>
+                &nbsp;Actualizar avatar
+              <% end %>
+            </div>
+          <% end %>
         </div>
 
-        <h2 class="title is-4 mt-6"><i class="fa-solid fa-pen-nib"></i> Mis publicaciones</h2>
-
-        <% if @posts.any? %>
-          <div class="box">
-            <% @posts.each do |post| %>
-                <%= render partial: "posts/posts", locals: { post: post } %>
+        <div class="column is-9">
+          <h1 class="title is-2 mb-2">
+            <%= @user.name %> <small class="has-text-grey-light">@<%= @user.username %></small>
+          </h1>
+          <p class="subtitle is-6 mb-4">
+            <span class="icon-text">
+              <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+              <span><%= @user.email %></span>
+            </span><br>
+            <% if @user.admin? %>
+              <span class="icon-text mt-1">
+                <span class="icon"><i class="fa-solid fa-user-shield"></i></span>
+                <strong>Rol:</strong> <span><%= @user.role.capitalize %></span>
+              </span><br>
             <% end %>
-          </div>
-        <% else %>
-          <div class="is-info">
-            <i class="fa-solid fa-circle-info"></i> No has creado publicaciones aún.
-          </div>
-        <% end %>
-        <div class="container">
-          <%= paginate @posts %>
+            <span class="icon-text mt-1">
+              <span class="icon"><i class="fa-solid fa-calendar-plus"></i></span>
+              <span>Registrado hace <%= time_ago_in_words(@user.created_at) %></span>
+            </span>
+          </p>
+
+          <%= link_to edit_password_path, class: "button is-link" do %>
+            <span class="icon"><i class="fa-solid fa-key"></i></span>
+            <span>Cambiar contraseña</span>
+          <% end %>
         </div>
       </div>
+    </div>
+
+    <h2 class="title is-4 mt-6 mb-4">
+      <i class="fa-solid fa-pen-nib"></i> Mis publicaciones
+    </h2>
+
+    <% if @posts.any? %>
+      <div class="box">
+        <% @posts.each do |post| %>
+          <%= render partial: "posts/posts", locals: { post: post } %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="is-warning is-light">
+        <i class="fa-solid fa-circle-exclamation"></i> No has creado publicaciones aún.
+      </div>
+    <% end %>
+    <div class="container">
+      <%= paginate @posts %>
     </div>
   </div>
 </section>

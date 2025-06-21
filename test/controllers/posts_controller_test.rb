@@ -124,4 +124,61 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to posts_url
     assert_equal "Esta publicación fue eliminada por la administración.", flash[:alert]
   end
+
+  test "debería crear una publicación con imagen válida" do
+    log_in_as(@user_one)
+
+    assert_difference("Post.count", 1) do
+      post posts_url, params: {
+        post: {
+          title: "Post con imagen",
+          content: "Contenido con imagen",
+          category: "Tecnología",
+          image: fixture_file_upload("user.jpeg", "image/jpeg")
+        }
+      }
+    end
+
+    post_creado = Post.last
+    assert post_creado.image.attached?, "La imagen debería estar adjunta"
+    assert_redirected_to post_url(post_creado)
+  end
+
+  test "debería rechazar imagen inválida al crear publicación" do
+    log_in_as(@user_one)
+
+    assert_no_difference("Post.count") do
+      post posts_url, params: {
+        post: {
+          title: "Post con archivo inválido",
+          content: "Intento con PDF",
+          category: "Tecnología",
+          image: fixture_file_upload("invalid_file.pdf")
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "debería eliminar la imagen si se marca remove_image en update" do
+    log_in_as(@user_one)
+
+    @post_one.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
+    @post_one.save
+    assert @post_one.image.attached?
+
+    patch post_url(@post_one), params: {
+      post: {
+        title: @post_one.title,
+        content: @post_one.content,
+        category: @post_one.category,
+        remove_image: "1"
+      }
+    }
+
+    @post_one.reload
+    assert_not @post_one.image.attached?, "La imagen debería haberse eliminado"
+    assert_redirected_to post_url(@post_one)
+  end
 end

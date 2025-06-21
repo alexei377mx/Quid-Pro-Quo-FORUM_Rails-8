@@ -70,11 +70,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def avatar
+    @user = current_user
+    if @user.update(user_params)
+      redirect_to profile_path, notice: "Avatar actualizado correctamente"
+    else
+      Rails.logger.error "Error al actualizar el avatar usuario ID=#{@user.id}: #{@user.errors.full_messages.join(', ')}"
+      flash.now[:alert] = "Error al actualizar el avatar: #{@user.errors.full_messages.join(', ')}"
+      @user.reload
+      @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(10)
+      render :show, status: :unprocessable_entity
+    end
+  end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :username, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :username, :email, :password, :password_confirmation, :avatar)
   end
 
   def password_params

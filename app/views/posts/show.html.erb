@@ -6,7 +6,15 @@
       <div class="columns">
         <div class="column">
           <div class="icon-text">
-            <span class="icon"><i class="fa-solid fa-user"></i></span>
+            <% if @post.user.avatar.attached? %>
+              <figure class="image is-32x32 mr-2">
+                <%= image_tag @post.user.avatar.variant(resize_to_fill: [32, 32]), class: "is-rounded" %>
+              </figure>
+            <% else %>
+              <span class="icon is-small mr-2">
+                <i class="fa-solid fa-user-circle"></i>
+              </span>
+            <% end %>
             <span>Publicado por <strong><%= name_and_username(@post.user) %></strong></span>
           </div>
         </div>
@@ -64,6 +72,12 @@
 
       <hr>
       <div class="box">
+        <% if @post.image.attached? %>
+          <div class="box has-text-centered">
+            <%= image_tag @post.image.variant(resize_to_limit: [800, 400]), class: "image is-inline-block" %>
+          </div>
+        <% end %>
+
         <div class="content post-content">
           <%= markdown(@post.content) %>
         </div>
@@ -84,7 +98,11 @@
           <article class="media">
             <figure class="media-left">
               <p class="image is-64x64">
-                <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
+                <% if current_user.avatar.attached? %>
+                  <%= image_tag current_user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
+                <% else %>
+                  <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+                <% end %>
               </p>
             </figure>
             <div class="media-content">

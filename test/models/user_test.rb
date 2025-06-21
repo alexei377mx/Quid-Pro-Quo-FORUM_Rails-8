@@ -54,4 +54,41 @@ class UserTest < ActiveSupport::TestCase
   test "no debería autenticar con la contraseña incorrecta" do
     assert_not @admin.authenticate("wrong")
   end
+
+  test "debería rechazar contraseña que no cumple el formato" do
+    @user.password = "nopassword"
+    @user.password_confirmation = "nopassword"
+    assert_not @user.valid?
+    assert_includes @user.errors[:password], "debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (por ejemplo: !, @, #, $, %, &, *)."
+  end
+
+  test "debería aceptar avatar válido" do
+    @user.avatar.attach(
+      io: file_fixture("user.jpeg").open,
+      filename: "user.jpeg",
+      content_type: "image/jpeg"
+    )
+    assert @user.valid?
+  end
+
+  test "debería rechazar avatar con tipo no permitido" do
+    @user.avatar.attach(
+      io: file_fixture("invalid_file.pdf").open,
+      filename: "invalid_file.pdf",
+      content_type: "application/pdf"
+    )
+    assert_not @user.valid?
+    assert_includes @user.errors[:image], "debe ser JPEG, PNG o WebP"
+  end
+
+  test "debería rechazar avatar demasiado grande" do
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new("a" * 2.megabytes),
+      filename: "large_image.jpg",
+      content_type: "image/jpeg"
+    )
+    @user.avatar.attach(blob)
+    assert_not @user.valid?
+    assert_includes @user.errors[:image], "es demasiado grande (máximo 1 MB)"
+  end
 end
