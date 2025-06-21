@@ -26,6 +26,6 @@ module QuidProQuo
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.i18n.default_locale = :es
-    config.active_job.queue_adapter = :solid_queue
+    config.active_job.queue_adapter = :async
   end
 end
