@@ -98,4 +98,31 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_match "Las nuevas contraseñas no coinciden.", response.body
   end
+
+  test "actualiza avatar correctamente" do
+    log_in_as(@user)
+    avatar_file = fixture_file_upload("user.jpeg", "image/jpeg")
+
+    patch user_avatar_path, params: {
+      user: { avatar: avatar_file }
+    }
+
+    assert_redirected_to profile_path
+    follow_redirect!
+    assert_match "Avatar actualizado correctamente", response.body
+    @user.reload
+    assert @user.avatar.attached?
+  end
+
+  test "no actualiza avatar con archivo inválido" do
+    log_in_as(@user)
+    invalid_file = fixture_file_upload("invalid_file.pdf", "application/pdf")
+
+    patch user_avatar_path, params: {
+      user: { avatar: invalid_file }
+    }
+
+    assert_response :unprocessable_entity
+    assert_match "Error al actualizar el avatar", response.body
+  end
 end

@@ -36,4 +36,40 @@ class PostTest < ActiveSupport::TestCase
     assert_not @post.valid?
     assert_includes @post.errors[:user], "debe existir"
   end
+
+  test "debería aceptar una imagen JPEG válida" do
+    @post.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
+    assert @post.valid?, "La imagen JPEG debería ser válida"
+  end
+
+  test "debería rechazar un archivo con tipo no permitido" do
+    @post.image.attach(
+      io: file_fixture("invalid_file.pdf").open,
+      filename: "invalid_file.pdf",
+      content_type: "application/pdf"
+    )
+
+    assert_not @post.valid?
+    assert_includes @post.errors[:image], "debe ser JPEG, PNG o WebP"
+  end
+
+
+  test "debería rechazar una imagen demasiado grande" do
+    large_file = StringIO.new("0" * 6.megabytes)
+    @post.image.attach(io: large_file, filename: "big_image.jpeg", content_type: "image/jpeg")
+    assert_not @post.valid?
+    assert_includes @post.errors[:image], "es demasiado grande (máximo 5 MB)"
+  end
+
+  test "debería eliminar la imagen si remove_image es true" do
+    @post.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
+    @post.save
+    assert @post.image.attached?, "La imagen debería estar adjunta"
+
+    @post.remove_image = true
+    @post.save
+    @post.reload
+
+    assert_not @post.image.attached?, "La imagen debería haber sido eliminada"
+  end
 end

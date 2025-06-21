@@ -100,7 +100,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :content, :category)
+    params.require(:post).permit(:title, :content, :category, :image, :remove_image)
   end
 
   def authorize_post_owner

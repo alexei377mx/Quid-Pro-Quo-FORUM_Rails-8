@@ -1,4 +1,4 @@
-<%= form_with(model: post, html: { class: "box" }) do |form| %>
+<%= form_with(model: post, html: { class: "box", multipart: true }) do |form| %>
   <div class="field">
     <%= form.label :title, class: "label" do %>
       <span class="icon-text">
@@ -31,7 +31,7 @@
         <span>Contenido</span>
       </span>
       <p class="help">
-        Puedes usar <strong>Markdown</strong> para dar formato al texto. 
+        Puedes usar <strong>Markdown</strong>. 
         <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
       </p>
     <% end %>
@@ -61,7 +61,60 @@
     <small class="help is-danger"><%= post.errors[:category].join(', ') %></small>
   </div>
 
-  <div class="field is-grouped">
+  <div class="field">
+    <%= form.label :image, class: "label" do %>
+      <span class="icon-text">
+        <span class="icon"><i class="fa-solid fa-image"></i></span>
+        <span>Imagen del post</span>
+      </span>
+    <% end %>
+
+    <% if post.image.attached? && post.image.image? %>
+      <div class="mb-4 card box">
+        <p class="has-text-weight-semibold">Imagen actual:</p>
+
+        <div class="">
+          <figure class="image is-128x128 is-inline-block">
+            <%= image_tag(post.image.variant(resize_to_limit: [128, 128])) %>
+          </figure>
+
+          <div class="mt-2">
+            <label class="checkbox">
+              <%= form.check_box :remove_image %> Eliminar imagen
+            </label>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="file has-name is-fullwidth mt-2" data-controller="file-input">
+      <label class="file-label">
+        <%= form.file_field :image, class: "file-input", accept: "image/*",
+              data: {
+                file_input_target: "input",
+                action: "change->file-input#updateFileName"
+              } %>
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fa-solid fa-upload"></i>
+          </span>
+          <span class="file-label">
+            Selecciona una imagen…
+          </span>
+        </span>
+        <span class="file-name" id="file-name" data-file-input-target="fileName">
+          No hay archivo seleccionado
+        </span>
+      </label>
+    </div>
+
+    <% if post.errors[:image].present? %>
+      <small class="help is-danger"><%= post.errors[:image].join(', ') %></small>
+    <% end %>
+  </div>
+
+
+  <div class="field is-grouped mt-5">
     <div class="control">
       <%= button_tag type: 'submit', class: "button is-primary" do %>
         <span class="icon">
