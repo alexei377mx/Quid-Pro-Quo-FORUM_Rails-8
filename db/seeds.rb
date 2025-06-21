@@ -19,5 +19,5 @@ unless User.exists?(username: admin_creds[:username])
     password_confirmation: admin_creds[:password],
     role: "admin"
   )
-  user.save!
+  user.save!(validate: false)
 end

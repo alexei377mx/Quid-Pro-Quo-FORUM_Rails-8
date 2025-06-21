@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to @post, notice: "El comentario fue publicado exitosamente."
+      redirect_to post_path(@post), notice: "El comentario fue publicado exitosamente."
     else
       Rails.logger.error("Hubo un error al publicar el comentario: #{@comment.errors.full_messages.join(', ')}")
       flash.now[:alert] = "Hubo un error al publicar el comentario."

@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_one_attached :avatar
+
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :comment_reactions, dependent: :destroy
@@ -12,6 +14,7 @@ class User < ApplicationRecord
   USERNAME_FORMAT = /\A[a-zA-Z0-9_-]+\z/.freeze
 
   before_validation :set_default_role, on: :create
+  validate :avatar_size_validation
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
@@ -40,7 +43,7 @@ class User < ApplicationRecord
     if total_deleted >= 5 && !banned?
       update(banned: true)
       Rails.logger.info("Usuario #{id} ha sido baneado automáticamente por contenido eliminado.")
-      controller&.flash&.warning = "El usuario #{username} ha sido baneado automáticamente por eliminaciones repetidas."
+      controller&.flash[:warning] = "El usuario #{username} ha sido baneado automáticamente por eliminaciones repetidas."
     end
   end
 
@@ -48,5 +51,18 @@ class User < ApplicationRecord
 
   def set_default_role
     self.role ||= "user"
+  end
+
+  def avatar_size_validation
+    return unless avatar.attached?
+
+    unless avatar.blob.byte_size <= 1.megabyte
+      errors.add(:image, "es demasiado grande (máximo 1 MB)")
+    end
+
+    acceptable_types = [ "image/jpeg", "image/png", "image/webp" ]
+    unless acceptable_types.include?(avatar.content_type)
+      errors.add(:image, "debe ser JPEG, PNG o WebP")
+    end
   end
 end

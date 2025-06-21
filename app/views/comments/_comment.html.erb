@@ -1,7 +1,11 @@
 <article class="media" data-controller="reply">
   <figure class="media-left">
     <p class="image is-64x64">
-      <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
+      <% if comment.user.avatar.attached? %>
+        <%= image_tag comment.user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
+      <% else %>
+        <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+      <% end %>
     </p>
   </figure>
   <div class="media-content">

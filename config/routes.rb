@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/register", to: "users#new"
   post "/users", to: "users#create"
   get "/profile", to: "users#show", as: :profile
+  patch "/profile/avatar", to: "users#avatar", as: :user_avatar
   get "/profile/change_password", to: "users#edit_password", as: :edit_password
   patch "/profile/change_password", to: "users#update_password", as: :update_password
 
