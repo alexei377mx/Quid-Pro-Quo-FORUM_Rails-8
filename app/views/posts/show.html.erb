@@ -15,7 +15,7 @@
                 <i class="fa-solid fa-user-circle"></i>
               </span>
             <% end %>
-            <span>Publicado por <strong><%= name_and_username(@post.user) %></strong></span>
+            <span><%= t('posts.show.published_by_html', user: "<strong>#{name_and_username(@post.user)}</strong>".html_safe) %></span>
           </div>
         </div>
 
@@ -35,13 +35,13 @@
         <div class="column">
           <div class="icon-text">
             <span class="icon"><i class="fa-solid fa-tag"></i></span>
-            <span><%= @post.category %></span>
+            <span><%= @post.category_name %></span>
           </div>
         </div>
         <div class="column">
           <div class="icon-text">
             <span class="icon"><i class="fa-solid fa-eye"></i></span>
-            <span><strong><%= @post.visits || 0 %></strong> visitas</span>
+            <span><strong><%= @post.visits || 0 %></strong> <%= t('posts.show.visits') %></span>
           </div>
         </div>
       </div>
@@ -50,22 +50,22 @@
         <% if can_edit_post?(@post) %>
           <%= link_to edit_post_path(@post), class: "button is-warning" do %>
             <span class="icon"><i class="fa-solid fa-pen-to-square"></i></span>
-            <span>Editar</span>
+            <span><%= t('posts.show.edit') %></span>
           <% end %>
         <% end %>
         <% if user_signed_in? %>
           <%= link_to new_post_report_path(@post), class: "button is-danger" do %>
             <span class="icon"><i class="fa-solid fa-flag"></i></span>
-            <span>Reportar</span>
+            <span><%= t('posts.show.report') %></span>
           <% end %>
         <% end %>
 
         <% if can? :admin_destroy_post, @post and !@post.deleted_by_admin? %>
           <%= button_to admin_destroy_post_post_path(@post), method: :patch,
-              data: { confirm: "¿Estás seguro de eliminar esta publicación como administrador?" },
+              data: { confirm: t('posts.show.admin_delete_confirm') },
               class: "button is-danger" do %>
             <span class="icon"><i class="fa-solid fa-ban"></i></span>
-            <span>Eliminar (admin)</span>
+            <span><%= t('posts.show.admin_delete') %></span>
           <% end %>
         <% end %>
       </div>
@@ -84,14 +84,14 @@
       </div>
 
       <div class="comments mt-5">
-        <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> Comentarios (<%= @post.comments.count %>)</h2>
+        <h2 class="subtitle is-4"><i class="fa-solid fa-comments"></i> <%= t('posts.show.comments_count', count: @post.comments.count) %></h2>
 
         <% if @comments.any? %>
           <% @comments.each do |comment| %>
             <%= render partial: "comments/comment", locals: { comment: comment, post: @post } %>
           <% end %>
         <% else %>
-          <p><i class="fa-solid fa-circle-info"></i> No hay comentarios aún.</p>
+          <p><i class="fa-solid fa-circle-info"></i> <%= t('posts.show.no_comments_yet') %></p>
         <% end %>
 
         <% if user_signed_in? %>
@@ -101,7 +101,7 @@
                 <% if current_user.avatar.attached? %>
                   <%= image_tag current_user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
                 <% else %>
-                  <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+                  <%= image_tag "user.jpeg", class: "is-rounded", alt: t('posts.show.default_avatar_alt') %>
                 <% end %>
               </p>
             </figure>
@@ -111,22 +111,21 @@
                   <%= form.label :content, class: "label" do %>
                     <span class="icon-text">
                       <span class="icon"><i class="fa-solid fa-comment"></i></span>
-                      <span>Comentario</span>
+                      <span><%= t('posts.show.comment') %></span>
                     </span>
                     <p class="help">
-                      Puedes usar <strong>Markdown</strong> para dar formato al texto. 
-                      <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+                      <%= t('posts.show.markdown_help_html', link: link_to(t('posts.show.markdown_guide'), "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info")) %>
                     </p>
                   <% end %>
                   <div class="control">
-                    <%= form.text_area :content, class: "textarea #{(@comment && @comment.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar un comentario..." %>
+                    <%= form.text_area :content, class: "textarea #{(@comment && @comment.errors[:content].any?) ? 'is-danger' : ''}", placeholder: t('posts.show.comment_placeholder') %>
                   </div>
                   <small class="help is-danger"><%= (@comment && @comment.errors[:content].join(', ')) %></small>
                 </div>
                 <div class="field">
                   <p class="control">
                     <%= button_tag type: 'submit', class: "button is-info" do %>
-                      <i class="fa-solid fa-paper-plane"></i> Publicar comentario
+                      <i class="fa-solid fa-paper-plane"></i> <%= t('posts.show.publish_comment') %>
                     <% end %>
                   </p>
                 </div>
@@ -134,7 +133,7 @@
             </div>
           </article>
         <% else %>
-          <p><%= link_to "<i class='fa-solid fa-right-to-bracket'></i> Inicia sesión".html_safe, login_path, data: { turbo: false } %> para dejar un comentario.</p>
+          <p><%= link_to("<i class='fa-solid fa-right-to-bracket'></i> ".html_safe + t('posts.show.login_to_comment'), login_path, data: { turbo: false }) %></p>
         <% end %>
       </div>
     </div>

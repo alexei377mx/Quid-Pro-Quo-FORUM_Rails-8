@@ -3,7 +3,7 @@
 
     <div class="column is-one-third">
       <div class="field">
-        <label class="label">Título</label>
+        <label class="label"><%= t('admin.radios.form.title') %></label>
         <div class="control">
           <%= f.text_field :title, class: "input", required: true %>
         </div>
@@ -12,7 +12,7 @@
 
     <div class="column is-one-third">
       <div class="field">
-        <label class="label">URL de Stream</label>
+        <label class="label"><%= t('admin.radios.form.stream_url') %></label>
         <div class="control">
           <%= f.text_field :stream_url, class: "input", required: true %>
         </div>
@@ -23,7 +23,7 @@
       <div class="field">
         <div class="control">
           <button type="submit" class="button is-primary">
-            <i class="fas fa-plus mr-1"></i> Agregar radio
+            <i class="fas fa-plus mr-1"></i> <%= t('admin.radios.form.add_radio') %>
           </button>
         </div>
       </div>
@@ -35,7 +35,7 @@
 <hr>
 
 <h2 class="subtitle mt-5">
-  <i class="fas fa-list"></i> Lista de radios
+  <i class="fas fa-list"></i> <%= t('admin.radios.list_title') %>
 </h2>
 
 <div id="dynamic-flash-container" class="mb-4"></div>
@@ -44,9 +44,9 @@
   <table class="table is-fullwidth is-striped">
     <thead>
       <tr>
-        <th>Título</th>
-        <th>URL de Stream</th>
-        <th>Acciones</th>
+        <th><%= t('admin.radios.table.title') %></th>
+        <th><%= t('admin.radios.table.stream_url') %></th>
+        <th><%= t('admin.radios.table.actions') %></th>
       </tr>
     </thead>
     <tbody>
@@ -61,10 +61,16 @@
               class="button is-info is-small"
               data-controller="clipboard-radio"
               data-clipboard-radio-url-value="<%= radio.stream_url %>"
-              data-action="click->clipboard-radio#copy">
+              data-clipboard-radio-copied-message-value="<%= t('stimulus.clipboard_radio_controller.notifications.url_copied') %>"
+              data-clipboard-radio-error-message-value="<%= t('stimulus.clipboard_radio_controller.notifications.copy_failed') %>"
+              data-clipboard-radio-notice-title-value="<%= t('stimulus.clipboard_radio_controller.notifications.notice_title') %>"
+              data-clipboard-radio-error-title-value="<%= t('stimulus.clipboard_radio_controller.notifications.error_title') %>"
+              data-clipboard-radio-info-title-value="<%= t('stimulus.clipboard_radio_controller.notifications.info_title') %>"
+              data-action="click->clipboard-radio#copy"
+              title="<%= t('admin.radios.actions.copy_url') %>">
               <i class="fas fa-copy"></i>
             </button>
-            <%= button_to radio_path(radio), method: :delete, data: { confirm: "¿Seguro que deseas eliminar esta radio?" }, class: "button is-danger is-small" do %>
+            <%= button_to radio_path(radio), method: :delete, data: { confirm: t('admin.radios.actions.confirm_delete') }, class: "button is-danger is-small" do %>
               <i class="fas fa-trash"></i>
             <% end %>
           </td>

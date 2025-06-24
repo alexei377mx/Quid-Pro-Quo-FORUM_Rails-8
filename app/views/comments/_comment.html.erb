@@ -4,7 +4,7 @@
       <% if comment.user.avatar.attached? %>
         <%= image_tag comment.user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
       <% else %>
-        <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+        <%= image_tag "user.jpeg", class: "is-rounded", alt: t("comments.default_avatar_alt") %>
       <% end %>
     </p>
   </figure>
@@ -21,24 +21,32 @@
           <% unless comment.deleted_by_admin? %>
             <%= comment_edit_link(comment, post) %>
             <% if user_signed_in? %>
-              · <%= link_to "<i class='fa-solid fa-reply'></i> Responder".html_safe, "#",
-                data: { controller: "reply", action: "click->reply#open", reply_parent_id_param: comment.id, reply_mention_param: "@#{comment.user.username}" } %>
-              · <%= link_to "<i class='fa-solid fa-flag'></i> Reportar".html_safe, new_comment_report_path(comment) %>
+              · <%= link_to "<i class='fa-solid fa-reply'></i> #{t("comments.reply")}".html_safe, "#",
+                    data: {
+                      controller: "reply",
+                      action: "click->reply#open",
+                      reply_parent_id_param: comment.id,
+                      reply_mention_param: "@#{comment.user.username}"
+                    } %>
+              · <%= link_to "<i class='fa-solid fa-flag'></i> #{t("comments.report")}".html_safe, new_comment_report_path(comment) %>
             <% end %>
           <% end %>
 
           <% if can?(:admin_destroy_comment, comment) && !comment.deleted_by_admin? %>
-            · <%= link_to admin_destroy_comment_post_comment_path(post, comment), method: :patch, data: { confirm: "¿Estás seguro de eliminar este comentario?" }, class: "has-text-danger" do %>
-              <i class="fa-solid fa-trash"></i> Eliminar (admin)
+            · <%= link_to admin_destroy_comment_post_comment_path(post, comment),
+                          method: :patch,
+                          data: { confirm: t("comments.confirm_admin_delete") },
+                          class: "has-text-danger" do %>
+              <i class="fa-solid fa-trash"></i> <%= t("comments.admin_delete") %>
             <% end %>
           <% end %>
         </small>
         <br/>
 
         <% if comment.deleted_by_admin? %>
-          <em class="has-text-grey">Comentario eliminado por administración</em>
+          <em class="has-text-grey"><%= t("comments.deleted_by_admin") %></em>
         <% else %>
-          <%= markdown(comment.display_content) %>
+          <%= markdown(comment.content) %>
         <% end %>
         <br/>
       </p>
@@ -49,44 +57,54 @@
         <% liked = comment_liked_by_user?(comment) %>
 
         <% if liked %>
-          <%= button_to post_comment_comment_reaction_path(post, comment), method: :delete, class: "button is-small is-danger", disabled: !user_signed_in? do %>
-            <i class="fa-solid fa-thumbs-down"></i> Quitar like (<%= comment.likes_count %>)
+          <%= button_to post_comment_comment_reaction_path(post, comment),
+                        method: :delete,
+                        class: "button is-small is-danger",
+                        disabled: !user_signed_in? do %>
+            <i class="fa-solid fa-thumbs-down"></i> <%= t("comments.remove_like") %> (<%= comment.likes_count %>)
           <% end %>
         <% else %>
-          <%= button_to post_comment_comment_reaction_path(post, comment), method: :post, class: "button is-small is-success", disabled: !user_signed_in? do %>
-            <i class="fa-solid fa-thumbs-up"></i> Me gusta (<%= comment.likes_count %>)
+          <%= button_to post_comment_comment_reaction_path(post, comment),
+                        method: :post,
+                        class: "button is-small is-success",
+                        disabled: !user_signed_in? do %>
+            <i class="fa-solid fa-thumbs-up"></i> <%= t("comments.like") %> (<%= comment.likes_count %>)
           <% end %>
         <% end %>
 
         <% unless user_signed_in? %>
-          <p class="is-size-7 has-text-grey mt-1">Inicia sesión para reaccionar.</p>
+          <p class="is-size-7 has-text-grey mt-1"><%= t("comments.sign_in_to_react") %></p>
         <% end %>
         <br>
       </div>
 
       <% if user_signed_in? %>
         <div id="reply-form-<%= comment.id %>" data-reply-target="form" style="display: <%= (@reply_with_errors && @reply_with_errors.parent_id == comment.id) ? 'block' : 'none' %>;">
-          <%= form_with(model: [post, reply_form_object(comment)], url: reply_post_comment_path(post, comment), local: true) do |form| %>
+          <%= form_with(model: [post, reply_form_object(comment)],
+                        url: reply_post_comment_path(post, comment),
+                        local: true) do |form| %>
             <div class="field">
               <%= form.label :content, class: "label" do %>
                 <span class="icon-text">
                   <span class="icon"><i class="fa-solid fa-reply"></i></span>
-                  <span>Respuesta</span>
+                  <span><%= t("comments.reply_label") %></span>
                 </span>
                 <p class="help">
-                  Puedes usar <strong>Markdown</strong> para dar formato al texto. 
-                  <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+                  <%= t("comments.markdown_help_html", guide_url_html: link_to("Markdown Guide", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener")) %>
                 </p>
               <% end %>
               <div class="control">
-                <%= form.text_area :content, data: { reply_target: "textarea" }, class: "textarea #{(form.object.errors[:content].any?) ? 'is-danger' : ''}", placeholder: "Agregar una respuesta..." %>
+                <%= form.text_area :content,
+                                   data: { reply_target: "textarea" },
+                                   class: "textarea #{form.object.errors[:content].any? ? 'is-danger' : ''}",
+                                   placeholder: t("comments.reply_placeholder") %>
               </div>
               <small class="help is-danger"><%= form.object.errors[:content].join(', ') %></small>
             </div>
             <div class="field">
               <p class="control">
                 <%= button_tag type: 'submit', class: "button is-info" do %>
-                  <i class="fa-solid fa-paper-plane"></i> Publicar respuesta
+                  <i class="fa-solid fa-paper-plane"></i> <%= t("comments.post_reply") %>
                 <% end %>
               </p>
             </div>

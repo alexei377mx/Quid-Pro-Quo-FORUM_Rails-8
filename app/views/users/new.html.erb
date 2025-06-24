@@ -11,7 +11,7 @@
     <div class="columns is-centered">
       <div class="column is-half">
         <h1 class="title">
-          <i class="fa-solid fa-user-plus"></i> Registrar nuevo usuario
+          <i class="fa-solid fa-user-plus"></i> <%= t("users.new.title") %>
         </h1>
 
         <%= form_with(model: @user, local: true, data: {
@@ -23,7 +23,7 @@
           <div class="field">
             <%= form.label :name, @user.class.human_attribute_name(:name), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.text_field :name, class: "input #{'is-danger' if @user.errors[:name].any?}", placeholder: "Tu nombre" %>
+              <%= form.text_field :name, class: "input #{'is-danger' if @user.errors[:name].any?}", placeholder: t("users.new.placeholders.name") %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-user"></i>
               </span>
@@ -36,7 +36,7 @@
           <div class="field">
             <%= form.label :username, @user.class.human_attribute_name(:username), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.text_field :username, class: "input #{'is-danger' if @user.errors[:username].any?}", placeholder: "Tu nombre de usuario" %>
+              <%= form.text_field :username, class: "input #{'is-danger' if @user.errors[:username].any?}", placeholder: t("users.new.placeholders.username") %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-user-tag"></i>
               </span>
@@ -49,7 +49,7 @@
           <div class="field">
             <%= form.label :email, @user.class.human_attribute_name(:email), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.email_field :email, class: "input #{'is-danger' if @user.errors[:email].any?}", placeholder: "Tu correo electrónico" %>
+              <%= form.email_field :email, class: "input #{'is-danger' if @user.errors[:email].any?}", placeholder: t("users.new.placeholders.email") %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-envelope"></i>
               </span>
@@ -62,7 +62,7 @@
           <div class="field">
             <%= form.label :password, @user.class.human_attribute_name(:password), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.password_field :password, class: "input #{'is-danger' if @user.errors[:password].any?}", placeholder: "Tu contraseña" %>
+              <%= form.password_field :password, class: "input #{'is-danger' if @user.errors[:password].any?}", placeholder: t("users.new.placeholders.password") %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-lock"></i>
               </span>
@@ -75,7 +75,7 @@
           <div class="field">
             <%= form.label :password_confirmation, @user.class.human_attribute_name(:password_confirmation), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.password_field :password_confirmation, class: "input #{'is-danger' if @user.errors[:password_confirmation].any?}", placeholder: "Confirma tu contraseña" %>
+              <%= form.password_field :password_confirmation, class: "input #{'is-danger' if @user.errors[:password_confirmation].any?}", placeholder: t("users.new.placeholders.password_confirmation") %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-lock"></i>
               </span>
@@ -101,7 +101,7 @@
             <div class="control">
               <%= button_tag type: 'submit', class: "button is-primary is-fullwidth", data: { turbo: false } do %>
                 <span class="icon"><i class="fa-solid fa-user-plus"></i></span>
-                <span>Registrarse</span>
+                <span><%= t("users.new.submit") %></span>
               <% end %>
             </div>
           </div>
@@ -109,7 +109,7 @@
 
         <div class="has-text-centered mt-4">
           <%= link_to login_path, class: "has-text-link", data: { turbo: false } do %>
-            <i class="fa-solid fa-right-to-bracket"></i> ¿Ya tienes cuenta? Inicia sesión
+            <i class="fa-solid fa-right-to-bracket"></i> <%= t("users.new.login_prompt") %>
           <% end %>
         </div>
       </div>

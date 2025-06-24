@@ -5,8 +5,8 @@ class SessionsController < ApplicationController
 
   def create
     errors = []
-    errors << "El campo email o nombre de usuario no puede estar vacío." if params[:login].blank?
-    errors << "El campo contraseña no puede estar vacío." if params[:password].blank?
+    errors << t("sessions.controller.blank_login") if params[:login].blank?
+    errors << t("sessions.controller.blank_password") if params[:password].blank?
 
     if errors.any?
       flash.now[:alert] = errors.join(" ")
@@ -16,13 +16,13 @@ class SessionsController < ApplicationController
     user = User.where("email = :login OR name = :login OR username = :login", login: params[:login]).first
 
     if user.nil?
-      flash.now[:alert] = "No se encontró un usuario con ese email o nombre de usuario."
+      flash.now[:alert] = t("sessions.controller.user_not_found")
       Rails.logger.warn("Intento de login fallido - usuario no encontrado: #{params[:login]}")
       return render :new, status: :unprocessable_entity
     end
 
     unless user.authenticate(params[:password])
-      flash.now[:alert] = "Contraseña incorrecta."
+      flash.now[:alert] = t("sessions.controller.invalid_password")
       Rails.logger.warn("Intento de login fallido - contraseña incorrecta para: #{user.username}")
       return render :new, status: :unprocessable_entity
     end
@@ -39,10 +39,10 @@ class SessionsController < ApplicationController
 
     if v3_success || v2_success
       session[:user_id] = user.id
-      redirect_to root_path, notice: "Has iniciado sesión exitosamente."
+      redirect_to root_path, notice: t("sessions.controller.login_success")
     else
       @show_checkbox_recaptcha = true
-      flash.now[:alert] = "No pudimos verificar que eres humano."
+      flash.now[:alert] = t("sessions.controller.recaptcha_failed")
       Rails.logger.warn("Falló reCAPTCHA v3 y v2")
       render :new, status: :unprocessable_entity
     end
@@ -50,6 +50,6 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    redirect_to root_path, notice: "Has cerrado sesión."
+    redirect_to root_path, notice: t("sessions.controller.logout_success")
   end
 end

@@ -18,8 +18,4 @@ class Comment < ApplicationRecord
   def likes_count
     comment_reactions.count
   end
-
-  def display_content
-    deleted_by_admin ? "Comentario eliminado por administración" : content
-  end
 end

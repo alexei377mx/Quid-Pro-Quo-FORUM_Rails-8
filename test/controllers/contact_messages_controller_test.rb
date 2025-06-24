@@ -7,13 +7,13 @@ class ContactMessagesControllerTest < ActionDispatch::IntegrationTest
     @user = users(:two)
   end
 
-  test "debería mostrar el formulario de contacto" do
+  test "should display contact form" do
     get contact_url
     assert_response :success
     assert_select "form"
   end
 
-  test "debería crear un mensaje de contacto con parámetros válidos" do
+  test "should create contact message with valid parameters" do
     assert_difference("ContactMessage.count", 1) do
       post contact_messages_url, params: {
         contact_message: {
@@ -25,11 +25,11 @@ class ContactMessagesControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to root_path
-    assert_equal "Tu mensaje ha sido enviado correctamente.", flash[:notice]
+    assert_redirected_to root_url(locale: I18n.locale)
+    assert_equal I18n.t("contact_messages.controller.success"), flash[:notice]
   end
 
-  test "no debería crear un mensaje de contacto con parámetros inválidos" do
+  test "should not create contact message with invalid parameters" do
     post contact_messages_url, params: {
       contact_message: {
         name: "",
@@ -41,21 +41,21 @@ class ContactMessagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_select "form"
-    assert_equal "La creación del mensaje falló.", flash[:alert]
+    assert_equal I18n.t("contact_messages.controller.failure"), flash[:alert]
   end
 
-  test "debería mostrar el mensaje de contacto si está autorizado" do
+  test "should show contact message when authorized" do
     log_in_as(@admin)
     get contact_message_url(@contact_message)
     assert_response :success
     assert_match @contact_message.subject, @response.body
   end
 
-  test "debería redirigir si no está autorizado a ver el mensaje de contacto" do
+  test "should redirect when not authorized to view contact message" do
     log_in_as(@user)
 
     get contact_message_url(@contact_message)
-    assert_redirected_to root_path
-    assert_equal "No estás autorizado para acceder a esta página.", flash[:alert]
+    assert_redirected_to root_url(locale: I18n.locale)
+    assert_equal I18n.t("errors.not_authorized"), flash[:alert]
   end
 end

@@ -8,151 +8,155 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     @user_two = users(:two)
   end
 
-  test "debería obtener el índice" do
+  test "should get index" do
     get posts_url
     assert_response :success
   end
 
-  test "debería mostrar una publicación" do
+  test "should show post" do
     get post_url(@post_one)
     assert_response :success
   end
 
-  test "debería redirigir a iniciar sesión al intentar acceder a nuevo sin estar autenticado" do
+  test "should redirect to login when trying to access new while unauthenticated" do
     get new_post_url
-    assert_redirected_to login_url
+    assert_redirected_to login_url(locale: I18n.locale)
   end
 
-  test "debería acceder a nuevo cuando el usuario ha iniciado sesión" do
+  test "should access new when user is logged in" do
     log_in_as(@user_one)
     get new_post_url
     assert_response :success
   end
 
-  test "debería crear una publicación" do
+  test "should create post" do
     log_in_as(@user_one)
     assert_difference("Post.count", 1) do
       post posts_url, params: {
-        post: { title: "Nuevo Título", content: "Nuevo contenido", category: "Tecnología" }
+        post: { title: "New Title", content: "New content", category: "1" }
       }
     end
 
-    nueva_post = Post.last
-    assert_redirected_to post_url(nueva_post)
-    assert_equal @user_one, nueva_post.user
+    new_post = Post.last
+    assert_redirected_to post_url(new_post, locale: I18n.locale)
+    assert_equal @user_one, new_post.user
   end
 
-  test "no debería crear una publicación si no ha iniciado sesión" do
+  test "should not create post when not logged in" do
     assert_no_difference("Post.count") do
       post posts_url, params: {
-        post: { title: "Nuevo Título", content: "Nuevo contenido" }
+        post: { title: "New Title", content: "New content" }
       }
     end
-    assert_redirected_to login_url
+    assert_redirected_to login_url(locale: I18n.locale)
   end
 
-  test "debería acceder a editar si es el propietario" do
+  test "should access edit if owner" do
     log_in_as(@user_one)
     get edit_post_url(@post_one)
     assert_response :success
   end
 
-  test "debería redirigir al intentar editar si no es el propietario" do
+  test "should redirect when trying to edit if not owner" do
     log_in_as(@user_two)
     get edit_post_url(@post_one)
-    assert_redirected_to posts_url
-    assert_equal "No estás autorizado para realizar esta acción.", flash[:alert]
+    assert_redirected_to posts_url(locale: I18n.locale)
+    assert_equal I18n.t("posts.controller.unauthorized"), flash[:alert]
   end
 
-  test "debería actualizar la publicación si es el propietario" do
+  test "should update post if owner" do
     log_in_as(@user_one)
     patch post_url(@post_one), params: {
-      post: { title: "Título Actualizado" }
+      post: {
+        title: "Updated Title",
+        content: @post_one.content,
+        category: @post_one.category
+      }
     }
-    assert_redirected_to post_url(@post_one)
+    assert_redirected_to post_url(@post_one, locale: I18n.locale)
     @post_one.reload
-    assert_equal "Título Actualizado", @post_one.title
+    assert_equal "Updated Title", @post_one.title
   end
 
-  test "no debería actualizar la publicación si no es el propietario" do
+  test "should not update post if not owner" do
     log_in_as(@user_two)
     patch post_url(@post_one), params: {
-      post: { title: "Título Hackeado" }
+      post: { title: "Hacked Title" }
     }
-    assert_redirected_to posts_url
+    assert_redirected_to posts_url(locale: I18n.locale)
     @post_one.reload
-    refute_equal "Título Hackeado", @post_one.title
+    refute_equal "Hacked Title", @post_one.title
   end
 
-  test "debería eliminar la publicación si es el propietario" do
+  test "should delete post if owner" do
     log_in_as(@user_one)
     assert_difference("Post.count", -1) do
       delete post_url(@post_one)
     end
-    assert_redirected_to posts_url
+    assert_redirected_to posts_url(locale: I18n.locale)
   end
 
-  test "no debería eliminar la publicación si no es el propietario" do
+  test "should not delete post if not owner" do
     log_in_as(@user_two)
     assert_no_difference("Post.count") do
       delete post_url(@post_one)
     end
-    assert_redirected_to posts_url
+    assert_redirected_to posts_url(locale: I18n.locale)
   end
 
-  test "admin debería poder marcar post como eliminado por admin" do
+  test "admin should be able to mark post as deleted by admin" do
     log_in_as(@user_one)
     patch admin_destroy_post_post_url(@post_two)
-    assert_redirected_to posts_url
-    assert_equal "Publicación eliminada por administración.", flash[:alert]
+    assert_redirected_to posts_url(locale: I18n.locale)
+    assert_equal I18n.t("posts.controller.admin_deleted"), flash[:alert]
     @post_two.reload
     assert @post_two.deleted_by_admin?
   end
 
-  test "usuario normal no debería poder marcar post como eliminado por admin" do
+  test "regular user should not be able to mark post as deleted by admin" do
     log_in_as(@user_two)
     patch admin_destroy_post_post_url(@post_one)
-    assert_redirected_to root_path
-    assert_equal "No estás autorizado para acceder a esta página.", flash[:alert]
+    assert_redirected_to root_url(locale: I18n.locale)
+    assert_equal I18n.t("errors.not_authorized"), flash[:alert]
     @post_one.reload
     refute @post_one.deleted_by_admin?
   end
 
-  test "mostrar alerta si post fue eliminado por admin al intentar verlo" do
+  test "should show alert when post was deleted by admin" do
     @post_one.update_column(:deleted_by_admin, true)
     get post_url(@post_one)
-    assert_redirected_to posts_url
-    assert_equal "Esta publicación fue eliminada por la administración.", flash[:alert]
+    assert_redirected_to posts_url(locale: I18n.locale)
+    assert_equal I18n.t("posts.controller.deleted_by_admin"), flash[:alert]
   end
 
-  test "debería crear una publicación con imagen válida" do
+  test "should create post with valid image" do
     log_in_as(@user_one)
 
     assert_difference("Post.count", 1) do
       post posts_url, params: {
         post: {
-          title: "Post con imagen",
-          content: "Contenido con imagen",
-          category: "Tecnología",
+          title: "Post with image",
+          content: "Content with image",
+          category: "1",
           image: fixture_file_upload("user.jpeg", "image/jpeg")
         }
       }
     end
 
-    post_creado = Post.last
-    assert post_creado.image.attached?, "La imagen debería estar adjunta"
-    assert_redirected_to post_url(post_creado)
+    created_post = Post.last
+    assert created_post.image.attached?, "Image should be attached"
+    assert_redirected_to post_url(created_post, locale: I18n.locale)
   end
 
-  test "debería rechazar imagen inválida al crear publicación" do
+  test "should reject invalid image when creating post" do
     log_in_as(@user_one)
 
     assert_no_difference("Post.count") do
       post posts_url, params: {
         post: {
-          title: "Post con archivo inválido",
-          content: "Intento con PDF",
-          category: "Tecnología",
+          title: "Post with invalid file",
+          content: "Attempt with PDF",
+          category: @post_one.category,
           image: fixture_file_upload("invalid_file.pdf")
         }
       }
@@ -161,7 +165,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test "debería eliminar la imagen si se marca remove_image en update" do
+  test "should remove image when remove_image is checked in update" do
     log_in_as(@user_one)
 
     @post_one.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
@@ -178,7 +182,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     }
 
     @post_one.reload
-    assert_not @post_one.image.attached?, "La imagen debería haberse eliminado"
-    assert_redirected_to post_url(@post_one)
+    assert_not @post_one.image.attached?, "Image should have been removed"
+    assert_redirected_to post_url(@post_one, locale: I18n.locale)
   end
 end

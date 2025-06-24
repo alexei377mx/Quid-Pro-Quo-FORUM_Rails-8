@@ -7,6 +7,16 @@ class ApplicationController < ActionController::Base
   after_action :log_action
   before_action :reject_banned_user
 
+  before_action :set_locale
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
+  end
+
   private
 
   def current_user
@@ -17,8 +27,8 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_path, alert: "No estás autorizado para acceder a esta página."
+  rescue_from CanCan::AccessDenied do |_exception|
+    redirect_to root_path, alert: t("errors.not_authorized")
   end
 
   def log_action
@@ -36,7 +46,7 @@ class ApplicationController < ActionController::Base
   def reject_banned_user
     if current_user&.banned?
       reset_session
-      redirect_to root_path, alert: "Tu cuenta ha sido baneada."
+      redirect_to root_path, alert: t("errors.account_banned")
     end
   end
 end

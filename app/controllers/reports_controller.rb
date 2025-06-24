@@ -12,9 +12,9 @@ class ReportsController < ApplicationController
 
     if @report.save
       redirect_to @reportable.is_a?(Post) ? post_path(@reportable) : post_path(@reportable.post),
-                  notice: "El reporte fue enviado correctamente."
+                  notice: t("reports.controller.created")
     else
-      flash.now[:alert] = "No se pudo enviar el reporte."
+      flash.now[:alert] = t("reports.controller.create_failed")
       render :new, status: :unprocessable_entity
     end
   end
@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
   def require_login
     unless user_signed_in?
       Rails.logger.error("Intento de acceso no autenticado a recurso protegido")
-      redirect_to login_path, alert: "Debes iniciar sesión para realizar esta acción."
+      redirect_to login_path, alert: t("reports.controller.auth_required")
     end
   end
 end

@@ -6,29 +6,30 @@ class ReportTest < ActiveSupport::TestCase
     @report_comment = reports(:two)
   end
 
-  test "valid report with reason in REASONS" do
-    valid_reason = Report::REASONS.first
-    @report_post.reason = valid_reason
-    assert @report_post.valid?, "El reporte con razón válida debería ser válido"
+  test "should be valid with reason id in REASONS" do
+    valid_reason_id = Report::REASONS.keys.first.to_s
+    @report_post.reason = valid_reason_id
+    assert @report_post.valid?, "Report with valid reason should be valid"
   end
 
-  test "invalid report without reason" do
+  test "should be invalid without reason" do
     @report_post.reason = nil
     assert_not @report_post.valid?
-    assert_includes @report_post.errors[:reason], "no puede estar en blanco"
+    assert_includes @report_post.errors[:reason], I18n.t("errors.messages.blank")
   end
 
-  test "invalid report with reason not in REASONS" do
-    @report_post.reason = "Razón inválida"
+  test "should be invalid with reason not in REASONS" do
+    @report_post.reason = "999"
     assert_not @report_post.valid?
-    assert_includes @report_post.errors[:reason], "no es una razón válida"
+    assert_includes @report_post.errors[:reason],
+                   I18n.t("activerecord.errors.models.report.attributes.reason.invalid_reason")
   end
 
-  test "report belongs to user" do
+  test "should belong to user" do
     assert_equal users(:one), @report_post.user
   end
 
-  test "report belongs to polymorphic reportable (post or comment)" do
+  test "should belong to polymorphic reportable (post or comment)" do
     assert_kind_of Post, @report_post.reportable
     assert_kind_of Comment, @report_comment.reportable
   end

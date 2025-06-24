@@ -6,10 +6,10 @@ class CommentReactionsController < ApplicationController
     reaction = current_user.comment_reactions.new(comment: @comment)
 
     if reaction.save
-      redirect_to @comment.post, notice: "Te gustó el comentario."
+      redirect_to @comment.post, notice: t("comment_reactions.liked")
     else
-      Rails.logger.error("Ya le diste like a este comentario.")
-      redirect_to @comment.post, alert: "Ya le diste like a este comentario."
+      Rails.logger.error(t("comment_reactions.already_liked_log"))
+      redirect_to @comment.post, alert: t("comment_reactions.already_liked")
     end
   end
 
@@ -17,10 +17,10 @@ class CommentReactionsController < ApplicationController
     reaction = current_user.comment_reactions.find_by(comment: @comment)
     if reaction
       reaction.destroy
-      redirect_to @comment.post, notice: "Quitaste tu reacción."
+      redirect_to @comment.post, notice: t("comment_reactions.unliked")
     else
-      Rails.logger.error("No habías reaccionado a este comentario.")
-      redirect_to @comment.post, alert: "No habías reaccionado a este comentario."
+      Rails.logger.error(t("comment_reactions.not_liked_log"))
+      redirect_to @comment.post, alert: t("comment_reactions.not_liked")
     end
   end
 
@@ -32,8 +32,8 @@ class CommentReactionsController < ApplicationController
 
   def require_login
     unless user_signed_in?
-      Rails.logger.error("Debes iniciar sesión para realizar esta acción.")
-      redirect_to login_path, alert: "Debes iniciar sesión para realizar esta acción."
+      Rails.logger.error(t("comment_reactions.login_required_log"))
+      redirect_to login_path, alert: t("comment_reactions.login_required")
     end
   end
 end

@@ -3,36 +3,36 @@ require "test_helper"
 class CommentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @post = posts(:one)
-    @comentario = comments(:one)
-    @usuario = users(:one)
-    @otro_usuario = users(:two)
+    @comment = comments(:one)
+    @user = users(:one)
+    @other_user = users(:two)
   end
 
-  test "debe redirigir si no has iniciado sesión al crear comentario" do
+  test "should redirect create when not logged in" do
     assert_no_difference "Comment.count" do
-      post post_comments_path(@post), params: { comment: { content: "Nuevo comentario" } }
+      post post_comments_path(@post), params: { comment: { content: "New comment" } }
     end
-    assert_redirected_to login_path
+    assert_redirected_to login_path(locale: I18n.locale)
     follow_redirect!
-    assert_match "Debes iniciar sesión", response.body
+    assert_match I18n.t("comments.controller.login_required"), response.body
   end
 
-  test "debe crear comentario si el usuario ha iniciado sesión" do
-    log_in_as(@usuario)
+  test "should create comment when logged in" do
+    log_in_as(@user)
 
     assert_difference "Comment.count", 1 do
       post post_comments_path(@post), params: {
-        comment: { content: "Un comentario válido" }
+        comment: { content: "A valid comment" }
       }
     end
 
-    assert_redirected_to post_path(@post)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "El comentario fue publicado exitosamente", response.body
+    assert_match I18n.t("comments.controller.created"), response.body
   end
 
-  test "no debe crear comentario inválido" do
-    log_in_as(@usuario)
+  test "should not create invalid comment" do
+    log_in_as(@user)
 
     assert_no_difference "Comment.count" do
       post post_comments_path(@post), params: {
@@ -41,80 +41,80 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_match "Hubo un error al publicar el comentario", response.body
+    assert_match I18n.t("comments.controller.create_error"), response.body
   end
 
-  test "debe permitir responder a un comentario" do
-    log_in_as(@usuario)
+  test "should allow replying to comment" do
+    log_in_as(@user)
 
     assert_difference "Comment.count", 1 do
-      post reply_post_comment_path(@post, @comentario), params: {
-        comment: { content: "Esta es una respuesta" }
+      post reply_post_comment_path(@post, @comment), params: {
+        comment: { content: "This is a reply" }
       }
     end
 
-    assert_redirected_to post_path(@post)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "La respuesta fue publicada exitosamente", response.body
+    assert_match I18n.t("comments.controller.reply_created"), response.body
   end
 
-  test "no debe permitir editar comentario de otro usuario" do
-    log_in_as(@otro_usuario)
+  test "should not allow editing another user's comment" do
+    log_in_as(@other_user)
 
-    get edit_post_comment_path(@post, @comentario)
-    assert_redirected_to post_path(@post)
+    get edit_post_comment_path(@post, @comment)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "No estás autorizado", response.body
+    assert_match I18n.t("comments.controller.unauthorized"), response.body
   end
 
-  test "debe permitir editar su propio comentario" do
-    log_in_as(@usuario)
+  test "should allow editing own comment" do
+    log_in_as(@user)
 
-    get edit_post_comment_path(@post, @comentario)
+    get edit_post_comment_path(@post, @comment)
     assert_response :success
   end
 
-  test "debe actualizar comentario válido" do
-    log_in_as(@usuario)
+  test "should update valid comment" do
+    log_in_as(@user)
 
-    patch post_comment_path(@post, @comentario), params: {
-      comment: { content: "Comentario actualizado" }
+    patch post_comment_path(@post, @comment), params: {
+      comment: { content: "Updated comment" }
     }
 
-    assert_redirected_to post_path(@post)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "El comentario fue actualizado exitosamente", response.body
+    assert_match I18n.t("comments.controller.updated"), response.body
   end
 
-  test "no debe actualizar comentario inválido" do
-    log_in_as(@usuario)
+  test "should not update invalid comment" do
+    log_in_as(@user)
 
-    patch post_comment_path(@post, @comentario), params: {
+    patch post_comment_path(@post, @comment), params: {
       comment: { content: "" }
     }
 
     assert_response :unprocessable_entity
   end
 
-  test "no debe permitir eliminar comentario si no es admin" do
-    log_in_as(@otro_usuario)
+  test "should not allow deleting comment if not admin" do
+    log_in_as(@other_user)
 
-    patch admin_destroy_comment_post_comment_path(@post, @comentario)
-    assert_redirected_to post_path(@post)
+    patch admin_destroy_comment_post_comment_path(@post, @comment)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "No estás autorizado", response.body
-    @comentario.reload
-    assert_not @comentario.deleted_by_admin
+    assert_match I18n.t("comments.controller.unauthorized"), response.body
+    @comment.reload
+    assert_not @comment.deleted_by_admin
   end
 
-  test "debe permitir eliminar comentario si es admin" do
-    log_in_as(@usuario)
+  test "should allow deleting comment if admin" do
+    log_in_as(@user)
 
-    patch admin_destroy_comment_post_comment_path(@post, @comentario)
-    assert_redirected_to post_path(@post)
+    patch admin_destroy_comment_post_comment_path(@post, @comment)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
     follow_redirect!
-    assert_match "Comentario eliminado por administración", response.body
-    @comentario.reload
-    assert @comentario.deleted_by_admin
+    assert_match I18n.t("comments.controller.admin_deleted"), response.body
+    @comment.reload
+    assert @comment.deleted_by_admin
   end
 end

@@ -8,63 +8,72 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     @comment = comments(:one)
   end
 
-  test "debería mostrar el formulario nuevo para post cuando está logueado" do
+  test "should show new form for post when logged in" do
     log_in_as(@admin)
-    get new_post_report_path(@post)
+    get new_post_report_path(@post, locale: I18n.locale)
     assert_response :success
     assert_select "form"
   end
 
-  test "debería mostrar el formulario nuevo para comentario cuando está logueado" do
+  test "should show new form for comment when logged in" do
     log_in_as(@admin)
-    get new_comment_report_path(@comment)
+    get new_comment_report_path(@comment, locale: I18n.locale)
     assert_response :success
     assert_select "form"
   end
 
-  test "debería crear reporte para post con motivo válido" do
+  test "should create report for post with valid reason (ID)" do
     log_in_as(@admin)
+    valid_reason_id = Report::REASONS.keys.first.to_s
     assert_difference("Report.count", 1) do
-      post post_reports_path(@post), params: { report: { reason: Report::REASONS.first } }
+      post post_reports_path(@post, locale: I18n.locale), params: { report: { reason: valid_reason_id } }
     end
-    assert_redirected_to post_path(@post)
+    assert_redirected_to post_path(@post, locale: I18n.locale)
+    assert_equal I18n.t("reports.controller.created"), flash[:notice]
   end
 
-  test "no debería crear reporte con motivo inválido" do
+  test "should not create report with invalid reason" do
     log_in_as(@admin)
     assert_no_difference("Report.count") do
-      post post_reports_path(@post), params: { report: { reason: "Motivo inválido" } }
+      post post_reports_path(@post, locale: I18n.locale), params: { report: { reason: "999" } }
     end
     assert_response :unprocessable_entity
+    assert_equal I18n.t("reports.controller.create_failed"), flash[:alert]
   end
 
-  test "debería redirigir al formulario nuevo de reporte si no está logueado" do
-    get new_post_report_path(@post)
-    assert_redirected_to login_path
+  test "should redirect to login when trying to access new report form while unauthenticated" do
+    get new_post_report_path(@post, locale: I18n.locale)
+    assert_redirected_to login_path(locale: I18n.locale)
     follow_redirect!
+    assert_equal I18n.t("reports.controller.auth_required"), flash[:alert]
   end
 
-  test "debería redirigir al crear reporte si no está logueado" do
-    post post_reports_path(@post), params: { report: { reason: Report::REASONS.first } }
-    assert_redirected_to login_path
+  test "should redirect to login when trying to create report while unauthenticated" do
+    valid_reason_id = Report::REASONS.keys.first.to_s
+    post post_reports_path(@post, locale: I18n.locale), params: { report: { reason: valid_reason_id } }
+    assert_redirected_to login_path(locale: I18n.locale)
+    follow_redirect!
+    assert_equal I18n.t("reports.controller.auth_required"), flash[:alert]
   end
 
-  test "admin debería acceder al índice de reportes desde el panel de administrador" do
+  test "admin should access reports index from admin panel" do
     log_in_as(@admin)
-    get admin_path(tab: "reports")
+    get admin_path(tab: "reports", locale: I18n.locale)
     assert_response :success
   end
 
-  test "usuario no admin no debería acceder al índice de reportes" do
+  test "non-admin user should not access reports index" do
     log_in_as(@user)
-    get admin_path(tab: "reports")
-    assert_redirected_to root_path
+    get admin_path(tab: "reports", locale: I18n.locale)
+    assert_redirected_to root_path(locale: I18n.locale)
     follow_redirect!
+    assert_equal I18n.t("errors.not_authorized"), flash[:alert]
   end
 
-  test "usuario no autenticado debería ser redirigido desde el índice de reportes" do
-    get admin_path(tab: "reports")
-    assert_redirected_to root_path
+  test "unauthenticated user should be redirected from reports index" do
+    get admin_path(tab: "reports", locale: I18n.locale)
+    assert_redirected_to root_path(locale: I18n.locale)
     follow_redirect!
+    assert_equal I18n.t("errors.not_authorized"), flash[:alert]
   end
 end

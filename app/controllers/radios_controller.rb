@@ -6,17 +6,17 @@ class RadiosController < ApplicationController
   def create
     @radio = Radio.new(radio_params)
     if @radio.save
-      redirect_to admin_path(tab: "radios"), notice: "Radio añadida correctamente."
+      redirect_to admin_path(tab: "radios"), notice: t("radios.controller.created")
     else
       @radios = Radio.order(:title)
-      flash.now[:error] = "No se pudo añadir la radio. Revisa los datos."
+      flash.now[:error] = t("radios.controller.create_failed")
       render "admin/radios", status: :unprocessable_entity
     end
   end
 
   def destroy
     @radio.destroy
-    redirect_to admin_path(tab: "radios"), notice: "Radio eliminada correctamente."
+    redirect_to admin_path(tab: "radios"), notice: t("radios.controller.deleted")
   end
 
   private

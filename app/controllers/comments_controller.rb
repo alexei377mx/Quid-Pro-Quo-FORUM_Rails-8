@@ -8,10 +8,10 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to post_path(@post), notice: "El comentario fue publicado exitosamente."
+      redirect_to post_path(@post), notice: t("comments.controller.created")
     else
-      Rails.logger.error("Hubo un error al publicar el comentario: #{@comment.errors.full_messages.join(', ')}")
-      flash.now[:alert] = "Hubo un error al publicar el comentario."
+      Rails.logger.error(t("comments.controller.create_error_log", errors: @comment.errors.full_messages.join(", ")))
+      flash.now[:alert] = t("comments.controller.create_error")
       @comments = @post.comments.order(created_at: :desc)
       render "posts/show", status: :unprocessable_entity
     end
@@ -23,10 +23,10 @@ class CommentsController < ApplicationController
     @reply.post = @post
 
     if @reply.save
-      redirect_to @post, notice: "La respuesta fue publicada exitosamente."
+      redirect_to @post, notice: t("comments.controller.reply_created")
     else
-      Rails.logger.error("Hubo un error al publicar la respuesta: #{@reply.errors.full_messages.join(', ')}")
-      flash.now[:alert] = "Hubo un error al publicar la respuesta"
+      Rails.logger.error(t("comments.controller.reply_error_log", errors: @reply.errors.full_messages.join(", ")))
+      flash.now[:alert] = t("comments.controller.reply_error")
       @comments = @post.comments.order(created_at: :desc)
       @reply_with_errors = @reply
       render "posts/show", status: :unprocessable_entity
@@ -41,10 +41,10 @@ class CommentsController < ApplicationController
     authorize_comment_owner
 
     if @comment.update(comment_params)
-      redirect_to @post, notice: "El comentario fue actualizado exitosamente."
+      redirect_to @post, notice: t("comments.controller.updated")
     else
-      Rails.logger.error("Error al actualizar comentario: #{@comment.errors.full_messages.join(', ')}")
-      flash.now[:alert] = "Hubo un error al actualizar el comentario."
+      Rails.logger.error(t("comments.controller.update_error_log", errors: @comment.errors.full_messages.join(", ")))
+      flash.now[:alert] = t("comments.controller.update_error")
       render :edit, status: :unprocessable_entity
     end
   end
@@ -53,16 +53,16 @@ class CommentsController < ApplicationController
     @comment = @post.comments.find(params[:id])
 
     unless can?(:admin_destroy_comment, @comment)
-      flash[:alert] = "No estás autorizado para realizar esta acción."
+      flash[:alert] = t("comments.controller.unauthorized")
       redirect_to @post and return
     end
 
     if @comment.update(deleted_by_admin: true)
       @comment.user.check_for_ban!(self)
-      redirect_to @post, notice: "Comentario eliminado por administración."
+      redirect_to @post, notice: t("comments.controller.admin_deleted")
     else
-      Rails.logger.error("Error al eliminar comentario por admin: #{@comment.errors.full_messages.join(', ')}")
-      redirect_to @post, alert: "Hubo un error al eliminar el comentario."
+      Rails.logger.error(t("comments.controller.admin_delete_error_log", errors: @comment.errors.full_messages.join(", ")))
+      redirect_to @post, alert: t("comments.controller.admin_delete_error")
     end
   end
 
@@ -83,15 +83,15 @@ class CommentsController < ApplicationController
 
   def authorize_comment_owner
     unless @comment.user == current_user
-      Rails.logger.error("No estás autorizado para realizar esta acción.")
-      redirect_to @post, alert: "No estás autorizado para realizar esta acción."
+      Rails.logger.error(t("comments.controller.unauthorized"))
+      redirect_to @post, alert: t("comments.controller.unauthorized")
     end
   end
 
   def require_login
     unless user_signed_in?
-      Rails.logger.error("Debes iniciar sesión para realizar esta acción.")
-      redirect_to login_path, alert: "Debes iniciar sesión para realizar esta acción."
+      Rails.logger.error(t("comments.controller.login_required"))
+      redirect_to login_path, alert: t("comments.controller.login_required")
     end
   end
 end

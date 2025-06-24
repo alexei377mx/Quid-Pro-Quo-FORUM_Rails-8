@@ -2,17 +2,17 @@
   <table class="table is-fullwidth is-striped is-hoverable">
     <thead>
       <tr>
-        <th>Fecha y Hora</th>
-        <th>Usuario</th>
-        <th>Acción</th>
-        <th>Descripción</th>
+        <th><%= t('admin.logs.headers.datetime') %></th>
+        <th><%= t('admin.logs.headers.user') %></th>
+        <th><%= t('admin.logs.headers.action') %></th>
+        <th><%= t('admin.logs.headers.description') %></th>
       </tr>
     </thead>
     <tbody>
       <% @logs.each do |log| %>
         <tr>
-          <td><%= log.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
-          <td><%= log.user&.username || "Desconocido" %></td>
+          <td><%= l(log.created_at, format: :default) %></td>
+          <td><%= log.user&.username || t('admin.logs.unknown_user') %></td>
           <td><%= log.action %></td>
           <td><%= log.description %></td>
         </tr>

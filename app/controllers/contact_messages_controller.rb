@@ -9,10 +9,10 @@ class ContactMessagesController < ApplicationController
   def create
     @contact_message = ContactMessage.new(contact_message_params)
     if @contact_message.save
-      redirect_to root_path, notice: "Tu mensaje ha sido enviado correctamente."
+      redirect_to root_path, notice: t("contact_messages.controller.success")
     else
-      Rails.logger.error("Errores: #{@contact_message.errors.full_messages.join(', ')}")
-      flash[:alert] = "La creación del mensaje falló."
+      Rails.logger.error(t("contact_messages.controller.error_log", errors: @contact_message.errors.full_messages.join(", ")))
+      flash[:alert] = t("contact_messages.controller.failure")
       render :new, status: :unprocessable_entity
     end
   end

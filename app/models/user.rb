@@ -21,16 +21,16 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 8 }, allow_nil: true
   validates :password, format: {
     with: PASSWORD_FORMAT,
-    message: "debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (por ejemplo: !, @, #, $, %, &, *)."
+    message: :invalid_password_format
   }, allow_nil: true
   validates :username,
-  presence: true,
-  uniqueness: true,
-  format: {
-    with: USERNAME_FORMAT,
-    message: "solo puede contener letras, números, guiones medios y guiones bajos, sin espacios"
-  }
-  validates :role, presence: true, inclusion: { in: ROLES }
+    presence: true,
+    uniqueness: true,
+    format: {
+      with: USERNAME_FORMAT,
+      message: :invalid_username_format
+    }
+  validates :role, presence: true, inclusion: { in: ROLES, message: :invalid_role }
 
   def admin?
     role == "admin"
@@ -43,7 +43,7 @@ class User < ApplicationRecord
     if total_deleted >= 5 && !banned?
       update(banned: true)
       Rails.logger.info("Usuario #{id} ha sido baneado automáticamente por contenido eliminado.")
-      controller&.flash[:warning] = "El usuario #{username} ha sido baneado automáticamente por eliminaciones repetidas."
+      controller&.flash[:warning] = I18n.t("users.ban_message", username: username)
     end
   end
 
@@ -56,13 +56,13 @@ class User < ApplicationRecord
   def avatar_size_validation
     return unless avatar.attached?
 
-    unless avatar.blob.byte_size <= 1.megabyte
-      errors.add(:image, "es demasiado grande (máximo 1 MB)")
+    if avatar.blob.byte_size > 1.megabyte
+      errors.add(:avatar, :avatar_too_big)
     end
 
     acceptable_types = [ "image/jpeg", "image/png", "image/webp" ]
     unless acceptable_types.include?(avatar.content_type)
-      errors.add(:image, "debe ser JPEG, PNG o WebP")
+      errors.add(:avatar, :avatar_invalid_format)
     end
   end
 end

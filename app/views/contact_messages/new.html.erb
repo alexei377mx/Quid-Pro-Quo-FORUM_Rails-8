@@ -1,16 +1,14 @@
 <section class="section">
   <div class="container">
-    <h1 class="title">Formulario de Contacto</h1>
-    <p class="subtitle">Consultas o apelaciones pueden enviarse desde aquí.</p>
+    <h1 class="title"><%= t("contact_messages.new.title") %></h1>
+    <p class="subtitle"><%= t("contact_messages.new.subtitle") %></p>
 
     <%= form_with model: @contact_message, local: true do |form| %>
       <div class="field">
-        <%= form.label :name, "Nombre", class: "label" %>
+        <%= form.label :name, t("contact_messages.new.name"), class: "label" %>
         <div class="control has-icons-left">
-          <%= form.text_field :name, class: "input #{'is-danger' if @contact_message.errors[:name].any?}", required: true, placeholder: "Tu nombre completo" %>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-user"></i>
-          </span>
+          <%= form.text_field :name, class: "input #{'is-danger' if @contact_message.errors[:name].any?}", required: true, placeholder: t("contact_messages.new.name_placeholder") %>
+          <span class="icon is-small is-left"><i class="fa-solid fa-user"></i></span>
         </div>
         <% if @contact_message.errors[:name].any? %>
           <small class="help is-danger"><%= @contact_message.errors[:name].join(', ') %></small>
@@ -18,12 +16,10 @@
       </div>
 
       <div class="field">
-        <%= form.label :email, "Correo Electrónico", class: "label" %>
+        <%= form.label :email, t("contact_messages.new.email"), class: "label" %>
         <div class="control has-icons-left">
-          <%= form.email_field :email, class: "input #{'is-danger' if @contact_message.errors[:email].any?}", required: true, placeholder: "tucorreo@ejemplo.com" %>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-envelope"></i>
-          </span>
+          <%= form.email_field :email, class: "input #{'is-danger' if @contact_message.errors[:email].any?}", required: true, placeholder: t("contact_messages.new.email_placeholder") %>
+          <span class="icon is-small is-left"><i class="fa-solid fa-envelope"></i></span>
         </div>
         <% if @contact_message.errors[:email].any? %>
           <small class="help is-danger"><%= @contact_message.errors[:email].join(', ') %></small>
@@ -31,12 +27,10 @@
       </div>
 
       <div class="field">
-        <%= form.label :subject, "Asunto", class: "label" %>
+        <%= form.label :subject, t("contact_messages.new.subject"), class: "label" %>
         <div class="control has-icons-left">
-          <%= form.text_field :subject, class: "input #{'is-danger' if @contact_message.errors[:subject].any?}", required: true, placeholder: "Motivo del contacto" %>
-          <span class="icon is-small is-left">
-            <i class="fa-solid fa-tag"></i>
-          </span>
+          <%= form.text_field :subject, class: "input #{'is-danger' if @contact_message.errors[:subject].any?}", required: true, placeholder: t("contact_messages.new.subject_placeholder") %>
+          <span class="icon is-small is-left"><i class="fa-solid fa-tag"></i></span>
         </div>
         <% if @contact_message.errors[:subject].any? %>
           <small class="help is-danger"><%= @contact_message.errors[:subject].join(', ') %></small>
@@ -44,9 +38,9 @@
       </div>
 
       <div class="field">
-        <%= form.label :message, "Mensaje", class: "label" %>
+        <%= form.label :message, t("contact_messages.new.message"), class: "label" %>
         <div class="control has-icons-left">
-          <%= form.text_area :message, class: "textarea #{'is-danger' if @contact_message.errors[:message].any?}", required: true, placeholder: "Escribe tu consulta o apelación aquí..." %>
+          <%= form.text_area :message, class: "textarea #{'is-danger' if @contact_message.errors[:message].any?}", required: true, placeholder: t("contact_messages.new.message_placeholder") %>
         </div>
         <% if @contact_message.errors[:message].any? %>
           <small class="help is-danger"><%= @contact_message.errors[:message].join(', ') %></small>
@@ -57,11 +51,11 @@
         <div class="control">
           <button class="button is-link">
             <span class="icon"><i class="fa-solid fa-paper-plane"></i></span>
-            <span>Enviar</span>
+            <span><%= t("contact_messages.new.send") %></span>
           </button>
         </div>
         <div class="control">
-          <%= link_to "Cancelar", root_path, class: "button is-light" %>
+          <%= link_to t("contact_messages.new.cancel"), root_path, class: "button is-light" %>
         </div>
       </div>
     <% end %>

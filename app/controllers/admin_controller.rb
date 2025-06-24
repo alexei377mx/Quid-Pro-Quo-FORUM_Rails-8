@@ -55,7 +55,7 @@ class AdminController < ApplicationController
       from: params[:from],
       to: params[:to],
       page: params[:page]
-    ), notice: "Estado del reporte actualizado."
+    ), notice: t("admin.controller.report_status_updated")
   end
 
   def toggle_contact_message_reviewed
@@ -68,7 +68,7 @@ class AdminController < ApplicationController
       from: params[:from],
       to: params[:to],
       page: params[:page]
-    ), notice: "Estado del mensaje actualizado."
+    ), notice: t("admin.controller.contact_message_status_updated")
   end
 
   private

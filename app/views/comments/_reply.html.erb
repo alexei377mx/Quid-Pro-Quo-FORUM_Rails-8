@@ -4,7 +4,7 @@
       <% if comment.user.avatar.attached? %>
         <%= image_tag comment.user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
       <% else %>
-        <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+        <%= image_tag "user.jpeg", class: "is-rounded", alt: t("comments.default_avatar_alt") %>
       <% end %>
     </p>
   </figure>
@@ -22,26 +22,34 @@
           <% unless comment.deleted_by_admin? %>
             <%= comment_edit_link(comment, post) %>
             <% if user_signed_in? && comment.parent_id.present? %>
-              · <%= link_to "<i class='fa-solid fa-reply'></i> Responder".html_safe, "#",
-                data: { controller: "reply", action: "click->reply#open", reply_parent_id_param: comment.parent_id, reply_mention_param: "@#{comment.user.username}" } %>
+              · <%= link_to "<i class='fa-solid fa-reply'></i> #{t("comments.reply")}".html_safe, "#",
+                data: {
+                  controller: "reply",
+                  action: "click->reply#open",
+                  reply_parent_id_param: comment.parent_id,
+                  reply_mention_param: "@#{comment.user.username}"
+                } %>
             <% end %>
             <% if user_signed_in? %>
-              · <%= link_to "<i class='fa-solid fa-flag'></i> Reportar".html_safe, new_comment_report_path(comment) %>
+              · <%= link_to "<i class='fa-solid fa-flag'></i> #{t("comments.report")}".html_safe, new_comment_report_path(comment) %>
             <% end %>
           <% end %>
 
           <% if can?(:admin_destroy_comment, comment) && !comment.deleted_by_admin? %>
-            · <%= link_to admin_destroy_comment_post_comment_path(post, comment), method: :patch, data: { confirm: "¿Estás seguro de eliminar este comentario?" }, class: "has-text-danger" do %>
-              <i class="fa-solid fa-trash"></i> Eliminar (admin)
+            · <%= link_to admin_destroy_comment_post_comment_path(post, comment),
+                          method: :patch,
+                          data: { confirm: t("comments.confirm_admin_delete") },
+                          class: "has-text-danger" do %>
+              <i class="fa-solid fa-trash"></i> <%= t("comments.admin_delete") %>
             <% end %>
           <% end %>
         </small>
         <br/>
 
         <% if comment.deleted_by_admin? %>
-          <em class="has-text-grey">Comentario eliminado por administración</em>
+          <em class="has-text-grey"><%= t("comments.deleted_by_admin") %></em>
         <% else %>
-          <%= markdown(comment.display_content) %>
+          <%= markdown(comment.content) %>
         <% end %>
         <br/>
       </p>
@@ -52,12 +60,18 @@
         <% liked = comment_liked_by_user?(comment) %>
 
         <% if liked %>
-          <%= button_to post_comment_comment_reaction_path(post, comment), method: :delete, class: "button is-small is-danger", disabled: !user_signed_in? do %>
-            <i class="fa-solid fa-thumbs-down"></i> Quitar like (<%= comment.likes_count %>)
+          <%= button_to post_comment_comment_reaction_path(post, comment),
+                        method: :delete,
+                        class: "button is-small is-danger",
+                        disabled: !user_signed_in? do %>
+            <i class="fa-solid fa-thumbs-down"></i> <%= t("comments.remove_like") %> (<%= comment.likes_count %>)
           <% end %>
         <% else %>
-          <%= button_to post_comment_comment_reaction_path(post, comment), method: :post, class: "button is-small is-success", disabled: !user_signed_in? do %>
-            <i class="fa-solid fa-thumbs-up"></i> Me gusta (<%= comment.likes_count %>)
+          <%= button_to post_comment_comment_reaction_path(post, comment),
+                        method: :post,
+                        class: "button is-small is-success",
+                        disabled: !user_signed_in? do %>
+            <i class="fa-solid fa-thumbs-up"></i> <%= t("comments.like") %> (<%= comment.likes_count %>)
           <% end %>
         <% end %>
         <br>
