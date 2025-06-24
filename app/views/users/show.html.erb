@@ -7,12 +7,13 @@
             <% if current_user.avatar.attached? %>
               <%= image_tag current_user.avatar.variant(resize_to_limit: [128, 128]), class: "is-rounded" %>
             <% else %>
-              <%= image_tag "user.jpeg", class: "is-rounded", alt: "Avatar por defecto" %>
+              <%= image_tag "user.jpeg", class: "is-rounded", alt: t('users.show.default_avatar_alt') %>
             <% end %>
           </figure>
 
           <%= form_with model: current_user, url: user_avatar_path, html: { multipart: true }, method: :patch, local: true do |form| %>
-            <div class="file has-name is-small" data-controller="file-input">
+            <div class="file has-name is-small" data-controller="file-input"
+                data-file-input-no-file-selected-value="<%= t('stimulus.file_input_controller.no_file_selected') %>">
               <label class="file-label">
                 <%= form.file_field :avatar, class: "file-input", accept: "image/*", required: true,
                       data: {
@@ -23,15 +24,15 @@
                   <span class="file-icon">
                     <i class="fas fa-upload"></i>
                   </span>
-                  <span class="file-label">Cambiar imagen</span>
+                  <span class="file-label"><%= t('users.show.change_image') %></span>
                 </span>
-                <span class="file-name" id="file-name" data-file-input-target="fileName">No hay archivo seleccionado</span>
+                <span class="file-name" id="file-name" data-file-input-target="fileName"><%= t('users.show.no_file_selected') %></span>
               </label>
             </div>
             <div class="field mt-4">
               <%= button_tag(type: 'submit', class: 'button is-primary is-fullwidth') do %>
                 <i class="fas fa-user-circle"></i>
-                &nbsp;Actualizar avatar
+                &nbsp;<%= t('users.show.update_avatar') %>
               <% end %>
             </div>
           <% end %>
@@ -49,25 +50,25 @@
             <% if @user.admin? %>
               <span class="icon-text mt-1">
                 <span class="icon"><i class="fa-solid fa-user-shield"></i></span>
-                <strong>Rol:</strong> <span><%= @user.role.capitalize %></span>
+                <strong><%= t('users.show.role') %>:</strong> <span><%= @user.role.capitalize %></span>
               </span><br>
             <% end %>
             <span class="icon-text mt-1">
               <span class="icon"><i class="fa-solid fa-calendar-plus"></i></span>
-              <span>Registrado hace <%= time_ago_in_words(@user.created_at) %></span>
+              <span><%= t('users.show.registered_ago', time: time_ago_in_words(@user.created_at)) %></span>
             </span>
           </p>
 
           <%= link_to edit_password_path, class: "button is-link" do %>
             <span class="icon"><i class="fa-solid fa-key"></i></span>
-            <span>Cambiar contraseña</span>
+            <span><%= t('users.show.change_password') %></span>
           <% end %>
         </div>
       </div>
     </div>
 
     <h2 class="title is-4 mt-6 mb-4">
-      <i class="fa-solid fa-pen-nib"></i> Mis publicaciones
+      <i class="fa-solid fa-pen-nib"></i> <%= t('users.show.my_posts') %>
     </h2>
 
     <% if @posts.any? %>
@@ -77,8 +78,8 @@
         <% end %>
       </div>
     <% else %>
-      <div class="is-warning is-light">
-        <i class="fa-solid fa-circle-exclamation"></i> No has creado publicaciones aún.
+      <div class="notification is-warning is-light">
+        <i class="fa-solid fa-circle-exclamation"></i> <%= t('users.show.no_posts_yet') %>
       </div>
     <% end %>
     <div class="container">

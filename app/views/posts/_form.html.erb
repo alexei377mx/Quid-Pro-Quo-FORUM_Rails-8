@@ -2,10 +2,8 @@
   <div class="field">
     <%= form.label :title, class: "label" do %>
       <span class="icon-text">
-        <span class="icon">
-          <i class="fa-solid fa-heading"></i>
-        </span>
-        <span>Título</span>
+        <span class="icon"><i class="fa-solid fa-heading"></i></span>
+        <span><%= t('posts.form.title') %></span>
       </span>
     <% end %>
     <div class="control has-icons-left">
@@ -13,11 +11,9 @@
         <%= form.text_field :title, class: "input", disabled: true %>
         <%= form.hidden_field :title %>
       <% else %>
-        <%= form.text_field :title, class: "input #{'is-danger' if post.errors[:title].any?}", placeholder: "Título del post (mínimo 5 caracteres)" %>
+        <%= form.text_field :title, class: "input #{'is-danger' if post.errors[:title].any?}", placeholder: t('posts.form.title_placeholder') %>
       <% end %>
-      <span class="icon is-small is-left">
-        <i class="fa-solid fa-pen"></i>
-      </span>
+      <span class="icon is-small is-left"><i class="fa-solid fa-pen"></i></span>
     </div>
     <small class="help is-danger"><%= post.errors[:title].join(', ') %></small>
   </div>
@@ -25,18 +21,15 @@
   <div class="field">
     <%= form.label :content, class: "label" do %>
       <span class="icon-text">
-        <span class="icon">
-          <i class="fa-solid fa-align-left"></i>
-        </span>
-        <span>Contenido</span>
+        <span class="icon"><i class="fa-solid fa-align-left"></i></span>
+        <span><%= t('posts.form.content') %></span>
       </span>
       <p class="help">
-        Puedes usar <strong>Markdown</strong>. 
-        <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+        <%= t('posts.form.markdown_help_html', link: link_to(t('posts.form.markdown_link'), "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info")).html_safe %>
       </p>
     <% end %>
     <div class="control">
-      <%= form.text_area :content, rows: 10, class: "textarea #{'is-danger' if post.errors[:content].any?}", placeholder: "Escribe el contenido detallado del post..." %>
+      <%= form.text_area :content, rows: 10, class: "textarea #{'is-danger' if post.errors[:content].any?}", placeholder: t('posts.form.content_placeholder') %>
     </div>
     <small class="help is-danger"><%= post.errors[:content].join(', ') %></small>
   </div>
@@ -44,18 +37,23 @@
   <div class="field">
     <%= form.label :category, class: "label" do %>
       <span class="icon-text">
-        <span class="icon">
-          <i class="fa-solid fa-tags"></i>
-        </span>
-        <span>Categoría</span>
+        <span class="icon"><i class="fa-solid fa-tags"></i></span>
+        <span><%= t('posts.form.category') %></span>
       </span>
     <% end %>
     <div class="select">
       <% if post.persisted? %>
-        <%= form.select :category, Post::CATEGORIES.sort, {}, disabled: true, class: "select" %>
+        <%= form.select :category,
+                        categories_options,
+                        {},
+                        disabled: true,
+                        class: "select" %>
         <%= form.hidden_field :category %>
       <% else %>
-        <%= form.select :category, Post::CATEGORIES.sort, { prompt: "Selecciona una categoría" }, class: "select #{'is-danger' if post.errors[:category].any?}" %>
+        <%= form.select :category,
+                        categories_options,
+                        { prompt: t('posts.form.category_prompt') },
+                        class: "select #{'is-danger' if post.errors[:category].any?}" %>
       <% end %>
     </div>
     <small class="help is-danger"><%= post.errors[:category].join(', ') %></small>
@@ -65,45 +63,33 @@
     <%= form.label :image, class: "label" do %>
       <span class="icon-text">
         <span class="icon"><i class="fa-solid fa-image"></i></span>
-        <span>Imagen del post</span>
+        <span><%= t('posts.form.image') %></span>
       </span>
     <% end %>
 
     <% if post.image.attached? && post.image.image? %>
       <div class="mb-4 card box">
-        <p class="has-text-weight-semibold">Imagen actual:</p>
-
-        <div class="">
-          <figure class="image is-128x128 is-inline-block">
-            <%= image_tag(post.image.variant(resize_to_limit: [128, 128])) %>
-          </figure>
-
-          <div class="mt-2">
-            <label class="checkbox">
-              <%= form.check_box :remove_image %> Eliminar imagen
-            </label>
-          </div>
+        <p class="has-text-weight-semibold"><%= t('posts.form.current_image') %></p>
+        <figure class="image is-128x128 is-inline-block">
+          <%= image_tag(post.image.variant(resize_to_limit: [128, 128])) %>
+        </figure>
+        <div class="mt-2">
+          <label class="checkbox">
+            <%= form.check_box :remove_image %> <%= t('posts.form.remove_image') %>
+          </label>
         </div>
       </div>
     <% end %>
 
     <div class="file has-name is-fullwidth mt-2" data-controller="file-input">
       <label class="file-label">
-        <%= form.file_field :image, class: "file-input", accept: "image/*",
-              data: {
-                file_input_target: "input",
-                action: "change->file-input#updateFileName"
-              } %>
+        <%= form.file_field :image, class: "file-input", accept: "image/*", data: { file_input_target: "input", action: "change->file-input#updateFileName" } %>
         <span class="file-cta">
-          <span class="file-icon">
-            <i class="fa-solid fa-upload"></i>
-          </span>
-          <span class="file-label">
-            Selecciona una imagen…
-          </span>
+          <span class="file-icon"><i class="fa-solid fa-upload"></i></span>
+          <span class="file-label"><%= t('posts.form.choose_image') %></span>
         </span>
         <span class="file-name" id="file-name" data-file-input-target="fileName">
-          No hay archivo seleccionado
+          <%= t('posts.form.no_file_selected') %>
         </span>
       </label>
     </div>
@@ -117,21 +103,15 @@
   <div class="field is-grouped mt-5">
     <div class="control">
       <%= button_tag type: 'submit', class: "button is-primary" do %>
-        <span class="icon">
-          <i class="fa-solid fa-save"></i>
-        </span>
-        <span>
-          <%= post.persisted? ? "Actualizar publicación" : "Crear publicación" %>
-        </span>
+        <span class="icon"><i class="fa-solid fa-save"></i></span>
+        <span><%= post.persisted? ? t('posts.form.update') : t('posts.form.create') %></span>
       <% end %>
     </div>
     <% cancel_path = post.persisted? ? post_path(post) : posts_path %>
     <div class="control">
       <%= link_to cancel_path, class: "button" do %>
-        <span class="icon">
-          <i class="fa-solid fa-times"></i>
-        </span>
-        <span>Cancelar</span>
+        <span class="icon"><i class="fa-solid fa-times"></i></span>
+        <span><%= t('posts.form.cancel') %></span>
       <% end %>
     </div>
   </div>

@@ -2,16 +2,23 @@ class Report < ApplicationRecord
   belongs_to :user
   belongs_to :reportable, polymorphic: true
 
-  REASONS = [
-    "Contenido ofensivo",
-    "Spam o publicidad no solicitada",
-    "Información falsa o engañosa",
-    "Acoso o abuso",
-    "Lenguaje inapropiado",
-    "Otro"
-  ].freeze
+  REASONS = {
+    1 => :offensive_content,
+    2 => :spam,
+    3 => :false_information,
+    4 => :harassment,
+    5 => :inappropriate_language,
+    6 => :other
+  }.freeze
 
-  validates :reason, presence: true, inclusion: { in: REASONS, message: "no es una razón válida" }
+  validates :reason, presence: true, inclusion: {
+    in: REASONS.keys.map(&:to_s),
+    message: :invalid_reason
+  }
+
+  def reason_text
+    I18n.t("reports.reasons.#{REASONS[reason.to_i]}")
+  end
 
   scope :without_deleted_content, lambda {
     joins(<<~SQL)

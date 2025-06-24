@@ -6,21 +6,21 @@ class AdminControllerTest < ActionDispatch::IntegrationTest
     @user = users(:two)
   end
 
-  test "debería acceder al panel como admin" do
+  test "should access admin panel as admin" do
     log_in_as(@admin)
     get admin_path
     assert_response :success
   end
 
-  test "debería redirigir al panel cuando no está logueado" do
+  test "should redirect to root when not logged in" do
     get admin_path
-    assert_redirected_to root_path
+    assert_redirected_to root_url(locale: I18n.locale)
   end
 
-  test "debería negar acceso al panel para usuarios que no son admin" do
+  test "should deny access to admin panel for non-admin users" do
     log_in_as(@user)
     get admin_path
-    assert_redirected_to root_path
-    assert_equal "No estás autorizado para acceder a esta página.", flash[:alert]
+    assert_redirected_to root_url(locale: I18n.locale)
+    assert_equal I18n.t("errors.not_authorized"), flash[:alert]
   end
 end

@@ -1,52 +1,29 @@
 es:
   activerecord:
-    models:
-      post: "Publicación"
-      comment: "Comentario"
-      comment_reaction: "Reacción a comentario"
-      report: "Reporte"
-      user: "Usuario"
-
-    attributes:
-      post:
-        title: "Título"
-        content: "Contenido"
-        user_id: "Usuario"
-        category: "Categoría"
-        created_at: "Fecha de creación"
-        updated_at: "Fecha de actualización"
-
-      comment:
-        content: "Contenido"
-        post_id: "Publicación"
-        user_id: "Usuario"
-        parent_id: "Comentario padre"
-        created_at: "Fecha de creación"
-        updated_at: "Fecha de actualización"
-
-      comment_reaction:
-        user_id: "Usuario"
-        comment_id: "Comentario"
-        created_at: "Fecha de creación"
-        updated_at: "Fecha de actualización"
-
-      report:
-        user_id: "Usuario"
-        reason: "Razón"
-        reportable_type: "Tipo de contenido"
-        reportable_id: "Contenido reportado"
-        created_at: "Fecha de creación"
-        updated_at: "Fecha de actualización"
-
-      user:
-        name: "Nombre"
-        username: "Nombre de usuario"
-        email: "Correo electrónico"
-        password_digest: "Contraseña"
-        role: "Rol"
-        created_at: "Fecha de creación"
-        updated_at: "Fecha de actualización"
-
+    errors:
+      models:
+        post:
+          attributes:
+            category:
+              invalid_category: "no es una categoría válida"
+            image:
+              invalid_format: "debe ser JPEG, PNG o WebP"
+              too_large: "es demasiado grande (máximo 5 MB)"
+        report:
+          attributes:
+            reason:
+              invalid_reason: "no es un motivo válido"
+        user:
+          attributes:
+            password:
+              invalid_password_format: "debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (por ejemplo: !, @, #, $, %, &, *)."
+            username:
+              invalid_username_format: "solo puede contener letras, números, guiones medios y guiones bajos, sin espacios"
+            role:
+              invalid_role: "no es un rol válido"
+            avatar:
+              avatar_too_big: "es demasiado grande (máximo 1 MB)"
+              avatar_invalid_format: "debe ser JPEG, PNG o WebP"
   views:
     pagination:
       first: "Primera"
@@ -54,3 +31,413 @@ es:
       previous: "Anterior"
       next: "Siguiente"
       truncate: "..."
+  posts:
+    categories:
+      technology: "Tecnología"
+      culture: "Cultura"
+      health: "Salud"
+      sports: "Deportes"
+      business: "Negocios"
+    controller:
+      deleted_by_admin: "Esta publicación fue eliminada por la administración."
+      invalid_category: "La categoría seleccionada no es válida."
+      created: "La publicación fue creada exitosamente."
+      create_failed: "La creación de la publicación falló."
+      create_failed_log: "La creación de la publicación falló. Errores: %{errors}"
+      updated: "La publicación fue actualizada exitosamente."
+      update_failed: "La actualización de la publicación falló."
+      update_failed_log: "La actualización de la publicación falló. Errores: %{errors}"
+      deleted: "La publicación fue eliminada exitosamente."
+      delete_failed: "No se pudo eliminar la publicación ID: %{id}. Errores: %{errors}"
+      delete_failed_log: "No se pudo eliminar la publicación ID: %{id}. Errores: %{errors}"
+      admin_deleted: "Publicación eliminada por administración."
+      admin_delete_failed: "No se pudo eliminar la publicación como administrador."
+      admin_delete_failed_log: "No se pudo eliminar la publicación como administrador: %{id}. Errores: %{errors}"
+      unauthorized: "No estás autorizado para realizar esta acción."
+      unauthorized_attempt_log: "Intento no autorizado de modificar publicación ID: %{id} por el usuario ID: %{user_id}"
+      unauthenticated_access_log: "Intento de acceso no autenticado a recurso protegido"
+      login_required: "Debes iniciar sesión para realizar esta acción."
+    helper:
+      published_ago: "hace %{time}"
+      edited_ago: "Editado hace %{time}"
+    index:
+      welcome_user: "Bienvenido al foro %{name}!"
+      welcome_guest: "Bienvenido al foro!"
+      new_post: "Nuevo Post"
+      published_by_html: "Publicado por %{username}"
+      comments: "Comentarios"
+      visits: "Visitas"
+    new:
+      title: "Nuevo Post"
+    form:
+      title: "Título"
+      title_placeholder: "Título del post (mínimo 5 caracteres)"
+      content: "Contenido"
+      content_placeholder: "Escribe el contenido detallado del post..."
+      markdown_help_html: "Puedes usar <strong>Markdown</strong>. %{link}"
+      category: "Categoría"
+      category_prompt: "Selecciona una categoría"
+      image: "Imagen del post"
+      current_image: "Imagen actual:"
+      remove_image: "Eliminar imagen"
+      choose_image: "Selecciona una imagen…"
+      no_file_selected: "No hay archivo seleccionado"
+      update: "Actualizar publicación"
+      create: "Crear publicación"
+      cancel: "Cancelar"
+    show:
+      published_by_html: "Publicado por %{user}"
+      visits: "visitas"
+      edit: "Editar"
+      report: "Reportar"
+      admin_delete_confirm: "¿Estás seguro de eliminar esta publicación como administrador?"
+      admin_delete: "Eliminar (admin)"
+      comments_count: "Comentarios (%{count})"
+      no_comments_yet: "No hay comentarios aún."
+      default_avatar_alt: "Avatar por defecto"
+      comment: "Comentario"
+      markdown_help_html: "Puedes usar <strong>Markdown</strong> para dar formato al texto. %{link}"
+      markdown_guide: "Ver guía de sintaxis"
+      comment_placeholder: "Agregar un comentario..."
+      publish_comment: "Publicar comentario"
+      login_to_comment: "Inicia sesión para dejar un comentario."
+    category:
+      title: "Posts en la categoría: %{category}"
+      no_posts: "No hay publicaciones en esta categoría."
+    edit:
+      title: "Editar mi Post"
+  fair_use:
+    title: "Política de Uso Justo"
+    last_updated: "Última actualización: 14 de junio de 2025"
+    acceptance: "Al usar este foro, aceptas cumplir con esta política en su totalidad."
+    sections:
+      scope:
+        title: "1. Ámbito de Aplicación"
+        content: "Esta política se aplica a todo contenido generado por los usuarios del foro: publicaciones, comentarios, reacciones, reportes, y uso de la cuenta."
+      account_responsibility:
+        title: "2. Registro y Responsabilidad de la Cuenta"
+        points:
+          - "Cada persona puede mantener solo una cuenta activa."
+          - "El usuario es responsable de toda actividad realizada desde su cuenta."
+          - "Suplantaciones o alias ofensivos están prohibidos."
+      prohibited_content:
+        title: "3. Contenido Prohibido"
+        points:
+          - "Discriminación, odio, violencia o acoso."
+          - "Contenido ilegal, sexualmente explícito o vulgar."
+          - "Spam, malware, fraudes o enlaces maliciosos."
+      moderation:
+        title: "4. Moderación"
+        content: "Todo el contenido está sujeto a moderación. Los administradores pueden editar, ocultar o eliminar publicaciones sin previo aviso."
+      reports:
+        title: "5. Reportes"
+        content: "Los usuarios pueden reportar contenido ofensivo. El uso malicioso del sistema de reportes será sancionado."
+      comments:
+        title: "6. Comentarios"
+        content: "Participa con respeto. Está prohibido hacer flood, trolleo o desviar deliberadamente el tema."
+      content_removal:
+        title: "7. Eliminación de Contenido"
+        content: "Solo administradores pueden eliminar permanentemente. Los usuarios pueden editar su contenido o reportarlo para revisión."
+      sanctions:
+        title: "8. Sanciones"
+        points:
+          - "Advertencias, suspensiones o baneos permanentes."
+          - "Logs internos registran las acciones administrativas."
+      content_ownership:
+        title: "9. Propiedad del Contenido"
+        content: "El foro puede mostrar y conservar contenido publicado, incluso si el usuario es suspendido."
+      policy_changes:
+        title: "10. Cambios en la Política"
+        content: "La política puede ser modificada sin previo aviso. Se notificará a los usuarios activos cuando corresponda."
+      contact:
+        title: "11. Contacto"
+        content: "Consultas o apelaciones pueden enviarse mediante el formulario de contacto."
+  admin:
+    controller:
+      report_status_updated: "Estado del reporte actualizado."
+      contact_message_status_updated: "Estado del mensaje actualizado."
+    dashboard:
+      title: "Panel de Administración"
+      tabs:
+        reports: "Reportes"
+        radios: "Radios"
+        contact_messages: "Mensajes"
+        logs: "Logs"
+    reports:
+      filters:
+        content_type: "Tipo de contenido"
+        all: "Todos"
+        post: "Post"
+        comment: "Comentario"
+        status: "Estado"
+        reviewed: "Revisados"
+        not_reviewed: "No revisados"
+        from: "Desde"
+        to: "Hasta"
+        filter: "Filtrar"
+        clear: "Limpiar"
+      table:
+        user: "Usuario"
+        reason: "Razón"
+        content: "Contenido"
+        type: "Tipo"
+        date: "Fecha"
+        status: "Estado"
+      types:
+        post: "Post"
+        comment: "Comentario"
+      status:
+        reviewed: "Revisado"
+        not_reviewed: "No revisado"
+      confirm_toggle_reviewed: "¿Cambiar estado de revisión?"
+    radios:
+      form:
+        title: "Título"
+        stream_url: "URL de Stream"
+        add_radio: "Agregar radio"
+      list_title: "Lista de radios"
+      table:
+        title: "Título"
+        stream_url: "URL de Stream"
+        actions: "Acciones"
+      actions:
+        copy_url: "Copiar URL"
+        confirm_delete: "¿Seguro que deseas eliminar esta radio?"
+    contact_messages:
+      filter:
+        status: "Estado"
+        all: "Todos"
+        read: "Leídos"
+        unread: "No leídos"
+        from: "Desde"
+        to: "Hasta"
+        submit: "Filtrar"
+        clear: "Limpiar"
+      table:
+        subject: "Asunto"
+        name: "Nombre"
+        email: "Email"
+        date: "Fecha"
+        status: "Estado"
+      status:
+        read: "Leído"
+        unread: "No leído"
+      actions:
+        confirm_toggle: "¿Cambiar estado de revisión?"
+    logs:
+      headers:
+        datetime: "Fecha y Hora"
+        user: "Usuario"
+        action: "Acción"
+        description: "Descripción"
+      unknown_user: "Desconocido"
+  comments:
+    default_avatar_alt: "Avatar por defecto"
+    reply: "Responder"
+    report: "Reportar"
+    like: "Me gusta"
+    remove_like: "Quitar like"
+    reply_label: "Respuesta"
+    reply_placeholder: "Agregar una respuesta..."
+    post_reply: "Publicar respuesta"
+    deleted_by_admin: "Comentario eliminado por administración"
+    admin_delete: "Eliminar (admin)"
+    confirm_admin_delete: "¿Estás seguro de eliminar este comentario?"
+    sign_in_to_react: "Inicia sesión para reaccionar."
+    markdown_help_html: "Puedes usar <strong>Markdown</strong> para dar formato al texto. %{guide_url_html}"
+    default_avatar_alt: "Avatar por defecto"
+    reply: "Responder"
+    report: "Reportar"
+    like: "Me gusta"
+    remove_like: "Quitar like"
+    deleted_by_admin: "Comentario eliminado por administración"
+    admin_delete: "Eliminar (admin)"
+    confirm_admin_delete: "¿Estás seguro de eliminar este comentario?"
+    helper:
+      edit: "Editar"
+      posted_ago: "hace %{time}"
+      edited_ago: "Editado hace %{time}"
+    controller:
+      created: "El comentario fue publicado exitosamente."
+      create_error: "Hubo un error al publicar el comentario."
+      create_error_log: "Hubo un error al publicar el comentario: %{errors}"
+      reply_created: "La respuesta fue publicada exitosamente."
+      reply_error: "Hubo un error al publicar la respuesta."
+      reply_error_log: "Hubo un error al publicar la respuesta: %{errors}"
+      updated: "El comentario fue actualizado exitosamente."
+      update_error: "Hubo un error al actualizar el comentario."
+      update_error_log: "Error al actualizar comentario: %{errors}"
+      admin_deleted: "Comentario eliminado por administración."
+      admin_delete_error: "Hubo un error al eliminar el comentario."
+      admin_delete_error_log: "Error al eliminar comentario por admin: %{errors}"
+      unauthorized: "No estás autorizado para realizar esta acción."
+      login_required: "Debes iniciar sesión para realizar esta acción."
+    edit:
+      post_title: "Post: %{title}"
+      edit_title: "Editar Comentario"
+      content_label: "Contenido"
+      markdown_help_html: "Puedes usar <strong>Markdown</strong> para dar formato al texto. %{guide_link}"
+      syntax_guide: "Ver guía de sintaxis"
+      update_button: "Actualizar comentario"
+      back_button: "Volver al Post"
+  contact_messages:
+    controller:
+      success: "Tu mensaje ha sido enviado correctamente."
+      failure: "La creación del mensaje falló."
+      error_log: "Errores: %{errors}"
+    new:
+      title: "Formulario de Contacto"
+      subtitle: "Consultas o apelaciones pueden enviarse desde aquí."
+      name: "Nombre"
+      name_placeholder: "Tu nombre completo"
+      email: "Correo Electrónico"
+      email_placeholder: "tucorreo@ejemplo.com"
+      subject: "Asunto"
+      subject_placeholder: "Motivo del contacto"
+      message: "Mensaje"
+      message_placeholder: "Escribe tu consulta o apelación aquí..."
+      send: "Enviar"
+      cancel: "Cancelar"
+    show:
+      title: "Mensaje de Contacto"
+      name: "Nombre"
+      email: "Correo Electrónico"
+      subject: "Asunto"
+      message: "Mensaje"
+      sent_at: "Enviado el %{date}"
+      back_to_panel: "Volver al panel"
+  users:
+    ban_message: "El usuario %{username} ha sido baneado automáticamente por eliminaciones repetidas."
+    roles:
+      user: "Usuario"
+      admin: "Administrador"
+      moderator: "Moderador"
+    controller:
+      registration_success: "Registrado correctamente"
+      registration_failed: "Error al registrar usuario"
+      recaptcha_failed: "No pudimos verificar que eres humano."
+      incorrect_current_password: "La contraseña actual es incorrecta."
+      passwords_do_not_match: "Las nuevas contraseñas no coinciden."
+      password_updated: "Contraseña actualizada correctamente"
+      password_update_failed: "Error al actualizar la contraseña."
+      avatar_updated: "Avatar actualizado correctamente"
+      avatar_update_failed: "Error al actualizar el avatar: %{errors}"
+      login_required: "Debes iniciar sesión para acceder a esta página."
+    password:
+      edit:
+        title: "Cambiar Contraseña"
+        current_password: "Contraseña Actual"
+        current_password_placeholder: "Tu contraseña actual"
+        new_password: "Nueva Contraseña"
+        new_password_placeholder: "Tu nueva contraseña"
+        confirm_password: "Confirmar Nueva Contraseña"
+        confirm_password_placeholder: "Confirma tu nueva contraseña"
+        submit: "Cambiar Contraseña"
+        back: "Volver"
+    new:
+      title: "Registrar nuevo usuario"
+      submit: "Registrarse"
+      login_prompt: "¿Ya tienes cuenta? Inicia sesión"
+      placeholders:
+        name: "Tu nombre"
+        username: "Tu nombre de usuario"
+        email: "Tu correo electrónico"
+        password: "Tu contraseña"
+        password_confirmation: "Confirma tu contraseña"
+    show:
+      default_avatar_alt: "Avatar por defecto"
+      change_image: "Cambiar imagen"
+      no_file_selected: "No hay archivo seleccionado"
+      update_avatar: "Actualizar avatar"
+      role: "Rol"
+      registered_ago: "Registrado hace %{time}"
+      change_password: "Cambiar contraseña"
+      my_posts: "Mis publicaciones"
+      no_posts_yet: "No has creado publicaciones aún."
+  sessions:
+    controller:
+      blank_login: "El campo email o nombre de usuario no puede estar vacío."
+      blank_password: "El campo contraseña no puede estar vacío."
+      user_not_found: "No se encontró un usuario con ese email o nombre de usuario."
+      invalid_password: "Contraseña incorrecta."
+      login_success: "Has iniciado sesión exitosamente."
+      logout_success: "Has cerrado sesión."
+      recaptcha_failed: "No pudimos verificar que eres humano."
+    new:
+      title: "Iniciar sesión"
+      login_label: "Email o nombre de usuario"
+      login_placeholder: "ejemplo@email.com o tu_usuario"
+      password_label: "Contraseña"
+      password_placeholder: "••••••••"
+      submit: "Iniciar sesión"
+      no_account: "¿No tienes cuenta?"
+      register_here: "Regístrate aquí"
+  reports:
+    reasons:
+      offensive_content: "Contenido ofensivo"
+      spam: "Spam o publicidad no solicitada"
+      false_information: "Información falsa o engañosa"
+      harassment: "Acoso o abuso"
+      inappropriate_language: "Lenguaje inapropiado"
+      other: "Otro"
+    controller:
+      created: "El reporte fue enviado correctamente."
+      create_failed: "No se pudo enviar el reporte."
+      auth_required: "Debes iniciar sesión para realizar esta acción."
+    new:
+      title: "Reportar contenido"
+      reason_label: "Motivo del reporte"
+      submit: "Enviar reporte"
+      cancel: "Cancelar"
+  footer:
+    fair_use: "Política de Uso Justo"
+    contact: "Contacto"
+    rights: "Todos los derechos reservados."
+  navbar:
+    categories: "Categorías"
+    admin_panel: "Panel de %{br}Administración"
+    my_profile: "Mi perfil"
+    logout: "Cerrar sesión"
+    login: "Iniciar sesión"
+    register: "Registrarse"
+    radio:
+      prev: "Anterior"
+      next: "Siguiente"
+      play_pause: "Reproducir / Pausar"
+      no_radio: "Sin radio"
+  notifications:
+    titles:
+      notice: "AVISO"
+      success: "ÉXITO"
+      alert: "ALERTA"
+      error: "ALERTA"
+      danger: "ALERTA"
+      warning: "ADVERTENCIA"
+      default: "INFORMACIÓN"
+  errors:
+    not_authorized: "No estás autorizado para acceder a esta página."
+    account_banned: "Tu cuenta ha sido baneada."
+  comment_reactions:
+    liked: "Te gustó el comentario."
+    already_liked: "Ya le diste like a este comentario."
+    already_liked_log: "Ya le diste like a este comentario."
+    unliked: "Quitaste tu reacción."
+    not_liked: "No habías reaccionado a este comentario."
+    not_liked_log: "No habías reaccionado a este comentario."
+    login_required: "Debes iniciar sesión para realizar esta acción."
+    login_required_log: "Debes iniciar sesión para realizar esta acción."
+  radios:
+    controller:
+      created: "Radio añadida correctamente."
+      create_failed: "No se pudo añadir la radio. Revisa los datos."
+      deleted: "Radio eliminada correctamente."
+  stimulus:
+    clipboard_radio_controller:
+      notifications:
+        url_copied: "URL copiada al portapapeles"
+        copy_failed: "No se pudo copiar la URL"
+        notice_title: "AVISO"
+        error_title: "ALERTA"
+        info_title: "INFORMACIÓN"
+    file_input_controller:
+          no_file_selected: "No hay archivo seleccionado"

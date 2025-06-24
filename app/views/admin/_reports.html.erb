@@ -3,32 +3,32 @@
 
   <div class="columns is-multiline">
     <div class="column is-one-quarter">
-      <label class="label">Tipo de contenido</label>
+      <label class="label"><%= t('admin.reports.filters.content_type') %></label>
       <div class="select is-fullwidth">
-        <%= select_tag :type, options_for_select([["Todos", ""], ["Post", "Post"], ["Comentario", "Comment"]], selected: params[:type]), class: "select" %>
+        <%= select_tag :type, options_for_select([[t('admin.reports.filters.all'), ""], [t('admin.reports.filters.post'), "Post"], [t('admin.reports.filters.comment'), "Comment"]], selected: params[:type]), class: "select" %>
       </div>
     </div>
 
     <div class="column is-one-quarter">
-      <label class="label">Estado</label>
+      <label class="label"><%= t('admin.reports.filters.status') %></label>
       <div class="select is-fullwidth">
-        <%= select_tag :reviewed, options_for_select([["Todos", ""], ["Revisados", "true"], ["No revisados", "false"]], selected: params[:reviewed]), class: "select" %>
+        <%= select_tag :reviewed, options_for_select([[t('admin.reports.filters.all'), ""], [t('admin.reports.filters.reviewed'), "true"], [t('admin.reports.filters.not_reviewed'), "false"]], selected: params[:reviewed]), class: "select" %>
       </div>
     </div>
 
     <div class="column is-one-quarter">
-      <label class="label">Desde</label>
+      <label class="label"><%= t('admin.reports.filters.from') %></label>
       <%= date_field_tag :from, params[:from], class: "input" %>
     </div>
 
     <div class="column is-one-quarter">
-      <label class="label">Hasta</label>
+      <label class="label"><%= t('admin.reports.filters.to') %></label>
       <%= date_field_tag :to, params[:to], class: "input" %>
     </div>
 
     <div class="column is-full">
-      <%= submit_tag "Filtrar", class: "button is-primary" %>
-      <%= link_to "Limpiar", admin_path(tab: "reports"), class: "button is-light" %>
+      <%= submit_tag t('admin.reports.filters.filter'), class: "button is-primary" %>
+      <%= link_to t('admin.reports.filters.clear'), admin_path(tab: "reports"), class: "button is-light" %>
     </div>
   </div>
 <% end %>
@@ -38,19 +38,19 @@
   <table class="table is-fullwidth is-striped is-hoverable">
     <thead>
       <tr>
-        <th>Usuario</th>
-        <th>Razón</th>
-        <th>Contenido</th>
-        <th>Tipo</th>
-        <th>Fecha</th>
-        <th>Estado</th>
+        <th><%= t('admin.reports.table.user') %></th>
+        <th><%= t('admin.reports.table.reason') %></th>
+        <th><%= t('admin.reports.table.content') %></th>
+        <th><%= t('admin.reports.table.type') %></th>
+        <th><%= t('admin.reports.table.date') %></th>
+        <th><%= t('admin.reports.table.status') %></th>
       </tr>
     </thead>
     <tbody>
       <% @reports.each do |report| %>
         <tr id="report_<%= report.id %>">
           <td><%= report.user.username %></td>
-          <td><%= report.reason %></td>
+          <td><%= report.reason_text %></td>
           <td>
             <% if report.reportable_type == "Post" %>
               <%= link_to truncate(report.reportable.title, length: 30), post_path(report.reportable), class: "has-text-link" %>
@@ -58,7 +58,7 @@
               <%= link_to truncate(report.reportable.content, length: 50), post_path(report.reportable.post), class: "has-text-link" %>
             <% end %>
           </td>
-          <td><%= report.reportable_type == "Post" ? "Post" : "Comentario" %></td>
+          <td><%= report.reportable_type == "Post" ? t('admin.reports.types.post') : t('admin.reports.types.comment') %></td>
           <td><%= l(report.created_at, format: :short) %></td>
           <td>
             <% button_class = "button is-small is-#{report.reviewed ? 'success' : 'warning'}" %>
@@ -71,9 +71,9 @@
                             to: params[:to],
                             page: params[:page]
                           },
-                          form: { data: { turbo_confirm: "¿Cambiar estado de revisión?" } },
-                          class: "button is-small is-#{report.reviewed ? 'success' : 'warning'}" do %>
-                          <%= report.reviewed ? "Revisado" : "No revisado" %>
+                          form: { data: { turbo_confirm: t('admin.reports.confirm_toggle_reviewed') } },
+                          class: button_class do %>
+                          <%= report.reviewed ? t('admin.reports.status.reviewed') : t('admin.reports.status.not_reviewed') %>
             <% end %>
           </td>
         </tr>

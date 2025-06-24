@@ -1,15 +1,43 @@
-<footer class="footer has-background-primary has-text-white-ter py-4 mt-5">
+<footer class="footer has-background-primary has-text-white-ter py-2 mt-3">
   <div class="content has-text-centered is-size-6">
-    <p class="has-text-weight-semibold mb-2">
+    <p class="has-text-weight-semibold mb-1">
       <span class="icon is-small"><i class="fas fa-comments"></i></span>
       Quid Pro Quo FORUM
     </p>
-    <p class="mb-2">
-      <%= link_to "Política de Uso Justo", fair_use_path, class: "has-text-white" %> &middot;
-      <%= link_to "Contacto", contact_path, class: "has-text-white" %>
+    <p class="mb-1">
+      <%= link_to t('footer.fair_use'), fair_use_path, class: "has-text-white" %> &middot;
+      <%= link_to t('footer.contact'), contact_path, class: "has-text-white" %>
     </p>
-    <p>
-      &copy; <%= Time.current.year %> Quid Pro Quo FORUM. Todos los derechos reservados.
+
+    <div class="dropdown is-up is-hoverable">
+      <div class="dropdown-trigger">
+        <button class="button is-primary is-small" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span class="icon is-small">
+            <i class="fas fa-globe"></i>
+          </span>
+          <span><%= I18n.locale == :es ? "Español" : "English" %></span>
+          <span class="icon is-small">
+            <i class="fas fa-angle-up" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <%= link_to url_for(locale: :es), class: "dropdown-item" do %>
+            <span class="icon is-small">🇲🇽</span>
+            <span>Español</span>
+          <% end %>
+
+          <%= link_to url_for(locale: :en), class: "dropdown-item" do %>
+            <span class="icon is-small">🇺🇸</span>
+            <span>English</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-2 is-size-6">
+      &copy; <%= Time.current.year %> Quid Pro Quo FORUM. <%= t('footer.rights') %>
     </p>
   </div>
 </footer>

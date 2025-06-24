@@ -11,7 +11,7 @@
     <div class="columns is-centered">
       <div class="column is-half">
         <h1 class="title has-text-centered">
-          <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
+          <i class="fa-solid fa-right-to-bracket"></i> <%= t('sessions.new.title') %>
         </h1>
 
         <%= form_with url: login_path, local: true, data: {
@@ -21,9 +21,9 @@
           "recaptcha-v2-value" => @show_checkbox_recaptcha
         } do |form| %>
           <div class="field">
-            <%= form.label :login, 'Email o nombre de usuario', class: "label" %>
+            <%= form.label :login, t('sessions.new.login_label'), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.text_field :login, class: "input", placeholder: "ejemplo@email.com o tu_usuario" %>
+              <%= form.text_field :login, class: "input", placeholder: t('sessions.new.login_placeholder') %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-user"></i>
               </span>
@@ -31,9 +31,9 @@
           </div>
 
           <div class="field">
-            <%= form.label :password, 'Contraseña', class: "label" %>
+            <%= form.label :password, t('sessions.new.password_label'), class: "label" %>
             <div class="control has-icons-left">
-              <%= form.password_field :password, class: "input", placeholder: "••••••••" %>
+              <%= form.password_field :password, class: "input", placeholder: t('sessions.new.password_placeholder') %>
               <span class="icon is-small is-left">
                 <i class="fa-solid fa-lock"></i>
               </span>
@@ -58,7 +58,7 @@
                 <span class="icon">
                   <i class="fa-solid fa-right-to-bracket"></i>
                 </span>
-                <span>Iniciar sesión</span>
+                <span><%= t('sessions.new.submit') %></span>
               <% end %>
             </div>
           </div>
@@ -66,8 +66,8 @@
 
         <div class="has-text-centered">
           <p class="is-size-6">
-            ¿No tienes cuenta?
-            <%= link_to '<i class="fa-solid fa-user-plus"></i> Regístrate aquí'.html_safe, register_path, class: "has-text-link", data: { turbo: false } %>
+            <%= t('sessions.new.no_account') %>
+            <%= link_to "<i class='fa-solid fa-user-plus'></i> #{t('sessions.new.register_here')}".html_safe, register_path, class: "has-text-link", data: { turbo: false } %>
           </p>
         </div>
       </div>

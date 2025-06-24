@@ -6,18 +6,18 @@
   </h2>
   <p class="subtitle is-6">        
     <span class="icon"><i class="fa-solid fa-user"></i></span>
-    <span>Publicado por <strong>@<%= post.user.username %></strong></span>
+    <span><%= t('posts.index.published_by_html', username: "<strong>@#{post.user.username}</strong>".html_safe) %></span>
 
     <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
     <span><%= post_published_time(post) %></span>
 
     <span class="icon"><i class="fa-solid fa-tag"></i></span>
-    <span><%= post.category %></span>
+    <span><%= post.category_name %></span>
     <br>
     <span class="icon"><i class="fa-solid fa-comments"></i></span>
-    <span><strong><%= post.comments.count %></strong> Comentarios</span>
+    <span><strong><%= post.comments.count %></strong> <%= t('posts.index.comments') %></span>
     <span class="icon"><i class="fa-solid fa-eye"></i></span>
-    <span><strong><%= post.visits || 0 %></strong> Visitas</span>
+    <span><strong><%= post.visits || 0 %></strong> <%= t('posts.index.visits') %></span>
   </p>
 
   <div class="content">

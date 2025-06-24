@@ -1,55 +1,82 @@
 <section class="section">
   <div class="container content">
-    <h1 class="title is-2"><i class="fa-solid fa-scale-balanced"></i> Política de Uso Justo</h1>
-    <p class="subtitle is-5 has-text-grey-dark">Última actualización: 14 de junio de 2025</p>
+    <h1 class="title is-2">
+      <i class="fa-solid fa-scale-balanced"></i> <%= t('fair_use.title') %>
+    </h1>
+    <p class="subtitle is-5 has-text-grey-dark"><%= t('fair_use.last_updated') %></p>
 
     <hr>
 
-    <h2 class="title is-4"><i class="fa-solid fa-bullseye"></i> 1. Ámbito de Aplicación</h2>
-    <p>Esta política se aplica a todo contenido generado por los usuarios del foro: publicaciones, comentarios, reacciones, reportes, y uso de la cuenta.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-bullseye"></i> <%= t('fair_use.sections.scope.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.scope.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-user-lock"></i> 2. Registro y Responsabilidad de la Cuenta</h2>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-user-lock"></i> <%= t('fair_use.sections.account_responsibility.title') %>
+    </h2>
     <ul>
-      <li>Cada persona puede mantener solo una cuenta activa.</li>
-      <li>El usuario es responsable de toda actividad realizada desde su cuenta.</li>
-      <li>Suplantaciones o alias ofensivos están prohibidos.</li>
+      <% t('fair_use.sections.account_responsibility.points').each do |point| %>
+        <li><%= point %></li>
+      <% end %>
     </ul>
 
-    <h2 class="title is-4"><i class="fa-solid fa-ban"></i> 3. Contenido Prohibido</h2>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-ban"></i> <%= t('fair_use.sections.prohibited_content.title') %>
+    </h2>
     <ul>
-      <li>Discriminación, odio, violencia o acoso.</li>
-      <li>Contenido ilegal, sexualmente explícito o vulgar.</li>
-      <li>Spam, malware, fraudes o enlaces maliciosos.</li>
+      <% t('fair_use.sections.prohibited_content.points').each do |point| %>
+        <li><%= point %></li>
+      <% end %>
     </ul>
 
-    <h2 class="title is-4"><i class="fa-solid fa-shield-halved"></i> 4. Moderación</h2>
-    <p>Todo el contenido está sujeto a moderación. Los administradores pueden editar, ocultar o eliminar publicaciones sin previo aviso.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-shield-halved"></i> <%= t('fair_use.sections.moderation.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.moderation.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-flag"></i> 5. Reportes</h2>
-    <p>Los usuarios pueden reportar contenido ofensivo. El uso malicioso del sistema de reportes será sancionado.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-flag"></i> <%= t('fair_use.sections.reports.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.reports.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-comments"></i> 6. Comentarios</h2>
-    <p>Participa con respeto. Está prohibido hacer flood, trolleo o desviar deliberadamente el tema.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-comments"></i> <%= t('fair_use.sections.comments.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.comments.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-trash"></i> 7. Eliminación de Contenido</h2>
-    <p>Solo administradores pueden eliminar permanentemente. Los usuarios pueden editar su contenido o reportarlo para revisión.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-trash"></i> <%= t('fair_use.sections.content_removal.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.content_removal.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-user-slash"></i> 8. Sanciones</h2>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-user-slash"></i> <%= t('fair_use.sections.sanctions.title') %>
+    </h2>
     <ul>
-      <li>Advertencias, suspensiones o baneos permanentes.</li>
-      <li>Logs internos registran las acciones administrativas.</li>
+      <% t('fair_use.sections.sanctions.points').each do |point| %>
+        <li><%= point %></li>
+      <% end %>
     </ul>
 
-    <h2 class="title is-4"><i class="fa-solid fa-file-shield"></i> 9. Propiedad del Contenido</h2>
-    <p>El foro puede mostrar y conservar contenido publicado, incluso si el usuario es suspendido.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-file-shield"></i> <%= t('fair_use.sections.content_ownership.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.content_ownership.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-gavel"></i> 10. Cambios en la Política</h2>
-    <p>La política puede ser modificada sin previo aviso. Se notificará a los usuarios activos cuando corresponda.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-gavel"></i> <%= t('fair_use.sections.policy_changes.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.policy_changes.content') %></p>
 
-    <h2 class="title is-4"><i class="fa-solid fa-envelope"></i> 11. Contacto</h2>
-    <p>Consultas o apelaciones pueden enviarse mediante el formulario de contacto.</p>
+    <h2 class="title is-4">
+      <i class="fa-solid fa-envelope"></i> <%= t('fair_use.sections.contact.title') %>
+    </h2>
+    <p><%= t('fair_use.sections.contact.content') %></p>
 
     <hr>
-    <p class="has-text-centered is-size-6"><i class="fa-solid fa-circle-check"></i> Al usar este foro, aceptas cumplir con esta política en su totalidad.</p>
+    <p class="has-text-centered is-size-6">
+      <i class="fa-solid fa-circle-check"></i> <%= t('fair_use.acceptance') %>
+    </p>
   </div>
 </section>

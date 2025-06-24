@@ -1,7 +1,7 @@
 <section class="section">
   <div class="container">
     <h1 class="title has-text-centered">
-      <i class="fas fa-tools"></i> Panel de Administración
+      <i class="fas fa-tools"></i> <%= t('admin.dashboard.title') %>
     </h1>
 
     <div class="tabs is-centered is-boxed">
@@ -9,25 +9,25 @@
         <li class="<%= 'is-active' if @tab == 'reports' %>">
           <%= link_to admin_path(tab: 'reports') do %>
             <span class="icon is-small"><i class="fas fa-flag"></i></span>
-            <span>Reportes</span>
+            <span><%= t('admin.dashboard.tabs.reports') %></span>
           <% end %>
         </li>
         <li class="<%= 'is-active' if @tab == 'radios' %>">
           <%= link_to admin_path(tab: 'radios') do %>
             <span class="icon is-small"><i class="fas fa-broadcast-tower"></i></span>
-            <span>Radios</span>
+            <span><%= t('admin.dashboard.tabs.radios') %></span>
           <% end %>
         </li>
         <li class="<%= 'is-active' if @tab == 'contact_messages' %>">
           <%= link_to admin_path(tab: 'contact_messages') do %>
             <span class="icon is-small"><i class="fas fa-envelope-open-text"></i></span>
-            <span>Mensajes</span>
+            <span><%= t('admin.dashboard.tabs.contact_messages') %></span>
           <% end %>
         </li>
         <li class="<%= 'is-active' if @tab == 'logs' %>">
           <%= link_to admin_path(tab: 'logs') do %>
             <span class="icon is-small"><i class="fas fa-history"></i></span>
-            <span>Logs</span>
+            <span><%= t('admin.dashboard.tabs.logs') %></span>
           <% end %>
         </li>
       </ul>

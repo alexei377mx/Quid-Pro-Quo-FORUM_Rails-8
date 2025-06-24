@@ -2,61 +2,62 @@ require "test_helper"
 
 class CommentTest < ActiveSupport::TestCase
   def setup
-    @comentario = comments(:one)
+    @comment = comments(:one)
   end
 
-  test "debe ser válido con atributos correctos" do
-    assert @comentario.valid?
+  test "should be valid with correct attributes" do
+    assert @comment.valid?
   end
 
-  test "debe requerir contenido" do
-    @comentario.content = nil
-    assert_not @comentario.valid?
-    assert_includes @comentario.errors[:content], "no puede estar en blanco"
+  test "should require content" do
+    @comment.content = nil
+    assert_not @comment.valid?
+    assert_includes @comment.errors[:content], I18n.t("errors.messages.blank")
   end
 
-  test "debe requerir contenido con longitud mínima" do
-    @comentario.content = "A"
-    assert_not @comentario.valid?
-    assert_includes @comentario.errors[:content], "es demasiado corto (2 caracteres mínimo)"
+  test "should require minimum content length" do
+    @comment.content = "A"
+    assert_not @comment.valid?
+    assert_includes @comment.errors[:content],
+                   I18n.t("errors.messages.too_short", count: 2)
   end
 
-  test "debe pertenecer a una publicación" do
-    assert_equal posts(:one), @comentario.post
+  test "should belong to a post" do
+    assert_equal posts(:one), @comment.post
   end
 
-  test "debe pertenecer a un usuario" do
-    assert_equal users(:one), @comentario.user
+  test "should belong to a user" do
+    assert_equal users(:one), @comment.user
   end
 
-  test "puede tener un comentario padre (auto-relación)" do
-    padre = comments(:one)
-    respuesta = Comment.new(
-      content: "Esta es una respuesta válida",
-      post: padre.post,
-      user: padre.user,
-      parent: padre
+  test "can have a parent comment (self-relationship)" do
+    parent = comments(:one)
+    reply = Comment.new(
+      content: "This is a valid reply",
+      post: parent.post,
+      user: parent.user,
+      parent: parent
     )
-    assert respuesta.valid?
-    assert_equal padre, respuesta.parent
+    assert reply.valid?
+    assert_equal parent, reply.parent
   end
 
-  test "debe eliminar las respuestas si se elimina el comentario padre" do
-    padre = Comment.create!(
-      content: "Comentario principal",
+  test "should delete replies when parent comment is deleted" do
+    parent = Comment.create!(
+      content: "Main comment",
       post: posts(:one),
       user: users(:one)
     )
 
     Comment.create!(
-      content: "Respuesta al comentario principal",
-      post: padre.post,
-      user: padre.user,
-      parent: padre
+      content: "Reply to main comment",
+      post: parent.post,
+      user: parent.user,
+      parent: parent
     )
 
     assert_difference "Comment.count", -2 do
-      padre.destroy
+      parent.destroy
     end
   end
 end

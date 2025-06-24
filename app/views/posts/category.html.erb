@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title">
       <i class="fa-solid fa-tag"></i>
-      Posts en la categoría: <%= params[:category_id] %>
+      <%= t('posts.category.title', category: t("posts.categories.#{Post::CATEGORIES[params[:category_id].to_i]}")) %>
     </h1>
 
     <% if @posts.present? %>
@@ -12,7 +12,7 @@
     <% else %>
       <p>
         <i class="fa-solid fa-circle-info"></i>
-        No hay publicaciones en esta categoría.
+        <%= t('posts.category.no_posts') %>
       </p>
     <% end %>
   </div>

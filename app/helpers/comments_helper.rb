@@ -6,15 +6,20 @@ module CommentsHelper
   def comment_edit_link(comment, post)
     return unless user_signed_in? && comment.user == current_user
 
-    link_to "<i class='fa-solid fa-pen'></i> Editar".html_safe, edit_post_comment_path(post, comment)
+    link_to(
+      "<i class='fa-solid fa-pen'></i> #{t('comments.helper.edit')}".html_safe,
+      edit_post_comment_path(post, comment)
+    )
   end
 
   def time_ago(comment)
-    "hace #{time_ago_in_words(comment.created_at)}"
+    t("comments.helper.posted_ago", time: time_ago_in_words(comment.created_at))
   end
 
   def edited_time_ago(comment)
-    "Editado hace #{time_ago_in_words(comment.updated_at)}" if comment.edited?
+    return unless comment.edited?
+
+    t("comments.helper.edited_ago", time: time_ago_in_words(comment.updated_at))
   end
 
   def reply_form_object(comment)

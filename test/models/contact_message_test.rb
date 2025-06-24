@@ -5,54 +5,54 @@ class ContactMessageTest < ActiveSupport::TestCase
     @message = contact_messages(:one)
   end
 
-  test "debería ser válido con todos los atributos" do
+  test "should be valid with all attributes" do
     assert @message.valid?
   end
 
-  test "debería ser inválido sin nombre" do
+  test "should be invalid without name" do
     @message.name = ""
     assert_not @message.valid?
-    assert_includes @message.errors[:name], "no puede estar en blanco"
+    assert_includes @message.errors[:name], I18n.t("errors.messages.blank")
   end
 
-  test "debería ser inválido sin correo electrónico" do
+  test "should be invalid without email" do
     @message.email = ""
     assert_not @message.valid?
-    assert_includes @message.errors[:email], "no puede estar en blanco"
+    assert_includes @message.errors[:email], I18n.t("errors.messages.blank")
   end
 
-  test "debería ser inválido con correo electrónico mal formado" do
+  test "should be invalid with malformed email" do
     @message.email = "invalid_email"
     assert_not @message.valid?
-    assert_includes @message.errors[:email], "no es válido"
+    assert_includes @message.errors[:email], I18n.t("errors.messages.invalid")
   end
 
-  test "debería ser inválido sin asunto" do
+  test "should be invalid without subject" do
     @message.subject = ""
     assert_not @message.valid?
-    assert_includes @message.errors[:subject], "no puede estar en blanco"
+    assert_includes @message.errors[:subject], I18n.t("errors.messages.blank")
   end
 
-  test "debería ser inválido sin mensaje" do
+  test "should be invalid without message" do
     @message.message = ""
     assert_not @message.valid?
-    assert_includes @message.errors[:message], "no puede estar en blanco"
+    assert_includes @message.errors[:message], I18n.t("errors.messages.blank")
   end
 
-  test "el scope by_reviewed debería filtrar correctamente" do
+  test "by_reviewed scope should filter correctly" do
     reviewed = ContactMessage.create!(
-      name: "Revisado",
+      name: "Reviewed",
       email: "ok@example.com",
-      subject: "Revisado",
-      message: "Mensaje leído",
+      subject: "Reviewed",
+      message: "Read message",
       reviewed: true
     )
 
     not_reviewed = ContactMessage.create!(
-      name: "No Revisado",
+      name: "Not Reviewed",
       email: "no@example.com",
-      subject: "No revisado",
-      message: "Mensaje no leído",
+      subject: "Not reviewed",
+      message: "Unread message",
       reviewed: false
     )
 
@@ -63,20 +63,20 @@ class ContactMessageTest < ActiveSupport::TestCase
     assert_not_includes ContactMessage.by_reviewed(false), reviewed
   end
 
-  test "el scope by_date_range debería filtrar mensajes en el rango de fechas" do
+  test "by_date_range scope should filter messages within date range" do
     in_range = ContactMessage.create!(
-      name: "Dentro del rango",
-      email: "rango@example.com",
-      subject: "Asunto",
-      message: "Mensaje",
+      name: "In range",
+      email: "range@example.com",
+      subject: "Subject",
+      message: "Message",
       created_at: 3.days.ago
     )
 
     out_of_range = ContactMessage.create!(
-      name: "Fuera del rango",
-      email: "fuera@example.com",
-      subject: "Asunto",
-      message: "Mensaje",
+      name: "Out of range",
+      email: "out@example.com",
+      subject: "Subject",
+      message: "Message",
       created_at: 10.days.ago
     )
 

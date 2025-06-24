@@ -5,17 +5,19 @@ class RadioTest < ActiveSupport::TestCase
     @radio = radios(:one)
   end
 
-  test "es válido con atributos válidos" do
+  test "should be valid with valid attributes" do
     assert @radio.valid?
   end
 
-  test "requiere un título" do
+  test "should require title" do
     @radio.title = ""
     assert_not @radio.valid?
+    assert_includes @radio.errors[:title], I18n.t("errors.messages.blank")
   end
 
-  test "requiere una URL de stream" do
+  test "should require stream URL" do
     @radio.stream_url = ""
     assert_not @radio.valid?
+    assert_includes @radio.errors[:stream_url], I18n.t("errors.messages.blank")
   end
 end

@@ -1,15 +1,14 @@
 <section class="section">
   <div class="container">
-    <h1 class="title is-2">Post: <%= @post.title %></h1>
+    <h1 class="title is-2"><%= t("comments.edit.post_title", title: @post.title) %></h1>
     <br>
-    <h1 class="title is-4">Editar Comentario</h1>
+    <h1 class="title is-4"><%= t("comments.edit.edit_title") %></h1>
 
-    <%= form_with(model: [ @post, @comment ], local: true) do |form| %>
+    <%= form_with(model: [@post, @comment], local: true) do |form| %>
       <div class="field">
-        <%= form.label :content, "Contenido", class: "label" %>
+        <%= form.label :content, t("comments.edit.content_label"), class: "label" %>
         <p class="help">
-          Puedes usar <strong>Markdown</strong> para dar formato al texto. 
-          <%= link_to "Ver guía de sintaxis", "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info" %>
+          <%= t("comments.edit.markdown_help_html", guide_link: link_to(t("comments.edit.syntax_guide"), "https://www.markdownguide.org/basic-syntax/", target: "_blank", rel: "noopener", class: "has-text-info")).html_safe %>
         </p>
         <div class="control">
           <%= form.text_area :content, class: "textarea", rows: 3 %>
@@ -18,11 +17,11 @@
       <div class="field">
         <div class="control">
           <%= button_tag type: 'submit', class: "button is-primary" do %>
-            <i class="fa-solid fa-check"></i> Actualizar comentario
+            <i class="fa-solid fa-check"></i> <%= t("comments.edit.update_button") %>
           <% end %>
 
           <%= link_to post_path(@post), class: "button" do %>
-            <i class="fa-solid fa-arrow-left"></i> Volver al Post
+            <i class="fa-solid fa-arrow-left"></i> <%= t("comments.edit.back_button") %>
           <% end %>
         </div>
       </div>

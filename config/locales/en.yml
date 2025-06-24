@@ -1,31 +1,443 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        post:
+          attributes:
+            category:
+              invalid_category: "is not a valid category"
+            image:
+              invalid_format: "must be JPEG, PNG, or WebP"
+              too_large: "is too large (maximum is 5 MB)"
+        report:
+          attributes:
+            reason:
+              invalid_reason: "is not a valid reason"
+        user:
+          attributes:
+            password:
+              invalid_password_format: "must include at least one uppercase letter, one lowercase letter, one digit, and one special character (e.g. !, @, #, $, %, &, *)."
+            username:
+              invalid_username_format: "can only contain letters, numbers, hyphens, and underscores, no spaces"
+            role:
+              invalid_role: "is not a valid role"
+            avatar:
+              avatar_too_big: "is too large (maximum 1 MB)"
+              avatar_invalid_format: "must be JPEG, PNG, or WebP"
+  views:
+      pagination:
+        first: "First"
+        last: "Last"
+        previous: "Previous"
+        next: "Next"
+        truncate: "..."
+  posts:
+    categories:
+      technology: "Technology"
+      culture: "Culture"
+      health: "Health"
+      sports: "Sports"
+      business: "Business"
+    controller:
+      deleted_by_admin: "This post was removed by the administration."
+      invalid_category: "The selected category is not valid."
+      created: "The post was successfully created."
+      create_failed: "Post creation failed."
+      create_failed_log: "Post creation failed. Errors: %{errors}"
+      updated: "The post was successfully updated."
+      update_failed: "Post update failed."
+      update_failed_log: "Post update failed. Errors: %{errors}"
+      deleted: "The post was successfully deleted."
+      delete_failed: "Could not delete post ID: %{id}. Errors: %{errors}"
+      delete_failed_log: "Could not delete post ID: %{id}. Errors: %{errors}"
+      admin_deleted: "Post deleted by admin."
+      admin_delete_failed: "The post could not be deleted by admin."
+      admin_delete_failed_log: "Admin failed to delete post ID: %{id}. Errors: %{errors}"
+      unauthorized: "You are not authorized to perform this action."
+      unauthorized_attempt_log: "Unauthorized attempt to modify post ID: %{id} by user ID: %{user_id}"
+      unauthenticated_access_log: "Unauthenticated access attempt to protected resource"
+      login_required: "You must be logged in to perform this action."
+    helper:
+      published_ago: "%{time} ago"
+      edited_ago: "Edited %{time} ago"
+    index:
+      welcome_user: "Welcome to the forum, %{name}!"
+      welcome_guest: "Welcome to the forum!"
+      new_post: "New Post"
+      published_by_html: "Published by %{username}"
+      comments: "Comments"
+      visits: "Visits"
+    new:
+      title: "New Post"
+    form:
+      title: "Title"
+      title_placeholder: "Post title (minimum 5 characters)"
+      content: "Content"
+      content_placeholder: "Write the detailed content of the post..."
+      markdown_help_html: "You can use <strong>Markdown</strong>. %{link}"
+      category: "Category"
+      category_prompt: "Select a category"
+      image: "Post image"
+      current_image: "Current image:"
+      remove_image: "Remove image"
+      choose_image: "Choose an image…"
+      no_file_selected: "No file selected"
+      update: "Update Post"
+      create: "Create Post"
+      cancel: "Cancel"
+    edit:
+      title: "Edit My Post"
+    show:
+      published_by_html: "Published by %{user}"
+      visits: "visits"
+      edit: "Edit"
+      report: "Report"
+      admin_delete_confirm: "Are you sure you want to delete this post as an administrator?"
+      admin_delete: "Delete (admin)"
+      comments_count: "Comments (%{count})"
+      no_comments_yet: "No comments yet."
+      default_avatar_alt: "Default avatar"
+      comment: "Comment"
+      markdown_help_html: "You can use <strong>Markdown</strong> to format text. %{link}"
+      markdown_guide: "View syntax guide"
+      comment_placeholder: "Add a comment..."
+      publish_comment: "Publish comment"
+      login_to_comment: "Log in to leave a comment."
+    category:
+      title: "Posts in category: %{category}"
+      no_posts: "There are no posts in this category."
+  fair_use:
+    title: "Fair Use Policy"
+    last_updated: "Last updated: June 14, 2025"
+    acceptance: "By using this forum, you agree to comply with this policy in its entirety."
+    sections:
+      scope:
+        title: "1. Scope"
+        content: "This policy applies to all content generated by forum users: posts, comments, reactions, reports, and account usage."
+      account_responsibility:
+        title: "2. Account Registration and Responsibility"
+        points:
+          - "Each person may maintain only one active account."
+          - "Users are responsible for all activities performed under their account."
+          - "Impersonations or offensive aliases are prohibited."
+      prohibited_content:
+        title: "3. Prohibited Content"
+        points:
+          - "Discrimination, hatred, violence, or harassment."
+          - "Illegal, sexually explicit, or vulgar content."
+          - "Spam, malware, frauds, or malicious links."
+      moderation:
+        title: "4. Moderation"
+        content: "All content is subject to moderation. Administrators may edit, hide, or delete posts without prior notice."
+      reports:
+        title: "5. Reports"
+        content: "Users may report offensive content. Malicious use of the reporting system will be sanctioned."
+      comments:
+        title: "6. Comments"
+        content: "Participate respectfully. Flooding, trolling, or deliberately diverting the topic is prohibited."
+      content_removal:
+        title: "7. Content Removal"
+        content: "Only administrators can permanently remove content. Users may edit their content or report it for review."
+      sanctions:
+        title: "8. Sanctions"
+        points:
+          - "Warnings, suspensions, or permanent bans."
+          - "Internal logs record administrative actions."
+      content_ownership:
+        title: "9. Content Ownership"
+        content: "The forum may display and retain published content even if the user is suspended."
+      policy_changes:
+        title: "10. Policy Changes"
+        content: "The policy may be changed without prior notice. Active users will be notified when applicable."
+      contact:
+        title: "11. Contact"
+        content: "Questions or appeals can be sent through the contact form."
+  admin:
+    controller:
+      report_status_updated: "Report status updated."
+      contact_message_status_updated: "Message status updated."
+    dashboard:
+      title: "Admin Dashboard"
+      tabs:
+        reports: "Reports"
+        radios: "Radios"
+        contact_messages: "Messages"
+        logs: "Logs"
+    reports:
+      filters:
+        content_type: "Content Type"
+        all: "All"
+        post: "Post"
+        comment: "Comment"
+        status: "Status"
+        reviewed: "Reviewed"
+        not_reviewed: "Not Reviewed"
+        from: "From"
+        to: "To"
+        filter: "Filter"
+        clear: "Clear"
+      table:
+        user: "User"
+        reason: "Reason"
+        content: "Content"
+        type: "Type"
+        date: "Date"
+        status: "Status"
+      types:
+        post: "Post"
+        comment: "Comment"
+      status:
+        reviewed: "Reviewed"
+        not_reviewed: "Not Reviewed"
+      confirm_toggle_reviewed: "Change review status?"
+    radios:
+      form:
+        title: "Title"
+        stream_url: "Stream URL"
+        add_radio: "Add Radio"
+      list_title: "Radio List"
+      table:
+        title: "Title"
+        stream_url: "Stream URL"
+        actions: "Actions"
+      actions:
+        copy_url: "Copy URL"
+        confirm_delete: "Are you sure you want to delete this radio?"
+    contact_messages:
+      filter:
+        status: "Status"
+        all: "All"
+        read: "Read"
+        unread: "Unread"
+        from: "From"
+        to: "To"
+        submit: "Filter"
+        clear: "Clear"
+      table:
+        subject: "Subject"
+        name: "Name"
+        email: "Email"
+        date: "Date"
+        status: "Status"
+      status:
+        read: "Read"
+        unread: "Unread"
+      actions:
+        confirm_toggle: "Change review status?"
+    logs:
+      headers:
+        datetime: "Date & Time"
+        user: "User"
+        action: "Action"
+        description: "Description"
+      unknown_user: "Unknown"
+  comments:
+    default_avatar_alt: "Default avatar"
+    reply: "Reply"
+    report: "Report"
+    like: "Like"
+    remove_like: "Remove like"
+    reply_label: "Reply"
+    reply_placeholder: "Add a reply..."
+    post_reply: "Post reply"
+    deleted_by_admin: "Comment removed by admin"
+    admin_delete: "Delete (admin)"
+    confirm_admin_delete: "Are you sure you want to delete this comment?"
+    sign_in_to_react: "Sign in to react."
+    markdown_help_html: "You can use <strong>Markdown</strong> to format your text. %{guide_url_html}"
+    default_avatar_alt: "Default avatar"
+    reply: "Reply"
+    report: "Report"
+    like: "Like"
+    remove_like: "Remove like"
+    deleted_by_admin: "Comment removed by admin"
+    admin_delete: "Delete (admin)"
+    confirm_admin_delete: "Are you sure you want to delete this comment?"
+    controller:
+      created: "The comment was successfully posted."
+      create_error: "There was an error posting the comment."
+      create_error_log: "Error posting comment: %{errors}"
+      reply_created: "The reply was successfully posted."
+      reply_error: "There was an error posting the reply."
+      reply_error_log: "Error posting reply: %{errors}"
+      updated: "The comment was successfully updated."
+      update_error: "There was an error updating the comment."
+      update_error_log: "Error updating comment: %{errors}"
+      admin_deleted: "Comment deleted by administration."
+      admin_delete_error: "There was an error deleting the comment."
+      admin_delete_error_log: "Admin error deleting comment: %{errors}"
+      unauthorized: "You are not authorized to perform this action."
+      login_required: "You must be logged in to perform this action."
+    helper:
+      edit: "Edit"
+      posted_ago: "%{time} ago"
+      edited_ago: "Edited %{time} ago"
+    edit:
+      post_title: "Post: %{title}"
+      edit_title: "Edit Comment"
+      content_label: "Content"
+      markdown_help_html: "You can use <strong>Markdown</strong> to format text. %{guide_link}"
+      syntax_guide: "View syntax guide"
+      update_button: "Update Comment"
+      back_button: "Back to Post"
+  contact_messages:
+    controller:
+      success: "Your message has been sent successfully."
+      failure: "Message creation failed."
+      error_log: "Errors: %{errors}"
+    new:
+      title: "Contact Form"
+      subtitle: "Inquiries or appeals can be sent from here."
+      name: "Name"
+      name_placeholder: "Your full name"
+      email: "Email"
+      email_placeholder: "youremail@example.com"
+      subject: "Subject"
+      subject_placeholder: "Reason for contact"
+      message: "Message"
+      message_placeholder: "Write your inquiry or appeal here..."
+      send: "Send"
+      cancel: "Cancel"
+    show:
+      title: "Contact Message"
+      name: "Name"
+      email: "Email"
+      subject: "Subject"
+      message: "Message"
+      sent_at: "Sent on %{date}"
+      back_to_panel: "Back to Panel"
+  users:
+    ban_message: "User %{username} was automatically banned due to repeated deletions."
+    roles:
+      user: "User"
+      admin: "Administrator"
+      moderator: "Moderator"
+    controller:
+      registration_success: "Successfully registered"
+      registration_failed: "Failed to register user"
+      recaptcha_failed: "We couldn't verify you're human."
+      incorrect_current_password: "The current password is incorrect."
+      passwords_do_not_match: "New passwords do not match."
+      password_updated: "Password updated successfully"
+      password_update_failed: "Failed to update password."
+      avatar_updated: "Avatar updated successfully"
+      avatar_update_failed: "Failed to update avatar: %{errors}"
+      login_required: "You must be logged in to access this page."
+    password:
+      edit:
+        title: "Change Password"
+        current_password: "Current Password"
+        current_password_placeholder: "Your current password"
+        new_password: "New Password"
+        new_password_placeholder: "Your new password"
+        confirm_password: "Confirm New Password"
+        confirm_password_placeholder: "Confirm your new password"
+        submit: "Change Password"
+        back: "Back"
+    new:
+      title: "Register New User"
+      submit: "Sign Up"
+      login_prompt: "Already have an account? Log in"
+      placeholders:
+        name: "Your name"
+        username: "Your username"
+        email: "Your email"
+        password: "Your password"
+        password_confirmation: "Confirm your password"
+    show:
+      default_avatar_alt: "Default avatar"
+      change_image: "Change image"
+      no_file_selected: "No file selected"
+      update_avatar: "Update avatar"
+      role: "Role"
+      registered_ago: "Registered %{time} ago"
+      change_password: "Change password"
+      my_posts: "My posts"
+      no_posts_yet: "You haven't created any posts yet."
+  sessions:
+    controller:
+      blank_login: "The email or username field cannot be blank."
+      blank_password: "The password field cannot be blank."
+      user_not_found: "No user found with that email or username."
+      invalid_password: "Incorrect password."
+      login_success: "You have logged in successfully."
+      logout_success: "You have logged out."
+      recaptcha_failed: "We couldn't verify you're human."
+    new:
+      title: "Log in"
+      login_label: "Email or username"
+      login_placeholder: "example@email.com or your_username"
+      password_label: "Password"
+      password_placeholder: "••••••••"
+      submit: "Log in"
+      no_account: "Don't have an account?"
+      register_here: "Register here"
+  reports:
+    reasons:
+      offensive_content: "Offensive content"
+      spam: "Spam or unsolicited advertising"
+      false_information: "False or misleading information"
+      harassment: "Harassment or abuse"
+      inappropriate_language: "Inappropriate language"
+      other: "Other"
+    controller:
+      created: "The report was submitted successfully."
+      create_failed: "The report could not be submitted."
+      auth_required: "You must be logged in to perform this action."
+    new:
+      title: "Report content"
+      reason_label: "Reason for report"
+      submit: "Submit report"
+      cancel: "Cancel"
+  footer:
+    fair_use: "Fair Use Policy"
+    contact: "Contact"
+    rights: "All rights reserved."
+  navbar:
+    categories: "Categories"
+    admin_panel: "Admin Panel"
+    my_profile: "My Profile"
+    logout: "Logout"
+    login: "Login"
+    register: "Register"
+    radio:
+      prev: "Previous"
+      next: "Next"
+      play_pause: "Play / Pause"
+      no_radio: "No radio"
+  notifications:
+    titles:
+      notice: "NOTICE"
+      success: "SUCCESS"
+      alert: "ALERT"
+      error: "ALERT"
+      danger: "ALERT"
+      warning: "WARNING"
+      default: "INFO"
+  errors:
+    not_authorized: "You are not authorized to access this page."
+    account_banned: "Your account has been banned."
+  comment_reactions:
+    liked: "You liked the comment."
+    already_liked: "You already liked this comment."
+    already_liked_log: "You already liked this comment."
+    unliked: "You removed your reaction."
+    not_liked: "You hadn't reacted to this comment."
+    not_liked_log: "You hadn't reacted to this comment."
+    login_required: "You must be logged in to perform this action."
+    login_required_log: "You must be logged in to perform this action."
+  radios:
+    controller:
+      created: "Radio added successfully."
+      create_failed: "Could not add the radio. Please check the data."
+      deleted: "Radio deleted successfully."
+  stimulus:
+    clipboard_radio_controller:
+      notifications:
+        url_copied: "URL copied to clipboard"
+        copy_failed: "Failed to copy the URL"
+        notice_title: "NOTICE"
+        error_title: "ALERT"
+        info_title: "INFORMATION"
+    file_input_controller:
+      no_file_selected: "No file selected"

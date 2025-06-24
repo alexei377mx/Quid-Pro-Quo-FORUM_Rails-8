@@ -3,19 +3,19 @@
     <% if user_signed_in? %>
       <h1 class="title">
         <i class="fa-solid fa-user"></i>
-        Bienvenido al foro <%= current_user.name %>!
+        <%= t('posts.index.welcome_user', name: current_user.name) %>
       </h1>
       <%= link_to new_post_path, class: "button is-primary" do %>
         <span class="icon">
           <i class="fa-solid fa-plus"></i>
         </span>
-        <span>Nuevo Post</span>
+        <span><%= t('posts.index.new_post') %></span>
       <% end %>
       <hr>
     <% else %>
       <h1 class="title">
         <i class="fa-solid fa-comments"></i>
-        Bienvenido al foro!
+        <%= t('posts.index.welcome_guest') %>
       </h1>
     <% end %>
     <% @posts.each do |post| %>

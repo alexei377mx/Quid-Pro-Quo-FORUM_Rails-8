@@ -1,22 +1,16 @@
 <div id="flash-messages" data-controller="notification">
   <% flash.each do |type, message| %>
     <% 
-      bulma_class = case type.to_sym
+      type_sym = type.to_sym
+
+      bulma_class = case type_sym
                     when :notice, :success then 'is-success'
                     when :alert, :error, :danger then 'is-danger'
                     when :warning then 'is-warning'
                     else 'is-info'
                     end
 
-      title = case type.to_sym
-              when :notice then 'AVISO'
-              when :success then 'ÉXITO'
-              when :alert, :error, :danger then 'ALERTA'
-              when :warning then 'ADVERTENCIA'
-              else 'INFORMACIÓN'
-              end
-
-      icon_class = case type.to_sym
+      icon_class = case type_sym
                    when :notice, :success then 'fa-circle-check'
                    when :alert, :error, :danger then 'fa-circle-exclamation'
                    when :warning then 'fa-triangle-exclamation'
@@ -30,7 +24,7 @@
         <span class="icon">
           <i class="fas <%= icon_class %>"></i>
         </span>
-        <span><strong><%= title %></strong></span>
+        <span><strong><%= t("notifications.titles.#{type_sym}", default: t("notifications.titles.default")) %></strong></span>
       </span>
       <br>
       <%= message %>

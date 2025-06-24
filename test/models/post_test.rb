@@ -5,44 +5,45 @@ class PostTest < ActiveSupport::TestCase
     @post = posts(:one)
   end
 
-  test "debería ser válido con atributos válidos" do
+  test "should be valid with valid attributes" do
     assert @post.valid?
   end
 
-  test "debería ser inválido sin título" do
+  test "should be invalid without title" do
     @post.title = ""
     assert_not @post.valid?
-    assert_includes @post.errors[:title], "no puede estar en blanco"
+    assert_includes @post.errors[:title], I18n.t("errors.messages.blank")
   end
 
-  test "debería ser inválido si el título es muy corto" do
+  test "should be invalid with too short title" do
     @post.title = "Hey"
     assert_not @post.valid?
-    assert_includes @post.errors[:title], "es demasiado corto (5 caracteres mínimo)"
+    assert_includes @post.errors[:title],
+                   I18n.t("errors.messages.too_short", count: 5)
   end
 
-  test "debería ser inválido sin contenido" do
+  test "should be invalid without content" do
     @post.content = ""
     assert_not @post.valid?
-    assert_includes @post.errors[:content], "no puede estar en blanco"
+    assert_includes @post.errors[:content], I18n.t("errors.messages.blank")
   end
 
-  test "debería pertenecer a un usuario" do
+  test "should belong to a user" do
     assert_instance_of User, @post.user
   end
 
-  test "debería ser inválido sin un usuario asociado" do
+  test "should be invalid without an associated user" do
     @post.user = nil
     assert_not @post.valid?
-    assert_includes @post.errors[:user], "debe existir"
+    assert_includes @post.errors[:user], I18n.t("errors.messages.required")
   end
 
-  test "debería aceptar una imagen JPEG válida" do
+  test "should accept valid JPEG image" do
     @post.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
-    assert @post.valid?, "La imagen JPEG debería ser válida"
+    assert @post.valid?, "JPEG image should be valid"
   end
 
-  test "debería rechazar un archivo con tipo no permitido" do
+  test "should reject file with invalid type" do
     @post.image.attach(
       io: file_fixture("invalid_file.pdf").open,
       filename: "invalid_file.pdf",
@@ -50,26 +51,27 @@ class PostTest < ActiveSupport::TestCase
     )
 
     assert_not @post.valid?
-    assert_includes @post.errors[:image], "debe ser JPEG, PNG o WebP"
+    assert_includes @post.errors[:image],
+                   I18n.t("activerecord.errors.models.post.attributes.image.invalid_format")
   end
 
-
-  test "debería rechazar una imagen demasiado grande" do
+  test "should reject image that is too large" do
     large_file = StringIO.new("0" * 6.megabytes)
     @post.image.attach(io: large_file, filename: "big_image.jpeg", content_type: "image/jpeg")
     assert_not @post.valid?
-    assert_includes @post.errors[:image], "es demasiado grande (máximo 5 MB)"
+    assert_includes @post.errors[:image],
+                   I18n.t("activerecord.errors.models.post.attributes.image.too_large")
   end
 
-  test "debería eliminar la imagen si remove_image es true" do
+  test "should remove image when remove_image is true" do
     @post.image.attach(io: file_fixture("user.jpeg").open, filename: "user.jpeg", content_type: "image/jpeg")
     @post.save
-    assert @post.image.attached?, "La imagen debería estar adjunta"
+    assert @post.image.attached?, "Image should be attached"
 
     @post.remove_image = true
     @post.save
     @post.reload
 
-    assert_not @post.image.attached?, "La imagen debería haber sido eliminada"
+    assert_not @post.image.attached?, "Image should have been removed"
   end
 end

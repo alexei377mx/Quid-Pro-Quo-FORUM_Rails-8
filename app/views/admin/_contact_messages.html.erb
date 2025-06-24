@@ -3,27 +3,31 @@
 
   <div class="columns is-multiline">
     <div class="column is-one-quarter">
-      <label class="label">Estado</label>
+      <label class="label"><%= t('admin.contact_messages.filter.status') %></label>
       <div class="select is-fullwidth">
         <%= select_tag :reviewed,
-                        options_for_select([["Todos", ""], ["Leídos", "true"], ["No leídos", "false"]], selected: params[:reviewed]),
+                        options_for_select([
+                          [t('admin.contact_messages.filter.all'), ""],
+                          [t('admin.contact_messages.filter.read'), "true"],
+                          [t('admin.contact_messages.filter.unread'), "false"]
+                        ], selected: params[:reviewed]),
                         class: "select" %>
       </div>
     </div>
 
     <div class="column is-one-quarter">
-      <label class="label">Desde</label>
+      <label class="label"><%= t('admin.contact_messages.filter.from') %></label>
       <%= date_field_tag :from, params[:from], class: "input" %>
     </div>
 
     <div class="column is-one-quarter">
-      <label class="label">Hasta</label>
+      <label class="label"><%= t('admin.contact_messages.filter.to') %></label>
       <%= date_field_tag :to, params[:to], class: "input" %>
     </div>
 
     <div class="column is-full">
-      <%= submit_tag "Filtrar", class: "button is-primary" %>
-      <%= link_to "Limpiar", admin_path(tab: "contact_messages"), class: "button is-light" %>
+      <%= submit_tag t('admin.contact_messages.filter.submit'), class: "button is-primary" %>
+      <%= link_to t('admin.contact_messages.filter.clear'), admin_path(tab: "contact_messages"), class: "button is-light" %>
     </div>
   </div>
 <% end %>
@@ -34,11 +38,11 @@
   <table class="table is-fullwidth is-hoverable is-striped">
     <thead>
       <tr>
-        <th>Asunto</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Fecha</th>
-        <th>Estado</th>
+        <th><%= t('admin.contact_messages.table.subject') %></th>
+        <th><%= t('admin.contact_messages.table.name') %></th>
+        <th><%= t('admin.contact_messages.table.email') %></th>
+        <th><%= t('admin.contact_messages.table.date') %></th>
+        <th><%= t('admin.contact_messages.table.status') %></th>
       </tr>
     </thead>
     <tbody>
@@ -57,10 +61,10 @@
                   to: params[:to],
                   page: params[:page]
                 },
-                form: { data: { turbo_confirm: "¿Cambiar estado de revisión?" } },
+                form: { data: { turbo_confirm: t('admin.contact_messages.actions.confirm_toggle') } },
                 class: "button is-small is-#{msg.reviewed ? 'success' : 'warning'}" do %>
-                  <%= msg.reviewed ? "Leído" : "No leído" %>
-                <% end %>
+                  <%= msg.reviewed ? t('admin.contact_messages.status.read') : t('admin.contact_messages.status.unread') %>
+            <% end %>
           </td>
         </tr>
       <% end %>
