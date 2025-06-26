@@ -49,3 +49,15 @@ html {
     text-align: center !important;
   }
 }
+
+/* Change the color of the Turbo loading bar */
+.turbo-progress-bar {
+  background-color: hsl(266, 48%, 45%) !important;
+}
+
+/* Change the primary color in Bulma CSS */
+:root {
+  --bulma-primary-h: 97;
+  --bulma-primary-s: 50%;
+  --bulma-primary-l: 50%;
+}
